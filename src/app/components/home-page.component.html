@@ -1,0 +1,189 @@
+<!-- home-page.component.html -->
+<app-navbar></app-navbar>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <h1 class="texto-maquina">Safe Capital Investment</h1>
+    <p class="hero-subtitle mt-3">Donde tus decisiones generan ganancias</p>
+    <a routerLink="/dashboard" class="btn btn-dashboard">Ir al Dashboard</a>
+  </div>
+</section>
+
+
+<!-- SECCIÓN BIENVENIDA -->
+<section class="bienvenida-section">
+  <div class="bienvenida-box">
+    <h2>¡Bienvenido a Safe Capital Investment!</h2>
+    <p class="sub">Tu plataforma de confianza para invertir de manera segura, aprender sobre trading y alcanzar tu libertad financiera.</p>
+    <hr />
+    <p class="desc">Explora nuestras herramientas, descubre los beneficios y prepárate para un nuevo nivel de inversión.</p>
+  </div>
+</section>
+
+<!-- FUTUROS -->
+<section class="futuros-section">
+  <div class="container">
+    <h2 class="text-center mb-5 display-5 fw-bold text-white">
+      Conoce los Mini Futuros Más Populares
+    </h2>
+
+    <div class="futuros-wrapper">
+      <div class="futuro-tarjeta" *ngFor="let futuro of futuros">
+        <img [src]="futuro.img" [alt]="futuro.titulo" class="fondo-img" />
+        <div class="overlay-text">
+          <div class="titulo">{{ futuro.titulo }}</div>
+          <div class="descripcion">{{ futuro.descripcion }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+ <!-- SECCIÓN BENEFICIOS -->
+ <section class="container my-5 beneficios-totales">
+  <h2 class="text-center text-white mb-5 display-5 fw-bold">Beneficios Destacados</h2>
+
+  <div class="beneficios-grid">
+    <div class="card-neon small-benefit p-3">
+      <img src="https://cdn-icons-png.flaticon.com/512/1216/1216895.png" width="50" alt="rendimiento" />
+      <h6 class="mt-2">Alto Rendimiento</h6>
+      <p class="mb-0">Multiplica tu capital con operaciones rápidas.</p>
+    </div>
+    <div class="card-neon small-benefit p-3">
+      <img src="https://cdn-icons-png.flaticon.com/512/3890/3890871.png" width="50" alt="seguridad" />
+      <h6 class="mt-2">Seguridad Garantizada</h6>
+      <p class="mb-0">Protección avanzada de tus datos y transacciones.</p>
+    </div>
+    <div class="card-neon small-benefit p-3">
+      <img src="https://cdn-icons-png.flaticon.com/512/1010/1010509.png" width="50" alt="soporte" />
+      <h6 class="mt-2">Soporte 24/7</h6>
+      <p class="mb-0">Ayuda inmediata a cualquier hora, todos los días.</p>
+    </div>
+  </div>
+
+  
+
+  <h2 class="text-center text-white mt-5 mb-4 display-6">¿Por qué elegir Elite Investors?</h2>
+
+<div class="beneficios-grid">
+  <div class="small-benefit">
+    <i class="fas fa-bolt fa-2x text-warning mb-2"></i>
+    <h6>Transacciones Rápidas</h6>
+    <p>Ejecuta órdenes en milisegundos.</p>
+  </div>
+  <div class="small-benefit">
+    <i class="fas fa-shield-alt fa-2x text-info mb-2"></i>
+    <h6>Plataforma Segura</h6>
+    <p>Con encriptación y doble verificación.</p>
+  </div>
+  <div class="small-benefit">
+    <i class="fas fa-users fa-2x text-success mb-2"></i>
+    <h6>Comunidad Activa</h6>
+    <p>Comparte ideas con miles de traders.</p>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- TESTIMONIOS -->
+<section class="testimonios-section py-5">
+  <h2 class="text-center mb-5 text-white">Testimonios</h2>
+  <div class="testimonios-grid">
+    <div class="testimonio-card" *ngFor="let t of testimonios">
+      <p class="comentario">"{{ t.comentario }}"</p>
+      <small class="autor">- {{ t.nombre }}</small>
+    </div>
+  </div>
+</section>
+
+
+<!-- CONTACTO + MAPA -->
+<section class="fila-contacto container-fluid my-5">
+  <div class="contacto-wrapper">
+
+    <!-- Mapa -->
+    <div class="contacto-item mapa-estilizado">
+      <iframe
+        src="https://www.google.com/maps?q=Javier+Barros+Sierra+495,+Piso+18,+Torre+Park+Plaza+III,+Colonia+Santa+Fe,+Álvaro+Obregón,+CDMX,+01376&output=embed"
+        allowfullscreen
+        loading="lazy">
+      </iframe>
+    </div>
+
+    <!-- WhatsApp -->
+    <div class="contacto-item whatsapp-estilizado d-flex flex-column justify-content-center text-white">
+      <i class="fab fa-whatsapp fa-4x mb-3 text-success"></i>
+      <h5 class="mb-3">¿Tienes dudas?</h5>
+      <p>Escríbenos directamente por WhatsApp y recibe asesoría personalizada.</p>
+      <a href="https://wa.me/5215616375549" target="_blank" class="btn btn-success mt-2">Contactar</a>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
+
+<!-- CTA FINAL CON DISEÑO MEJORADO -->
+<section class="cta-section text-white text-center py-5 animate__animated animate__fadeInUp">
+  <div class="container">
+    <h2 class="mb-3">🚀 <strong>¡Listo para comenzar tu viaje financiero?</strong>
+    </h2>
+    <p class="lead">Regístrate hoy y recibe <strong>bonos exclusivos</strong> de bienvenida.</p>
+    <a routerLink="/register" class="btn btn-outline-light mt-3"> ¡Regístrate Ahora!</a>
+
+    <!-- Métodos de pago -->
+    <div class="mt-5">
+      <h4 class="fw-bold mb-3">Métodos de Pago Aceptados</h4>
+      <div class="payment-row">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" class="payment-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" class="payment-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" alt="PayPal" class="payment-logo">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple Pay" class="payment-logo">
+      </div>
+    </div>
+
+    <!-- Aval institucional -->
+    <div class="mt-5">
+      <h4 class="fw-bold mb-3">Avalado por Instituciones Oficiales</h4>
+      <div class="payment-row">
+        <img src="assets/img/logo_shcp.png" alt="SHCP" class="logo-institucion">
+        <img src="assets/img/logo_cnbv.png" alt="CNBV" class="logo-institucion">
+        <img src="assets/img/logo_banxico.png" alt="Banco de México" class="logo-institucion">
+      </div>
+    </div>
+
+    <!-- Redes Sociales -->
+    <div class="social-icons mt-4">
+      <a href="https://www.facebook.com/share/1F9Ka3bpBD/" target="_blank"><i class="fab fa-facebook fa-2x"></i></a>
+      <a href="https://www.instagram.com/investmentsafecapital" target="_blank"><i class="fab fa-instagram fa-2x"></i></a>
+      <a href="https://www.tiktok.com/@safecapitalinvestment" target="_blank"><i class="fab fa-tiktok fa-2x"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER FINAL MEJORADO -->
+<footer class="bg-dark text-white py-4">
+  <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center">
+    <strong>Safe Capital Investment</strong>
+
+    <div class="d-flex flex-wrap mt-2 mt-md-0">
+      <a href="#beneficios" class="text-white me-3">Beneficios</a>
+      <a href="#por-que" class="text-white me-3">¿Por qué Nosotros?</a>
+      <a href="#faq" class="text-white me-3">FAQ</a>
+      <a href="#pagos" class="text-white">Pagos</a>
+    </div>
+
+    <p class="mt-3 mt-md-0">&copy; {{ year }} Safe Capital Investment. Todos los derechos reservados.</p>
+  </div>
+</footer>

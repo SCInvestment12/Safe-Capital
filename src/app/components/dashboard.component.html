@@ -1,0 +1,63 @@
+<div class="dashboard">
+    <h2 class="animate__animated animate__fadeInDown">Bienvenido al Panel</h2>
+  
+    <div class="cuenta-info animate__animated animate__fadeInUp">
+      <span *ngIf="isCuentaDemo" class="demo">Cuenta Demo</span>
+      <span *ngIf="!isCuentaDemo">Saldo: ${{ saldo }}</span>
+      <button (click)="abrirDeposito()">💳 Realizar Depósito</button>
+    </div>
+  
+    <label for="duracion">Duración de la apuesta:</label>
+    <select id="duracion" (change)="cambiarDuracionDesdeEvento($event)">
+      <option value="30000">30 segundos</option>
+      <option value="60000">1 minuto</option>
+      <option value="300000">5 minutos</option>
+    </select>
+  
+    <p>Monto por apuesta: ${{ montoPorApuesta }}</p>
+  
+    <app-chart-wrapper [tipo]="tipo"></app-chart-wrapper>
+  
+    <div class="acciones animate__animated animate__fadeInUp animate__delay-1s">
+      <button (click)="apostar('up')">↑ Apostar arriba</button>
+      <button (click)="apostar('down')">↓ Apostar abajo</button>
+    </div>
+  
+    <h3 class="animate__animated animate__fadeIn">Historial de Apuestas</h3>
+    <table class="tabla-historial">
+      <tr>
+        <th>Hora</th>
+        <th>Dirección</th>
+        <th>Resultado</th>
+      </tr>
+      <tr *ngFor="let item of historial" class="animate__animated animate__fadeInDown">
+        <td>{{ item.timestamp }}</td>
+        <td>{{ item.direccion }}</td>
+        <td [ngClass]="{
+          'ganado': item.resultado.includes('Ganaste'),
+          'perdido': item.resultado.includes('Perdiste'),
+          'esperando': item.resultado.includes('Esperando')
+        }">{{ item.resultado }}</td>
+      </tr>
+    </table>
+  </div>
+  
+  <!-- Modal de Depósito -->
+  <div class="modal" *ngIf="mostrarModal">
+    <div class="modal-content animate__animated animate__zoomIn">
+      <h3>Realizar Depósito</h3>
+      <label>Monto:</label>
+      <input type="number" #monto placeholder="Ej. 1000" />
+      <label>Método de Pago:</label>
+      <select>
+        <option>SPEI</option>
+        <option>Tarjeta</option>
+        <option>PayPal</option>
+      </select>
+      <div class="modal-actions">
+        <button (click)="realizarDeposito(monto.valueAsNumber)">Depositar</button>
+        <button (click)="cerrarDeposito()">Cancelar</button>
+      </div>
+    </div>
+  </div>
+  

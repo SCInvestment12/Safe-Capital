@@ -1,0 +1,534 @@
+/* FONDO GLOBAL PARA TODA LA PÁGINA */
+body {
+  background: url('/assets/img/FondoPag.png') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* HERO PRINCIPAL */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 80px 60px;
+  text-align: left;
+  color: white;
+  background: url('/assets/img/FondoPag.png') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.texto-maquina {
+  font-size: 3.5rem;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  border-right: 3px solid #f3f0f0;
+  width: 0;
+  color: #faf5f5;
+  animation: escribir 4s steps(30, end) forwards;
+}
+
+@keyframes escribir {
+  to {
+    width: 100%;
+  }
+}
+
+.hero-subtitle {
+  font-size: 2rem;
+  color: #eeeeee;
+  margin-top: 20px;
+}
+
+.btn-dashboard {
+  text-decoration: none;
+  margin-top: 25px;
+  background-color: transparent;
+  border: 2px solid #3739da;
+  color: #e0e2e6;
+  font-size: 1.5rem;
+  padding: 10px 25px;
+  border-radius: 30px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.2);
+}
+
+.btn-dashboard:hover {
+  background-color: #0c0c0c;
+  color: #eaf1eb;
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.5);
+}
+
+/* BIENVENIDA */
+.bienvenida-section {
+  padding: 100px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bienvenida-box {
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #00ffc8;
+  padding: 40px 60px;
+  border-radius: 20px;
+  text-align: center;
+  color: white;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.3);
+  max-width: 800px;
+  transition: all 0.3s ease;
+}
+
+.bienvenida-box h2 {
+  font-size: 2.5rem;
+  color: #00ffb3;
+  margin-bottom: 20px;
+}
+
+.bienvenida-box .sub {
+  font-size: 1.3rem;
+  margin-bottom: 10px;
+}
+
+.bienvenida-box hr {
+  border: 1px solid #00ffc8;
+  width: 60%;
+  margin: 20px auto;
+}
+
+.bienvenida-box .desc {
+  font-size: 1.1rem;
+  color: #ddd;
+}
+
+/* MINI FUTUROS */
+.futuros-section {
+  padding: 60px 20px;
+  color: white;
+}
+
+.futuros-wrapper {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.futuro-tarjeta {
+  position: relative;
+  width: 300px;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+  cursor: pointer;
+}
+
+.futuro-tarjeta:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+}
+
+.fondo-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.75);
+}
+
+.overlay-text {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  border-radius: 0 0 20px 20px;
+}
+
+.overlay-text .titulo {
+  color: #00ffc8;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.overlay-text .descripcion {
+  font-size: 0.95rem;
+  color: #ddd;
+}
+
+/* CAJA NEÓN */
+.neon-box {
+  background-color: #111;
+  border: 2px solid #00f7ff;
+  border-radius: 15px;
+  padding: 30px;
+}
+
+/* TESTIMONIOS */
+.testimonio {
+  background-color: #222;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 350px;
+  text-align: center;
+  color: white;
+}
+.testimonios-section {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(3px);
+}
+
+.testimonios-grid {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 0 20px;
+}
+
+.testimonio-card {
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 2px solid #00ffc8;
+  border-radius: 15px;
+  color: white;
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.2);
+  padding: 30px 20px;
+  max-width: 300px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.testimonio-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.5);
+}
+
+.comentario {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+.autor {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+/* MAPA Y WHA */
+.contacto-item {
+  width: 50%;
+  min-height: 300px;
+  padding: 0;
+}
+
+.mapa-contacto-section {
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(6px);
+  padding: 60px 20px;
+  color: white;
+}
+
+.mapa-box {
+  flex: 1 1 500px;
+  min-width: 300px;
+  max-width: 600px;
+  border: 2px solid #00ffc8;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 255, 200, 0.3);
+}
+
+.whatsapp-box {
+  flex: 1 1 300px;
+  min-width: 280px;
+  max-width: 450px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid #00ffc8;
+  border-radius: 15px;
+  padding: 30px 20px;
+  box-shadow: 0 0 20px rgba(0, 255, 200, 0.3);
+  transition: all 0.3s ease;
+}
+
+.whatsapp-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 30px rgba(0, 255, 200, 0.5);
+}
+
+.fila-contacto {
+  backdrop-filter: blur(6px);
+  z-index: 2;
+}
+
+.fila-contacto .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: stretch;
+}
+
+.mapa-estilizado {
+  background-color: #fff;
+  border-radius: 15px;
+  overflow: hidden;
+  border: 3px solid #00ffc8;
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.mapa-estilizado:hover {
+  transform: scale(1.02);
+}
+.mapa-estilizado iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+
+.whatsapp-estilizado {
+  background: linear-gradient(145deg, rgba(0,0,0,0.7), rgba(0,0,0,0.85));
+  border: 2px solid #25D366;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s ease;
+}
+
+.whatsapp-estilizado:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 35px rgba(37, 211, 102, 0.7);
+}
+
+.fila-contacto {
+  margin: 0;
+  padding: 0;
+}
+
+.row.gx-0 {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.row.gx-0 > [class^="col-"] {
+  padding-left: 0;
+  padding-right: 0;
+}
+.contacto-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 0;
+}
+
+.contacto-item {
+  width: 50%;
+  min-height: 300px;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.mapa-estilizado iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+  border-radius: 15px;
+  border: 2px solid #00ffc8;
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.3);
+}
+
+.whatsapp-estilizado {
+  background: linear-gradient(145deg, rgba(0,0,0,0.7), rgba(0,0,0,0.85));
+  border: 2px solid #25D366;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+  transition: all 0.3s ease;
+  text-align: center;
+}
+
+.whatsapp-estilizado:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 35px rgba(37, 211, 102, 0.7);
+}
+
+/* CTA FINAL */
+.cta {
+  background: linear-gradient(to right, #004d7a, #008793);
+  padding: 50px 20px;
+  text-align: center;
+  color: white;
+}
+
+/* REDES SOCIALES */
+.social-icons i {
+  margin: 0 10px;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.social-icons i:hover {
+  color: #00f7ff;
+}
+
+/* BENEFICIOS */
+.beneficios-totales {
+  z-index: 2;
+  padding: 40px 0;
+}
+
+/* ✅ NUEVO ESTILO PARA MOSTRAR EN FILA */
+.beneficios-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.small-benefit {
+  width: 250px;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 2px solid #00ffc8;
+  border-radius: 15px;
+  color: white;
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.2);
+  transition: all 0.3s ease;
+  text-align: center;
+  padding: 20px;
+}
+
+.small-benefit:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.5);
+}
+
+.small-benefit img,
+.small-benefit i {
+  filter: drop-shadow(0 0 5px #00ffc8);
+}
+
+.small-benefit h6 {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.small-benefit p {
+  font-size: 0.95rem;
+}
+
+
+/* === SECCIÓN FINAL ESTILO XMR MARKETS ADAPTADA === */
+
+.cta-section {
+  background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+  padding: 60px 20px;
+  color: white;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-size: 2.4rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.cta-section p {
+  font-size: 1.2rem;
+  margin-bottom: 25px;
+}
+
+.cta-section .btn {
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  border-radius: 30px;
+  background-color: transparent;
+  color: white;
+  border: 2px solid #00ffc8;
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.3);
+  transition: all 0.3s ease;
+}
+
+.cta-section .btn:hover {
+  background-color: rgba(0, 255, 200, 0.2);
+  color: #fff;
+  transform: scale(1.05);
+}
+
+/* 🏦 Métodos de pago y Aval */
+.bg-light.text-dark {
+  background: linear-gradient(to right, #00687d, #007b8a) !important;
+  color: #fff !important;
+  padding: 40px 20px;
+}
+
+.bg-light.text-dark h4 {
+  color: #ffffff;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.payment-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.payment-logo {
+  height: 40px;
+  filter: brightness(5) contrast(0.8);
+}
+
+.logo-institucion {
+  height: 50px;
+  filter: brightness(5) grayscale(1);
+}
+
+/* 🌐 Redes Sociales */
+.social-icons a {
+  margin: 0 10px;
+  color: white;
+  transition: 0.2s;
+}
+
+.social-icons a:hover {
+  transform: scale(1.2);
+  color: #00c875;
+}
+
+/* 📋 Footer */
+footer.bg-dark {
+  background-color: #111 !important;
+  color: white;
+}
+
+footer.bg-dark a {
+  color: white;
+  text-decoration: none;
+  margin-right: 15px;
+}
+
+footer.bg-dark a:hover {
+  color: #00ffc8;
+}
+
+footer .social-icons a {
+  margin-right: 15px;
+  color: white;
+  transition: 0.2s;
+}
+
+footer .social-icons a:hover {
+  transform: scale(1.2);
+  color: #00c875;
+}
+
+

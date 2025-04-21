@@ -1,0 +1,17 @@
+<div class="register-wrapper">
+    <div class="glass-box animate__animated animate__fadeInDown">
+      <h2>Crear cuenta</h2>
+  
+      <input type="text" [(ngModel)]="nombre" placeholder="Nombre completo" />
+      <input type="email" [(ngModel)]="email" placeholder="Correo electrónico" />
+      <input type="password" [(ngModel)]="password" placeholder="Contraseña" />
+      <input type="password" [(ngModel)]="confirmar" placeholder="Confirmar contraseña" />
+  
+      <button (click)="registrarse()">Registrarse</button>
+  
+      <p class="ya-cuenta">¿Ya tienes cuenta?
+        <a routerLink="/login">Inicia sesión</a>
+      </p>
+    </div>
+  </div>
+  
