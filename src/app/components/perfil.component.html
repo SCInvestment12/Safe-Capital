@@ -1,1 +1,40 @@
-<p>perfil works!</p>
+<div class="perfil-wrapper">
+    <div class="perfil-card animate__animated animate__fadeInUp">
+      <h2 class="mb-4 text-center">Perfil de Usuario</h2>
+  
+      <div class="saldo-section mb-4">
+        <h4>Saldo disponible</h4>
+        <p class="saldo-cantidad">$12,500.00 MXN</p>
+      </div>
+  
+      <div class="deposito-section mb-5">
+        <h5>Depósito bancario</h5>
+        <p class="text-light small mb-2">Realiza tu depósito a la siguiente cuenta:</p>
+        <ul class="lista-deposito">
+          <li><strong>Banco:</strong> BBVA</li>
+          <li><strong>Cuenta:</strong> 0123 4567 8910 1112</li>
+          <li><strong>CLABE:</strong> 012345678901234567</li>
+          <li><strong>Beneficiario:</strong> Safe Capital Investment</li>
+        </ul>
+        <p class="text-light small mt-2">Envía tu comprobante al área de soporte para acreditar tu saldo.</p>
+      </div>
+  
+      <div class="retiro-section">
+        <h5>Solicitar retiro</h5>
+        <form (ngSubmit)="solicitarRetiro()" class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label">Monto a retirar</label>
+            <input type="number" class="form-control" [(ngModel)]="montoRetiro" name="montoRetiro" required />
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Cuenta CLABE (18 dígitos)</label>
+            <input type="text" class="form-control" [(ngModel)]="clabe" name="clabe" maxlength="18" required />
+          </div>
+          <div class="col-12 text-center">
+            <button type="submit" class="btn btn-success">Solicitar retiro</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  

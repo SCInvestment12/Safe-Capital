@@ -1,11 +1,21 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-perfil',
-  imports: [],
+  standalone: true,
+  imports: [FormsModule], // <- AÑADIDO AQUÍ
   templateUrl: './perfil.component.html',
-  styleUrl: './perfil.component.css'
+  styleUrls: ['./perfil.component.css']
 })
 export class PerfilComponent {
+  montoRetiro: number = 0;
+  clabe: string = '';
 
+  solicitarRetiro() {
+    console.log('Solicitud enviada:', {
+      monto: this.montoRetiro,
+      clabe: this.clabe
+    });
+  }
 }

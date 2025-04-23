@@ -12,7 +12,13 @@ import { CommonModule } from '@angular/common';
 })
 export class RegisterPageComponent {
   nombre: string = '';
+  apellido: string = '';
+  username: string = '';
+  curp: string = '';
   email: string = '';
+  telefono: string = '';     
+  direccion: string = '';
+  fechaNacimiento: string = ''; 
   password: string = '';
   confirmar: string = '';
 

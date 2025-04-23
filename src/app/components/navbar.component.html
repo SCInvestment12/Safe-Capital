@@ -1,1 +1,12 @@
-<p>navbar works!</p>
+<nav class="navbar">
+    <a routerLink="/">Inicio</a>
+    <ng-container *ngIf="estaLogueado(); else opcionesGuest">
+      <a routerLink="/dashboard">Dashboard</a>
+      <a (click)="logout()">Cerrar sesión</a>
+    </ng-container>
+    <ng-template #opcionesGuest>
+      <a routerLink="/login">Login</a>
+      <a routerLink="/register">Registro</a>
+    </ng-template>
+  </nav>
+  

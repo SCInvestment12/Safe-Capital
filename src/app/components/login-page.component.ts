@@ -11,13 +11,13 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule, FormsModule]
 })
 export class LoginPageComponent {
-  email: string = '';
+  username: string = '';
   password: string = '';
 
   constructor(private router: Router) {}
 
   login() {
-    if (this.email === 'admin@example.com' && this.password === '1234') {
+    if (this.username === 'Prueba1' && this.password === '1234') {
       localStorage.setItem('rol', 'ADMIN');
       this.router.navigate(['/dashboard']);
     } else {

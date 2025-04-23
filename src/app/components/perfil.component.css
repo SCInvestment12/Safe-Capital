@@ -1,0 +1,107 @@
+@import 'animate.css';
+
+.perfil-wrapper {
+  background: url('/assets/img/FondoPerfil.png') no-repeat center center;
+  background-size: cover;
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.perfil-card {
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  padding: 60px 50px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 750px;
+  color: white;
+  box-shadow: 0 0 35px rgba(0, 0, 0, 0.5);
+  animation: fadeIn 1s ease-in-out;
+}
+
+.perfil-card h2 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.saldo-section {
+  background: linear-gradient(145deg, #0d6efd, #00bcd4);
+  padding: 25px;
+  border-radius: 15px;
+  text-align: center;
+  margin-bottom: 30px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+}
+
+.saldo-section h4 {
+  margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+.saldo-cantidad {
+  font-size: 2.2rem;
+  font-weight: bold;
+  color: #b4b0b0;
+}
+
+
+.deposito-section {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px 30px;
+  border-radius: 12px;
+  margin-bottom: 40px;
+}
+
+.deposito-section h5 {
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+.lista-deposito {
+  list-style: none;
+  padding-left: 0;
+}
+
+.lista-deposito li {
+  padding: 5px 0;
+}
+
+.retiro-section h5 {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.retiro-section .form-control {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 10px;
+  padding: 12px;
+  color: white;
+}
+
+.retiro-section .form-label {
+  font-weight: 500;
+  color: #f0f0f0;
+}
+
+.btn-success {
+  background-color: #00c897;
+  border: none;
+  font-weight: bold;
+  font-size: 16px;
+  border-radius: 10px;
+  padding: 12px 30px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-success:hover {
+  background-color: #00a27a;
+}

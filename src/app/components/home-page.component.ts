@@ -14,22 +14,47 @@ export class HomePageComponent {
   futuros = [
     {
       img: 'assets/img/slide1.png',
-      titulo: 'Mini NASDAQ 100',
-      descripcion: 'Conoce el E-mini NASDAQ 100 y aprovecha el mercado tecnológico.'
+      titulo: 'Cetes',
+      descripcion: 'Invierte de forma segura en Certificados de la Tesorería del gobierno mexicano.'
     },
     {
       img: 'assets/img/slide2.png',
-      titulo: 'Mini S&P 500',
-      descripcion: 'Opera los movimientos del mercado con uno de los futuros más líquidos.'
+      titulo: 'ETFs',
+      descripcion: 'Descubre cómo diversificar tu portafolio invirtiendo en ETFs.'
     },
     {
       img: 'assets/img/slide3.png',
-      titulo: 'Mini Dow Jones',
-      descripcion: 'Invierte en las principales empresas estadounidenses con este índice.'
+      titulo: 'Acciones',
+      descripcion: 'Descubre qué son las acciones y cómo invertir en ellas de forma estratégica.'
+    },
+    {
+      img: 'assets/img/slide7.png',
+      titulo: 'Criptomonedas',
+      descripcion: 'Invierte en criptomonedas y participa en el mercado financiero del futuro.'
     }
   
   
   ];
+
+
+  guia = [
+  {
+    img: 'assets/img/slide4.png',
+    titulo: 'Guía básica sobre el Trading',
+    descripcion: 'Conoce los conceptos clave, plataformas, análisis técnico y tipos de órdenes para empezar a invertir como un profesional.'
+  },
+  {
+    img: 'assets/img/slide5.png',
+    titulo: 'Opciones Binarias',
+    descripcion: 'Aprende cómo funcionan las opciones binarias, cuándo operar y cuáles son los riesgos y oportunidades que ofrecen.'
+  },
+  {
+    img: 'assets/img/slide6.png',
+    titulo: 'Mentalidad Ganadora',
+    descripcion: 'Descubre los pilares del éxito financiero: disciplina, control emocional y toma de decisiones inteligente en cada inversión.'
+  }
+];
+
 
   testimonios = [
     { nombre: 'Karla G.', comentario: 'Safe Capital es lo mejor que me ha pasado en 3 meses.' },
