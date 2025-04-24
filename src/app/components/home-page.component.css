@@ -1,6 +1,6 @@
 /* FONDO GLOBAL PARA TODA LA PÁGINA */
 body {
-  background: url('/assets/img/FondoPag.png') no-repeat center center fixed;
+  background: url('/assets/img/Fondo2.png') no-repeat center center fixed;
   background-size: cover;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -14,9 +14,9 @@ body {
   padding: 30px 60px;
   text-align: left;
   color: white;
-  background: url('/assets/img/FondoPag.png') no-repeat center center fixed;
+  background: url('/assets/img/Fondo2.png') no-repeat center center fixed;
   background-size: cover;
-}
+} 
 
 .texto-maquina {
   font-size: 3.5rem;
