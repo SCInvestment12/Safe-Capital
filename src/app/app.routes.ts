@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { HomePageComponent } from './components/home-page.component';
 import { LoginPageComponent } from './components/login-page.component';
 import { RegisterPageComponent } from './components/register-page.component';
-import { DashboardComponent } from './components/dashboard.component'; // ✅ Asegúrate de que esta línea esté
+import { DashboardComponent } from './components/dashboard.component';
 import { PerfilComponent } from './components/perfil.component';
 
 export const routes: Routes = [
@@ -10,7 +10,10 @@ export const routes: Routes = [
   { path: 'login', component: LoginPageComponent },
   { path: 'register', component: RegisterPageComponent },
   { path: 'perfil', component: PerfilComponent },
-
-  { path: 'dashboard', component: DashboardComponent }, // ✅ Aquí debe estar bien declarado
-  { path: '**', redirectTo: '' }
-];
+  { path: 'dashboard', component: DashboardComponent },
+  {
+    path: '**',
+    loadComponent: () =>
+      import('./not-found.component').then(m => m.NotFoundComponent)
+  }
+]; 
