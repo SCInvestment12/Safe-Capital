@@ -11,7 +11,7 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 80px 60px;
+  padding: 30px 60px;
   text-align: left;
   color: white;
   background: url('/assets/img/FondoPag.png') no-repeat center center fixed;
@@ -36,7 +36,7 @@ body {
 }
 
 .hero-subtitle {
-  font-size: 2rem;
+  font-size: 3rem;
   color: #eeeeee;
   margin-top: 20px;
 }
@@ -47,7 +47,7 @@ body {
   background-color: transparent;
   border: 2px solid #3739da;
   color: #e0e2e6;
-  font-size: 1.5rem;
+  font-size: 2rem;
   padding: 10px 25px;
   border-radius: 30px;
   transition: all 0.3s ease;
@@ -62,7 +62,7 @@ body {
 
 /* BIENVENIDA */
 .bienvenida-section {
-  padding: 100px 20px;
+  padding: 50px 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -71,13 +71,13 @@ body {
 .bienvenida-box {
   background: rgba(0, 0, 0, 0.6);
   border: 2px solid #00ffc8;
-  padding: 40px 60px;
+  padding: 30px 60px;
   border-radius: 20px;
   text-align: center;
   color: white;
   backdrop-filter: blur(8px);
   box-shadow: 0 0 25px rgba(0, 255, 200, 0.3);
-  max-width: 800px;
+  max-width: 1500px;
   transition: all 0.3s ease;
 }
 
@@ -106,7 +106,7 @@ body {
 
 .guia-section {
   padding: 60px 20px;
-  color: white;
+  color: #0a0a0a;
   text-align: center;
 }
 .guia-wrapper {
@@ -118,7 +118,7 @@ body {
 }
 
 .guia-tarjeta {
-  width: 360px; /* 🔼 Aumentado */
+  width: 460px; /* 🔼 Aumentado */
   border-radius: 20px;
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.65);
@@ -133,7 +133,7 @@ body {
 
 .guia-tarjeta img {
   width: 100%;
-  height: 240px; /* 🔼 Más alta para que se aprecie mejor */
+  height: 300px; /* 🔼 Más alta para que se aprecie mejor */
   object-fit: cover;
   display: block;
   filter: brightness(0.85);
@@ -148,37 +148,72 @@ body {
 .guia-tarjeta .info-tarjeta .titulo {
   font-size: 1.2rem;
   font-weight: bold;
-  color: #00ffc8;
+  color: #e9f0ee;
   margin-bottom: 10px;
 }
 
 .guia-tarjeta .info-tarjeta .descripcion {
-  font-size: 1rem;
+  font-size: 0.1rem;
   color: #ddd;
 }
 
 
-/* MINI FUTUROS */
+/* Cetes */
 .futuros-section {
   padding: 60px 20px;
-  color: white;
+  color: #f9fafa;
   text-align: center;
 }
 
 .futuros-wrapper {
   display: flex;
-  gap: 2rem;
+  gap: 4rem;
   flex-wrap: wrap;
   justify-content: center;
 }
 
+.intro-futuros {
+  font-size: 1.8rem;
+  color: #0bbe98; 
+  max-width: 900px;
+  margin: 0 auto 40px;
+}
+.futuros-intro-wrapper {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.futuros-intro-box {
+  display: inline-block;
+  background-color:  rgba(0, 0, 0, 0.6);
+  color: rgb(247, 248, 247);
+  padding: 30px 40px;
+  border-radius: 30px;
+  max-width: 1200px;
+  font-size: 1.1rem;
+  box-shadow: 0 0 20px rgba(0, 255, 200, 0.2);
+}
+
 .futuro-tarjeta {
-  width: 300px;
-  border-radius: 20px;
+  width: 400px;
+  
+  border-radius: 30px;
   overflow: hidden;
-  background-color: rgba(0, 0, 0, 0.6);
+  min-height: 350px; /* 🔼 fuerza un tamaño mayor */
+
+  background-color: rgb(0, 0, 0);
   box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.futuro-tarjeta.solo-texto {
+  background-color: rgba(0, 0, 0, 0.877);
+  min-height: 240px;
+  display: flex;
+  
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  width: 1200px;
 }
 
 .futuro-tarjeta:hover {
@@ -284,7 +319,7 @@ body {
   background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(6px);
   padding: 60px 20px;
-  color: white;
+  color: rgb(252, 247, 247);
 }
 
 .mapa-box {
@@ -327,7 +362,7 @@ body {
 }
 
 .mapa-estilizado {
-  background-color: #fff;
+  background-color: #f3eeee;
   border-radius: 15px;
   overflow: hidden;
   border: 3px solid #00ffc8;
@@ -345,6 +380,39 @@ body {
   display: block;
 }
 
+/* WHATSAPP PERSONALIZADO */
+.whatsapp-box-personalizada {
+  text-align: center;
+  padding: 40px 30px;
+  background: linear-gradient(to bottom right, #2a2a2a, #1f1f1f);
+  border-radius: 15px;
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.2);
+  border: 2px solid #eef5f0;
+  color: rgb(247, 239, 239);
+}
+
+.whatsapp-box-personalizada h5 {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin: 15px 0;
+}
+
+.whatsapp-box-personalizada p {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+}
+
+.whatsapp-box-personalizada a {
+  color: #25D366;
+  font-size: 1.1rem;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.whatsapp-box-personalizada a:hover {
+  color: #1ebd5c;
+  text-decoration: underline;
+}
 
 .whatsapp-estilizado {
   background: linear-gradient(145deg, rgba(0,0,0,0.7), rgba(0,0,0,0.85));
@@ -423,9 +491,10 @@ body {
 
 /* REDES SOCIALES */
 .social-icons i {
-  margin: 0 10px;
+  margin:  30px;
   color: white;
   transition: color 0.3s ease;
+  font-size: 8.5rem;
 }
 
 .social-icons i:hover {
@@ -446,6 +515,14 @@ body {
   gap: 2rem;
   flex-wrap: wrap;
   margin-top: 20px;
+}
+.bi {
+  filter: drop-shadow(0 0 5px #00ffc8);
+  transition: transform 0.3s ease;
+}
+
+.bi:hover {
+  transform: scale(1.1);
 }
 
 .small-benefit {
@@ -483,7 +560,7 @@ body {
 /* === SECCIÓN FINAL ESTILO XMR MARKETS ADAPTADA === */
 
 .cta-section {
-  background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(to bottom, #0f2027, #60bbda, #f2f3f3);
   padding: 60px 20px;
   color: white;
   text-align: center;
@@ -519,8 +596,8 @@ body {
 
 /* 🏦 Métodos de pago y Aval */
 .bg-light.text-dark {
-  background: linear-gradient(to right, #00687d, #007b8a) !important;
-  color: #fff !important;
+  background: linear-gradient(to right, #00687d, #45c1d1) !important;
+  color: #0c0b0b !important;
   padding: 40px 20px;
 }
 

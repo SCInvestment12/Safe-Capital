@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 body {
-    background-image: url('./assets/img/FondoPag.png'); /* ← ruta relativa desde index.html */
+    background:  #f8f4f4;
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;

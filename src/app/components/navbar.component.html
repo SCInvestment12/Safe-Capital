@@ -1,12 +1,15 @@
-<nav class="navbar">
-    <a routerLink="/">Inicio</a>
-    <ng-container *ngIf="estaLogueado(); else opcionesGuest">
-      <a routerLink="/dashboard">Dashboard</a>
-      <a (click)="logout()">Cerrar sesión</a>
-    </ng-container>
-    <ng-template #opcionesGuest>
-      <a routerLink="/login">Login</a>
-      <a routerLink="/register">Registro</a>
-    </ng-template>
+<nav class="navbar-custom">
+    <div class="logo-area">
+      <img src="assets/img/logo.jpg" alt="Safe Capital" class="logo-navbar" />
+      <span class="brand-text">Safe Capital Investment</span>
+    </div>
+  
+    <div class="nav-links">
+      <a routerLink="/perfil" *ngIf="estaLogueado()">Perfil</a>
+      <a routerLink="/dashboard" *ngIf="estaLogueado()">Dashboard</a>
+      <a (click)="logout()" *ngIf="estaLogueado()">Cerrar sesión</a>
+      <a routerLink="/login" *ngIf="!estaLogueado()">Entrar</a>
+      <a routerLink="/register" *ngIf="!estaLogueado()">Registrarte</a>
+    </div>
   </nav>
   

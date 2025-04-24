@@ -13,24 +13,24 @@ import { RouterLink } from '@angular/router'; // ← IMPORTANTE
 export class HomePageComponent {
   futuros = [
     {
-      img: 'assets/img/slide1.png',
-      titulo: 'Cetes',
-      descripcion: 'Invierte de forma segura en Certificados de la Tesorería del gobierno mexicano.'
+      img: 'assets/img/slide10.jpg',
+      titulo: 'CETES:',
+      descripcion: 'Una opción confiable respaldada por el gobierno mexicano, que ofrce rendimientos atractivos con bajo riesgo y alta liquidez.'
     },
     {
-      img: 'assets/img/slide2.png',
-      titulo: 'ETFs',
-      descripcion: 'Descubre cómo diversificar tu portafolio invirtiendo en ETFs.'
+      img: 'assets/img/slide11.jpg',
+      titulo: 'ETFs:',
+      descripcion: 'Que permiten diversificar tu portafolio de forma eficiente, accediendo a distintos mercados con bajo costo y menor riesgo.'
     },
     {
-      img: 'assets/img/slide3.png',
-      titulo: 'Acciones',
-      descripcion: 'Descubre qué son las acciones y cómo invertir en ellas de forma estratégica.'
+      img: 'assets/img/slide12.jpg',
+      titulo: 'Acciones en bolsa:',
+      descripcion: ' Aunque implican mayor volatilidad, tienen el potencial de generar ganancias superiores a largo plazo, ideales para inversionistas con un apetito de riesgo moderado a alto.'
     },
     {
-      img: 'assets/img/slide7.png',
-      titulo: 'Criptomonedas',
-      descripcion: 'Invierte en criptomonedas y participa en el mercado financiero del futuro.'
+      img: 'assets/img/slide13.jpg',
+      titulo: 'Mercado Forex y Criptomonedas:',
+      descripcion: 'Aunque son más volátiles, representan una alternativa innovadora y con gran proyección a futuro, ideal para perfiles que buscan diversificación y están dispuestos a asumir mayores riesgos.'
     }
   
   
@@ -39,27 +39,28 @@ export class HomePageComponent {
 
   guia = [
   {
-    img: 'assets/img/slide4.png',
-    titulo: 'Guía básica sobre el Trading',
-    descripcion: 'Conoce los conceptos clave, plataformas, análisis técnico y tipos de órdenes para empezar a invertir como un profesional.'
+    img: 'assets/img/slide14.jpg',
+    titulo: 'Comisión Nacional Bancaria y de Valores',
+    
   },
   {
-    img: 'assets/img/slide5.png',
-    titulo: 'Opciones Binarias',
-    descripcion: 'Aprende cómo funcionan las opciones binarias, cuándo operar y cuáles son los riesgos y oportunidades que ofrecen.'
+    img: 'assets/img/slide15.jpg',
+    titulo: 'Secretaria De Hacienda',
+    
   },
   {
-    img: 'assets/img/slide6.png',
-    titulo: 'Mentalidad Ganadora',
-    descripcion: 'Descubre los pilares del éxito financiero: disciplina, control emocional y toma de decisiones inteligente en cada inversión.'
+    img: 'assets/img/slide16.jpg', 
+    titulo: 'Banco de México',  
   }
 ];
 
 
   testimonios = [
-    { nombre: 'Karla G.', comentario: 'Safe Capital es lo mejor que me ha pasado en 3 meses.' },
-    { nombre: 'Luis M.', comentario: 'Está claro. Recomendadísimo.' },
-    { nombre: 'Marta P.', comentario: 'Puedo operar desde el celular. Rápido y seguro.' }
+    { nombre: 'Jesus Reyes Garcia.', comentario: 'Al inicio desconfié, pero conforme me asesoraron y entendí mejor como invertir he generado ganancias considerables, estoy muy contento con su servicio. ', correo: 'jesusreyesgarcia890@gmail.com ' },
+    { nombre: 'Nora Pacheco S.', comentario: 'Excelente atención, totalmente recomendable', correo: 'pachecosolisnora@gmail.com ' },
+    { nombre: 'Alejandra Márquez R .', comentario: 'Super recomendados busque opciones donde poder invertir mi dinero de manera segura y la atención que me brindaron es excelente, no he tenido ningún problema para realizar mis depósitos y retiros.', correo: 'alemar9990@gmail.com  ' },
+    { nombre: 'Mario Bermudez Hernandez .', comentario: 'Comencé con poco para ver qué tan confiable es, tengo 3 meses en operaciones y todo perfecto, la recomiendo totalmente', correo: 'MarbrosBhernadez89@outlook.es' },
+    { nombre: 'Miguel Ortiz Hernández .', comentario: 'Es una plataforma muy fácil de utilizar con el asesoramiento que me brindaron logre poder manejarla de manera correcta, en otros lugares hay tanta información que termine confundido, gracias bendiciones.', correo: 'Miguesharkbon@gmail.com' },
   ];
   public year = new Date().getFullYear();
 }
