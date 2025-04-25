@@ -36,4 +36,23 @@ export class AlertService {
       cancelButtonText: 'Cancelar'
     }).then(result => result.isConfirmed);
   }
+
+  mostrarGanar(monto: number) {
+    Swal.fire({
+      icon: 'success',
+      title: '🎉 ¡Ganaste!',
+      text: `Has ganado $${monto}. ¡Felicidades!`,
+      confirmButtonColor: '#00c897'
+    });
+  }
+  
+  mostrarPerder() {
+    Swal.fire({
+      icon: 'error',
+      title: '😢 Perdiste',
+      text: 'Sigue intentando, la próxima puede ser la tuya.',
+      confirmButtonColor: '#dc3545'
+    });
+  }
+  
 }

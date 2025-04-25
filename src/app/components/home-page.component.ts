@@ -51,7 +51,13 @@ export class HomePageComponent {
   {
     img: 'assets/img/slide16.jpg', 
     titulo: 'Banco de México',  
-  }
+  },
+  {
+    img: 'assets/img/metodos.jpg',
+    titulo: 'Metodos De Pago',
+    
+  },
+  
 ];
 
 

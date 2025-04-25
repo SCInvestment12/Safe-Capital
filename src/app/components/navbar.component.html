@@ -5,6 +5,8 @@
     </div>
   
     <div class="nav-links">
+      <!-- Este botón se muestra solo en la página de login -->
+    <a routerLink="/" *ngIf="isLoginPage()">Inicio</a>
       <a routerLink="/perfil" *ngIf="estaLogueado()">Perfil</a>
       <a routerLink="/dashboard" *ngIf="estaLogueado()">Dashboard</a>
       <a (click)="logout()" *ngIf="estaLogueado()">Cerrar sesión</a>

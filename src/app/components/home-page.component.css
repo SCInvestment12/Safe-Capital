@@ -1,6 +1,6 @@
 /* FONDO GLOBAL PARA TODA LA PÁGINA */
 body {
-  background: url('/assets/img/Fondo2.png') no-repeat center center fixed;
+  background: url('/assets/img/Fondo3.png') no-repeat center center fixed;
   background-size: cover;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -13,27 +13,14 @@ body {
   justify-content: flex-start;
   padding: 30px 60px;
   text-align: left;
+  font-size: 3rem;
+
   color: white;
-  background: url('/assets/img/Fondo2.png') no-repeat center center fixed;
+  background: url('/assets/img/Fondo5.png') no-repeat center center fixed;
   background-size: cover;
 } 
 
-.texto-maquina {
-  font-size: 3.5rem;
-  font-weight: bold;
-  white-space: nowrap;
-  overflow: hidden;
-  border-right: 3px solid #f3f0f0;
-  width: 0;
-  color: #faf5f5;
-  animation: escribir 4s steps(30, end) forwards;
-}
 
-@keyframes escribir {
-  to {
-    width: 100%;
-  }
-}
 
 .hero-subtitle {
   font-size: 3rem;
@@ -106,19 +93,19 @@ body {
 
 .guia-section {
   padding: 60px 20px;
-  color: #0a0a0a;
+  color: #f8f6f6;
   text-align: center;
 }
 .guia-wrapper {
   display: flex;
-  gap: 2rem;
+  gap: 3rem;
   flex-wrap: wrap;
   justify-content: center;
   
 }
 
 .guia-tarjeta {
-  width: 460px; /* 🔼 Aumentado */
+  width: 360px; /* 🔼 Aumentado */
   border-radius: 20px;
   overflow: hidden;
   background-color: rgba(0, 0, 0, 0.65);
@@ -494,7 +481,7 @@ body {
   margin:  30px;
   color: white;
   transition: color 0.3s ease;
-  font-size: 8.5rem;
+  font-size: 12.5rem;
 }
 
 .social-icons i:hover {
@@ -506,6 +493,7 @@ body {
   z-index: 2;
   padding: 40px 0;
   text-align: center;
+  font-size: 1.5rem;
 }
 
 /* ✅ NUEVO ESTILO PARA MOSTRAR EN FILA */
@@ -560,7 +548,7 @@ body {
 /* === SECCIÓN FINAL ESTILO XMR MARKETS ADAPTADA === */
 
 .cta-section {
-  background: linear-gradient(to bottom, #0f2027, #60bbda, #f2f3f3);
+  background: linear-gradient(to bottom,  #002b2fab);
   padding: 60px 20px;
   color: white;
   text-align: center;
@@ -635,35 +623,53 @@ body {
 
 .social-icons a:hover {
   color: #0d6efd; /* azul elegante */
-  transform: scale(1.2);
+  transform: scale(5.2);
 }
 
 
-/* 📋 Footer */
+/* FOOTER */
+/* Asegúrate de que el footer se ajuste completamente */
 footer.bg-dark {
-  background-color: #111 !important;
+  background-color: #0c0c0c; /* Fondo oscuro */
   color: white;
+  padding: 0; /* Elimina el padding */
+  margin: 0; /* Elimina el margen */
+  width: 100%; /* Hace que el footer ocupe todo el ancho */
+  text-align: center; /* Centra el contenido dentro del footer */
+  position: fixed;
+  bottom: 0;
 }
 
 footer.bg-dark a {
-  color: white;
+  color: #ffffff;
   text-decoration: none;
-  margin-right: 15px;
+  margin-right: 25px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
 footer.bg-dark a:hover {
   color: #00ffc8;
+  transform: scale(1.1);
+}
+
+footer p {
+  margin-top: 20px;
+  font-size: 1rem;
+  color: #e0e0e0;
 }
 
 footer .social-icons a {
-  margin-right: 15px;
+  margin: 0 15px;
   color: white;
-  transition: 0.2s;
+  font-size: 1.5rem;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 footer .social-icons a:hover {
+  color: #00ffc8;
   transform: scale(1.2);
-  color: #00c875;
 }
 
 /* Hace que el footer siempre quede pegado abajo */
@@ -678,12 +684,6 @@ body {
   flex-direction: column;
 }
 
-app-root {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
 main {
   flex: 1;
 }
@@ -692,3 +692,9 @@ footer {
   margin-top: auto;
 }
 
+.social-title {
+  font-size: 2rem; /* Aumenta el tamaño del texto */
+  color: #ffffff; /* Color blanco para el texto */
+  font-weight: bold; /* Hazlo en negrita */
+  text-transform: uppercase; /* Convierte el texto a mayúsculas */
+}

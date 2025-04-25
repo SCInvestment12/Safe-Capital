@@ -20,4 +20,8 @@ export class NavbarComponent {
     localStorage.clear();
     this.router.navigate(['/']);
   }
+  // Método para verificar si estamos en la página de login
+  isLoginPage(): boolean {
+    return this.router.url === '/login'; // Comprueba si la URL es la de la página de login
+  }
 }
