@@ -1,0 +1,62 @@
+/* acciones-compra.component.css */
+.acciones-container {
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  .lista-acciones {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .card {
+    padding: 15px;
+    background: #f8f9fa;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+  
+  .card:hover {
+    transform: scale(1.02);
+    border-color: #007bff;
+  }
+  
+  .formulario label,
+  .formulario input,
+  .formulario select {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  
+  .acciones {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+  }
+  
+  button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+  }
+  
+  button.cancelar {
+    background: #dc3545;
+  }
+  
+  .confirmacion {
+    background: #fff3cd;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ffeeba;
+    text-align: center;
+  }
+  

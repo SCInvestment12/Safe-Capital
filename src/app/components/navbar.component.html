@@ -1,17 +1,19 @@
 <nav class="navbar-custom">
-    <div class="logo-area">
-      <img src="assets/img/logo.jpg" alt="Safe Capital" class="logo-navbar" />
-      <span class="brand-text">Safe Capital Investment</span>
-    </div>
-  
-    <div class="nav-links">
-      <!-- Este botón se muestra solo en la página de login -->
-    <a routerLink="/" *ngIf="isLoginPage()">Inicio</a>
-      <a routerLink="/perfil" *ngIf="estaLogueado()">Perfil</a>
-      <a routerLink="/dashboard" *ngIf="estaLogueado()">Dashboard</a>
-      <a (click)="logout()" *ngIf="estaLogueado()">Cerrar sesión</a>
-      <a routerLink="/login" *ngIf="!estaLogueado()">Entrar</a>
-      <a routerLink="/register" *ngIf="!estaLogueado()">Registrarte</a>
-    </div>
-  </nav>
-  
+  <div class="logo-area">
+    <img src="assets/img/logo.jpg" alt="Safe Capital" class="logo-navbar" />
+    <span class="brand-text">Safe Capital Investment</span>
+  </div>
+
+  <div class="nav-links" *ngIf="estaLogueado()">
+    <a routerLink="/perfil">Mi perfil</a>
+    <a routerLink="/deposito">Depósito</a>
+    <a routerLink="/retiro">Retiro</a>
+    <span class="saldo-usuario">Saldo: {{ obtenerSaldo() }}</span>
+    <a (click)="logout()">Cerrar sesión</a>
+  </div>
+
+  <div class="nav-links" *ngIf="!estaLogueado()">
+    <a routerLink="/login">Entrar</a>
+    <a routerLink="/register">Registrarte</a>
+  </div>
+</nav>

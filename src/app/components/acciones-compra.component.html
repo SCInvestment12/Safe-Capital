@@ -1,0 +1,40 @@
+/* acciones-compra.component.html */
+<div class="acciones-container">
+  <h2>Acciones Disponibles</h2>
+  <div class="lista-acciones" *ngIf="!accionSeleccionada">
+    <div *ngFor="let accion of acciones" class="card" (click)="seleccionarAccion(accion)">
+      <h3>{{ accion.nombre }}</h3>
+      <p>{{ accion.descripcion }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="accionSeleccionada && !confirmacion" class="formulario">
+    <h3>Invertir en {{ accionSeleccionada.nombre }}</h3>
+    <label>Monto (MXN):</label>
+    <input type="number" [(ngModel)]="monto" placeholder="Ej. 1000" min="100" />
+
+    <label>Plazo:</label>
+    <select [(ngModel)]="plazo">
+      <option [ngValue]="30">30 días</option>
+      <option [ngValue]="60">60 días</option>
+      <option [ngValue]="90">90 días</option>
+    </select>
+
+    <div class="acciones">
+      <button (click)="confirmarInversion()">Continuar</button>
+      <button (click)="cancelar()" class="cancelar">Cancelar</button>
+    </div>
+  </div>
+
+  <div *ngIf="confirmacion" class="confirmacion">
+    <h3>Confirmar Inversión</h3>
+    <p>Acción: {{ accionSeleccionada.nombre }}</p>
+    <p>Monto: ${{ monto }}</p>
+    <p>Plazo: {{ plazo }} días</p>
+
+    <div class="acciones">
+      <button (click)="finalizar()">Confirmar</button>
+      <button (click)="cancelar()" class="cancelar">Cancelar</button>
+    </div>
+  </div>
+</div>

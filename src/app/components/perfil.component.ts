@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, NgClass, NgFor, CurrencyPipe } from '@angular/common';
-import { AlertService } from '../services/alert.service'; // importa
+import { AlertService } from '../services/alert.service';
+import { UserService } from '../services/user.service';
 
 @Component({
   selector: 'app-perfil',
@@ -10,7 +11,6 @@ import { AlertService } from '../services/alert.service'; // importa
   styleUrls: ['./perfil.component.css'],
   imports: [CommonModule, FormsModule, NgClass, NgFor, CurrencyPipe]
 })
-
 export class PerfilComponent {
   montoRetiro: number = 0;
   clabe: string = '';
@@ -18,12 +18,15 @@ export class PerfilComponent {
   archivoComprobante: File | null = null;
   modoEdicion = false;
 
-  nombre = 'Axel Garcia';
-  correo = 'axel.garcia@email.com';
-  telefono = '+52 55 1234 5678';
+  nombre = '';
+  apellidos = '';
+  curp = '';
+  correo = '';
+  telefono = '';
+  fechaNacimiento = '';
 
   nombreEditado = '';
-  correoEditado = '';
+  apellidosEditado = '';
   telefonoEditado = '';
 
   ultimoDeposito: any;
@@ -36,15 +39,37 @@ export class PerfilComponent {
     { tipo: 'Apuesta', monto: 150, fecha: '27 marzo 2025' }
   ];
 
-  constructor(private alert: AlertService) {} // injecta en constructor
+  mostrarModal = false;
+
+  constructor(
+    private alert: AlertService,
+    private userService: UserService
+  ) {}
 
   ngOnInit() {
     this.calcularResumen();
+    this.cargarPerfil();
     this.cargarSaldo();
   }
 
+  cargarPerfil() {
+    this.userService.obtenerPerfil().subscribe({
+      next: (data) => {
+        this.nombre = data.nombre;
+        this.apellidos = data.apellidos;
+        this.curp = data.curp;
+        this.telefono = data.telefono;
+        this.correo = data.correo;
+        this.fechaNacimiento = data.fechaNacimiento;
+      },
+      error: () => {
+        this.alert.error('Error al cargar perfil');
+      }
+    });
+  }
+
   cargarSaldo() {
-    this.saldo = 12500;
+    this.saldo = 12500; // 🔄 Por ahora sigue simulado
   }
 
   calcularResumen() {
@@ -62,38 +87,49 @@ export class PerfilComponent {
       this.alert.error('Por favor, llena todos los campos correctamente.');
       return;
     }
-  
+
     const confirmado = await this.alert.confirmacion('¿Deseas solicitar este retiro?');
     if (!confirmado) return;
-  
-    // Aquí se haría el POST al backend
+
     this.alert.success('Solicitud de retiro enviada correctamente.');
     this.montoRetiro = 0;
     this.clabe = '';
   }
-  
 
   editarPerfil() {
     this.modoEdicion = true;
     this.nombreEditado = this.nombre;
-    this.correoEditado = this.correo;
+    this.apellidosEditado = this.apellidos;
     this.telefonoEditado = this.telefono;
   }
 
   guardarPerfil() {
-    if (!this.nombreEditado || !this.correoEditado || !this.telefonoEditado) {
+    if (!this.nombreEditado || !this.apellidosEditado || !this.telefonoEditado) {
       this.alert.error('Completa todos los campos antes de guardar.');
       return;
     }
-  
-    this.nombre = this.nombreEditado;
-    this.correo = this.correoEditado;
-    this.telefono = this.telefonoEditado;
-    this.modoEdicion = false;
-  
-    this.alert.success('Perfil actualizado correctamente.');
+
+    const payload = {
+      nombre: this.nombreEditado,
+      apellidos: this.apellidosEditado,
+      telefono: this.telefonoEditado
+    };
+
+    this.userService.actualizarPerfil(payload).subscribe({
+      next: () => {
+        this.nombre = this.nombreEditado;
+        this.apellidos = this.apellidosEditado;
+        this.telefono = this.telefonoEditado;
+        this.modoEdicion = false;
+        this.alert.success('Perfil actualizado correctamente.');
+      },
+      error: () => {
+        this.alert.error('Error al actualizar perfil.');
+      }
+    });
+    console.log('Payload enviado:', payload);
+
   }
-  
 
   cancelarEdicion() {
     this.modoEdicion = false;
@@ -103,7 +139,6 @@ export class PerfilComponent {
     const file = event.target.files[0];
     if (file) {
       this.archivoComprobante = file;
-      console.log('Archivo seleccionado:', file.name);
     }
   }
 
@@ -112,11 +147,21 @@ export class PerfilComponent {
       this.alert.error('Selecciona un archivo antes de enviar.');
       return;
     }
-  
-    // Simula subida
-    this.alert.success('Comprobante enviado correctamente.');
+
+    const token = localStorage.getItem('token');
+    const formData = new FormData();
+    formData.append('archivo', this.archivoComprobante);
+
+    fetch('http://localhost:8096/api/depositos/subir', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: formData
+    }).then(() => {
+      this.alert.success('Comprobante enviado correctamente.');
+    }).catch(() => {
+      this.alert.error('Error al enviar comprobante.');
+    });
   }
-  
 
   irAFondos() {
     console.log('Ir a agregar fondos');
@@ -138,15 +183,12 @@ export class PerfilComponent {
       default: return 'fas fa-exchange-alt';
     }
   }
-  mostrarModal = false;
 
   abrirModal() {
     this.mostrarModal = true;
   }
-  
+
   cerrarModal() {
     this.mostrarModal = false;
   }
-  
-
 }

@@ -1,100 +1,29 @@
 <div class="dashboard">
-  <h2 class="animate__animated animate__fadeInDown">Bienvenido al Panel</h2>
-
-  <div class="cuenta-info animate__animated animate__fadeInUp">
-    <span *ngIf="isCuentaDemo" class="demo">Cuenta Demo</span>
-    <span *ngIf="!isCuentaDemo">Saldo: ${{ saldo }}</span>
-    <button (click)="abrirDeposito()">💳 Realizar Depósito</button>
-  </div>
-
-  <label for="duracion">Duración de la apuesta:</label>
-  <select id="duracion" (change)="cambiarDuracionDesdeEvento($event)">
-    <option value="30000">30 segundos</option>
-    <option value="60000">1 minuto</option>
-    <option value="300000">5 minutos</option>
-  </select>
-
-  <label for="monto">Monto por apuesta:</label>
-<input id="monto"
-       type="number"
-       [(ngModel)]="montoPorApuesta"
-       min="10"
-       step="10"
-       placeholder="Ej. 100"
-       style="margin-bottom: 15px; padding: 6px 10px; border-radius: 6px; border: 1px solid #ccc;" />
-
-
-  <!-- Secciones Top 5 por tipo de activo -->
- <!-- Sección de Tabs -->
-<div class="top5-tabs">
-  <div class="tab-buttons">
-    <button *ngFor="let tipo of tiposActivos"
-            [class.active]="tipoActivoSeleccionado === tipo"
-            (click)="cambiarTab(tipo)">
-      {{ tipo | titlecase }}
-    </button>
-  </div>
-
-  <app-top5-instrumentos
-    [tipo]="tipoActivoSeleccionado"
-    (instrumentoSeleccionado)="cambiarInstrumento($event)">
-  </app-top5-instrumentos>
-</div>
- <!-- Resumen -->
-<div *ngIf="instrumentoSeleccionado" class="resumen-instrumento">
-  <h4>{{ instrumentoSeleccionado.nombre }}</h4>
-  <p>Precio actual: ${{ instrumentoSeleccionado.precio }}</p>
-  <p>Variación: 
-    <span [ngStyle]="{ color: instrumentoSeleccionado.variacion >= 0 ? 'green' : 'red' }">
-      {{ instrumentoSeleccionado.variacion }}%
-    </span>
-  </p>
-  <p>Volumen: {{ instrumentoSeleccionado.volumen }}</p>
-</div>
-
-  <!-- Gráfica principal -->
-  <app-chart-wrapper [tipo]="tipo" [instrumento]="instrumentoSeleccionado"></app-chart-wrapper>
-
-  <div class="acciones animate__animated animate__fadeInUp animate__delay-1s">
-    <button [disabled]="apuestaActiva" (click)="apostar('up')">↑ Apostar arriba</button>
-    <button [disabled]="apuestaActiva" (click)="apostar('down')">↓ Apostar abajo</button>
-  </div>
-  
-
-  <h3 class="animate__animated animate__fadeIn">Historial de Apuestas</h3>
-  <table class="tabla-historial">
-    <tr>
-      <th>Hora</th>
-      <th>Dirección</th>
-      <th>Resultado</th>
-    </tr>
-    <tr *ngFor="let item of historial" class="animate__animated animate__fadeInDown">
-      <td>{{ item.timestamp }}</td>
-      <td>{{ item.direccion }}</td>
-      <td [ngClass]="{
-        'ganado': item.resultado.includes('Ganaste'),
-        'perdido': item.resultado.includes('Perdiste'),
-        'esperando': item.resultado.includes('Esperando')
-      }">{{ item.resultado }}</td>
-    </tr>
-  </table>
-</div>
-
-<!-- Modal de Depósito -->
-<div class="modal" *ngIf="mostrarModal">
-  <div class="modal-content animate__animated animate__zoomIn">
-    <h3>Realizar Depósito</h3>
-    <label>Monto:</label>
-    <input type="number" #monto placeholder="Ej. 1000" />
-    <label>Método de Pago:</label>
-    <select>
-      <option>SPEI</option>
-      <option>Tarjeta</option>
-      <option>PayPal</option>
-    </select>
-    <div class="modal-actions">
-      <button (click)="realizarDeposito(monto.valueAsNumber)">Depositar</button>
-      <button (click)="cerrarDeposito()">Cancelar</button>
+  <!-- Barra superior -->
+  <div class="cuenta-info animate__animated animate__fadeInDown">
+    <span>Saldo actual: {{ saldo | currency:'MXN' }}</span>
+    <div class="acciones">
+      <button routerLink="/perfil">👤 Perfil</button>
+      <button (click)="abrirDeposito()">💳 Depósito / Retiro</button>
     </div>
+  </div>
+
+  <!-- Tabs de tipo de activo -->
+  <div class="top5-tabs">
+    <div class="tab-buttons">
+      <button *ngFor="let tipo of tiposActivos"
+              [class.active]="tipoActivoSeleccionado === tipo"
+              (click)="cambiarTab(tipo)">
+        {{ tipo | titlecase }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Render dinámico del componente según selección -->
+  <div class="contenedor-activo animate__animated animate__fadeIn">
+    <app-cetes-compra *ngIf="tipoActivoSeleccionado === 'cetes'"></app-cetes-compra>
+    <app-etfs-compra *ngIf="tipoActivoSeleccionado === 'etfs'"></app-etfs-compra>
+    <app-acciones-compra *ngIf="tipoActivoSeleccionado === 'acciones'"></app-acciones-compra>
+    <app-cripto-compra *ngIf="tipoActivoSeleccionado === 'cripto'"></app-cripto-compra>
   </div>
 </div>

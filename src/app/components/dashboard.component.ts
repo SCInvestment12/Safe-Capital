@@ -1,114 +1,90 @@
-import { Component, ViewChild } from '@angular/core';
-import { ChartWrapperComponent } from './chart-wrapper.component';
+// dashboard.component.ts actualizado
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Top5InstrumentosComponent } from '../components/top5-instrumentos/top5-instrumentos.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { ChartWrapperComponent } from './chart-wrapper.component';
 import { AlertService } from '../services/alert.service';
+import { AuthService } from '../services/auth.service';
+import { CetesCompraComponent } from './cetes-compra.component';
+import { EtfsCompraComponent } from './etfs-compra.component';
+import { AccionesCompraComponent } from './acciones-compra.component';
+import { CriptoCompraComponent } from './cripto-compra.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    
+    CetesCompraComponent,
+    EtfsCompraComponent,
+    AccionesCompraComponent,
+    CriptoCompraComponent
+  ],
+  
+
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'],
-  imports: [CommonModule, ChartWrapperComponent, Top5InstrumentosComponent, FormsModule]
+  styleUrls: ['./dashboard.component.css']
 })
-export class DashboardComponent {
-  tipo = 'cetes';
-  instrumentoSeleccionado: any = null;
-  duracion = 30000; // 30 segundos
-  montoPorApuesta = 100;
-  tiposActivos: string[] = ['cetes', 'cripto', 'etfs', 'acciones'];
-  tipoActivoSeleccionado: string = 'cetes';
-  apuestaActiva: boolean = false;
-
-  historial: {
-    direccion: string;
-    resultado: string;
-    timestamp: string;
-  }[] = [];
-
-  saldo: number = 0;
-  isCuentaDemo: boolean = true;
-  mostrarModal: boolean = false;
-
+export class DashboardComponent implements OnInit {
   @ViewChild(ChartWrapperComponent) chartWrapper!: ChartWrapperComponent;
 
-  constructor(private alertService: AlertService) {
-    const historialGuardado = localStorage.getItem('historial');
-    const saldoGuardado = localStorage.getItem('saldo');
-    const demoGuardado = localStorage.getItem('isCuentaDemo');
+  tipo = 'cetes';
+  tiposActivos = ['cetes', 'cripto', 'etfs', 'acciones'];
+  tipoActivoSeleccionado = 'cetes';
 
-    if (historialGuardado) {
-      this.historial = JSON.parse(historialGuardado);
+  instrumentoSeleccionado: any = null;
+  userRole = '';
+  saldo = 0;
+  isCuentaDemo = true;
+  mostrarModal = false;
+  esRetiro = false;
+
+  historial: any[] = [];
+  transacciones: any[] = [];
+
+  constructor(private alertService: AlertService, private authService: AuthService) {}
+
+  ngOnInit(): void {
+    const token = localStorage.getItem('token');
+    const demo = localStorage.getItem('isCuentaDemo');
+    const sl = localStorage.getItem('saldo');
+    const hist = localStorage.getItem('historial');
+    const tx = localStorage.getItem('transacciones');
+
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        this.userRole = payload.rol || '';
+      } catch (error) {
+        console.error('Error decodificando token:', error);
+      }
     }
 
-    if (saldoGuardado) {
-      this.saldo = parseFloat(saldoGuardado);
-    }
-
-    if (demoGuardado) {
-      this.isCuentaDemo = demoGuardado === 'true';
-    }
-  }
-
-  apostar(direccion: 'up' | 'down') {
-    if (this.apuestaActiva) {
-      this.alertService.error('Ya tienes una apuesta activa.');
-      return;
-    }
-
-    if (this.saldo < this.montoPorApuesta && !this.isCuentaDemo) {
-      this.alertService.error('Saldo insuficiente. Realiza un depósito.');
-      return;
-    }
-
-    this.apuestaActiva = true;
-    const timestamp = new Date().toLocaleTimeString();
-    this.chartWrapper.lanzarApuesta(direccion);
+    if (hist) this.historial = JSON.parse(hist);
+    if (tx) this.transacciones = JSON.parse(tx);
+    if (sl) this.saldo = parseFloat(sl);
+    if (demo) this.isCuentaDemo = demo === 'true';
 
     if (!this.isCuentaDemo) {
-      this.saldo -= this.montoPorApuesta;
+      this.authService.getSaldo().subscribe({
+        next: (realSaldo) => {
+          this.saldo = realSaldo;
+          localStorage.setItem('saldo', this.saldo.toString());
+        },
+        error: (err) => console.error('Error al obtener saldo:', err)
+      });
     }
-
-    this.historial.unshift({
-      direccion: direccion === 'up' ? '↑' : '↓',
-      resultado: '⏳ Esperando...',
-      timestamp,
-    });
-    this.guardarEnLocalStorage();
-
-    const index = 0;
-
-    setTimeout(() => {
-      const gano = Math.random() > 0.5;
-      this.historial[index].resultado = gano ? 'Ganaste ✅' : 'Perdiste ❌';
-
-      if (!this.isCuentaDemo && gano) {
-        this.saldo += this.montoPorApuesta * 2;
-      }
-
-      if (gano) {
-        this.alertService.mostrarGanar(this.montoPorApuesta * 2);
-      } else {
-        this.alertService.mostrarPerder();
-      }
-
-      this.apuestaActiva = false;
-      this.guardarEnLocalStorage();
-    }, this.duracion);
-  }
-
-  cambiarDuracion(valor: string) {
-    this.duracion = parseInt(valor, 10);
-  }
-
-  cambiarDuracionDesdeEvento(event: Event) {
-    const value = (event.target as HTMLSelectElement)?.value;
-    this.cambiarDuracion(value || '30000');
   }
 
   cambiarTab(tipo: string) {
     this.tipoActivoSeleccionado = tipo;
+  }
+
+  cambiarInstrumento(inst: any) {
+    this.instrumentoSeleccionado = inst;
+    this.tipo = inst.tipo;
   }
 
   abrirDeposito() {
@@ -119,21 +95,14 @@ export class DashboardComponent {
     this.mostrarModal = false;
   }
 
-  realizarDeposito(monto: number) {
-    this.saldo += monto;
-    this.isCuentaDemo = false;
-    this.mostrarModal = false;
-    this.guardarEnLocalStorage();
-  }
+  esAdmin() { return this.userRole === 'ROLE_ADMIN'; }
+  esModerador() { return this.userRole === 'ROLE_MODERATOR'; }
+  esSuperAdmin() { return this.userRole === 'ROLE_SUPER_ADMIN'; }
 
-  guardarEnLocalStorage() {
+  persistir() {
     localStorage.setItem('historial', JSON.stringify(this.historial));
+    localStorage.setItem('transacciones', JSON.stringify(this.transacciones));
     localStorage.setItem('saldo', this.saldo.toString());
     localStorage.setItem('isCuentaDemo', this.isCuentaDemo.toString());
-  }
-
-  cambiarInstrumento(instrumento: any) {
-    this.instrumentoSeleccionado = instrumento;
-    this.tipo = instrumento.tipo;
   }
 }
