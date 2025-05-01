@@ -1,4 +1,3 @@
-// src/app/components/login-page.component.ts
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -27,39 +26,57 @@ export class LoginPageComponent {
     const loginData = {
       correoElectronico: this.correoElectronico,
       contrasena: this.password
-        };
+    };
 
     this.http.post<any>('http://localhost:8096/api/auth/login', loginData).subscribe({
       next: (response) => {
         const token = response.token;
-        localStorage.setItem('token', token); // ✅ Guardamos el token
+        if (!token) {
+          this.error = 'No se recibió token del backend.';
+          return;
+        }
 
-        const payload = JSON.parse(atob(token.split('.')[1])); // Decodificamos el payload del JWT
-        const rol = payload.rol;
+        localStorage.setItem('token', token);
 
-        if (rol) {
-          switch (rol) {
-            case 'ROLE_USER':
-              this.router.navigate(['/dashboard/user']);
-              break;
-            case 'ROLE_MODERATOR':
-              this.router.navigate(['/dashboard/moderator']);
-              break;
-            case 'ROLE_ADMIN':
-              this.router.navigate(['/dashboard/admin']);
-              break;
-            case 'ROLE_SUPER_ADMIN':
-              this.router.navigate(['/dashboard/super-admin']);
-              break;
-            default:
-              this.router.navigate(['/dashboard']);
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+
+          const nombre = payload.nombre || 'Usuario';
+          const apellidos = payload.apellidos || '';
+          const id = payload.id || 'N/A';
+
+          localStorage.setItem('nombre', nombre);
+          localStorage.setItem('apellidos', apellidos);
+          localStorage.setItem('id', id.toString());
+
+          const rol = payload.rol;
+          if (rol) {
+            switch (rol) {
+              case 'ROLE_USER':
+                this.router.navigate(['/dashboard/user']);
+                break;
+              case 'ROLE_MODERATOR':
+                this.router.navigate(['/dashboard/moderator']);
+                break;
+              case 'ROLE_ADMIN':
+                this.router.navigate(['/dashboard/admin']);
+                break;
+              case 'ROLE_SUPER_ADMIN':
+                this.router.navigate(['/dashboard/super-admin']);
+                break;
+              default:
+                this.router.navigate(['/dashboard']);
+            }
+          } else {
+            this.error = 'Rol no encontrado en el token.';
           }
-        } else {
-          this.error = 'Rol no encontrado en el token.';
+
+        } catch (e) {
+          console.error('Error al decodificar token:', e);
+          this.error = 'Token inválido o malformado.';
         }
       },
-      error: (err) => {
-        console.error(err);
+      error: () => {
         this.error = 'Usuario o contraseña incorrectos.';
       }
     });

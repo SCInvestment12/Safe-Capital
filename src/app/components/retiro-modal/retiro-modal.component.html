@@ -1,0 +1,38 @@
+<div class="modal-backdrop" (click)="cerrarModal()"></div>
+
+<div class="modal-content">
+  <button class="cerrar" (click)="cerrarModal()">✖</button>
+  <h2>Solicitar Retiro</h2>
+
+  <!-- Formulario -->
+  <div *ngIf="!confirmado && !rechazado">
+    <label>Monto a retirar (MXN):</label>
+    <input type="number" [(ngModel)]="monto" placeholder="Ej. 1000" />
+
+    <label>Banco:</label>
+    <select [(ngModel)]="banco">
+      <option value="" disabled selected>Selecciona un banco</option>
+      <option *ngFor="let b of bancos" [value]="b">{{ b }}</option>
+    </select>
+
+    <label>CLABE / Cuenta / Tarjeta:</label>
+    <input type="text" [(ngModel)]="cuenta" placeholder="18 dígitos" maxlength="18" />
+
+    <label>Titular de la cuenta:</label>
+    <input type="text" [(ngModel)]="titular" placeholder="Nombre completo" />
+
+    <button class="btn-confirmar" (click)="solicitarRetiro()" [disabled]="!formularioValido()">
+      💸 Solicitar Retiro
+    </button>
+  </div>
+
+  <!-- Confirmación -->
+  <div *ngIf="confirmado" class="mensaje-confirmacion">
+    <p>⏳ Retiro en proceso de validación...</p>
+  </div>
+
+  <!-- Rechazado -->
+  <div *ngIf="rechazado" class="mensaje-rechazo">
+    <p>❌ Retiro rechazado por el sistema. Intenta más tarde o contacta a soporte.</p>
+  </div>
+</div>

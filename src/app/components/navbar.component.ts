@@ -1,15 +1,20 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
+import { DepositoModalComponent } from '../components/deposito-modal/deposito-modal.component';
+import { RetiroModalComponent } from '../components/retiro-modal/retiro-modal.component';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, DepositoModalComponent, RetiroModalComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
+  mostrarModalDeposito: boolean = false;
+  mostrarModalRetiro: boolean = false;
+
   constructor(private router: Router) {}
 
   estaLogueado(): boolean {
@@ -18,14 +23,26 @@ export class NavbarComponent {
 
   obtenerSaldo(): string {
     const saldo = localStorage.getItem('saldo');
-    return saldo ? parseFloat(saldo).toLocaleString('es-MX', {
-      style: 'currency',
-      currency: 'MXN'
-    }) : '$0.00';
+    return saldo
+      ? parseFloat(saldo).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })
+      : '$0.00';
   }
 
   logout() {
     localStorage.clear();
     this.router.navigate(['/']);
+  }
+
+  abrirModalDeposito() {
+    this.mostrarModalDeposito = true;
+  }
+
+  abrirModalRetiro() {
+    this.mostrarModalRetiro = true;
+  }
+
+  cerrarModales() {
+    this.mostrarModalDeposito = false;
+    this.mostrarModalRetiro = false;
   }
 }

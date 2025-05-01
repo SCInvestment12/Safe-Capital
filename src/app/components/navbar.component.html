@@ -6,8 +6,8 @@
 
   <div class="nav-links" *ngIf="estaLogueado()">
     <a routerLink="/perfil">Mi perfil</a>
-    <a routerLink="/deposito">Depósito</a>
-    <a routerLink="/retiro">Retiro</a>
+    <a (click)="abrirModalDeposito()">Depósito</a>
+    <a (click)="abrirModalRetiro()">Retiro</a>
     <span class="saldo-usuario">Saldo: {{ obtenerSaldo() }}</span>
     <a (click)="logout()">Cerrar sesión</a>
   </div>
@@ -17,3 +17,10 @@
     <a routerLink="/register">Registrarte</a>
   </div>
 </nav>
+
+<!-- Modales -->
+<app-deposito-modal *ngIf="mostrarModalDeposito" (cerrar)="cerrarModales()"></app-deposito-modal>
+<app-retiro-modal
+  [hidden]="!mostrarModalRetiro"
+  (cerrar)="cerrarModales()">
+</app-retiro-modal>

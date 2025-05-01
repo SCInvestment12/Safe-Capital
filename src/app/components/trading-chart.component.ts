@@ -9,10 +9,11 @@ import {
   ApexTitleSubtitle,
   ApexTooltip,
   ApexMarkers,
-  ApexAnnotations
+  ApexAnnotations,
+  ApexYAxis
 } from 'ng-apexcharts';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
+import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
 import { interval, Subscription } from 'rxjs';
 
 @Component({
@@ -23,13 +24,14 @@ import { interval, Subscription } from 'rxjs';
   styleUrls: ['./trading-chart.component.css']
 })
 export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() tipo: string = 'cetes';
-  @Input() instrumento: any = null;
+  @Input() tipo: string = 'acciones';
+  @Input() simbolo: string = 'TSLA';
 
   chartOptions: {
     series: ApexAxisChartSeries;
     chart: ApexChart;
     xaxis: ApexXAxis;
+    yaxis: ApexYAxis;
     dataLabels: ApexDataLabels;
     stroke: ApexStroke;
     title: ApexTitleSubtitle;
@@ -49,29 +51,41 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         animations: {
           enabled: true,
           speed: 800,
-          animateGradually: {
-            enabled: true,
-            delay: 150
-          },
-          dynamicAnimation: {
-            enabled: true,
-            speed: 300
-          }
+          animateGradually: { enabled: true, delay: 150 },
+          dynamicAnimation: { enabled: true, speed: 300 }
         },
         toolbar: { show: false },
-        zoom: { enabled: false }
+        zoom: { enabled: false },
+        foreColor: '#ffffff' // Estilo general blanco
+      },
+      xaxis: {
+        categories: [],
+        labels: {
+          style: {
+            colors: '#ffffff'
+          }
+        }
+      },
+      yaxis: {
+        labels: {
+          style: {
+            colors: '#ffffff'
+          }
+        }
       },
       dataLabels: { enabled: false },
       stroke: { curve: 'smooth' },
-      title: { text: '' },
-      xaxis: { categories: [] },
+      title: {
+        text: '',
+        style: {
+          color: '#ffffff',
+          fontSize: '16px'
+        }
+      },
       tooltip: {
         enabled: true,
         theme: 'dark',
-        x: {
-          show: true,
-          format: 'HH:mm:ss' // o 'dd MMM HH:mm' si quieres más detalle
-        },
+        x: { show: true, format: 'HH:mm:ss' },
         y: {
           formatter: (value: number) => `$${value.toFixed(2)}`
         }
@@ -81,28 +95,34 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         colors: ['#007bff'],
         strokeColors: '#fff',
         strokeWidth: 2
+      },
+      annotations: {
+        points: []
       }
-      ,
-      annotations: { points: [] }
     };
   }
 
   ngOnInit(): void {
-    this.chartOptions.title.text = `Gráfico de: ${this.tipo}`;
+    this.chartOptions.title.text = `Gráfico de: ${this.simbolo}`;
     this.obtenerDatos();
-    this.subscription = interval(10000).subscribe(() => this.obtenerDatos());
+    this.subscription = interval(5000).subscribe(() => this.obtenerDatos());
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['instrumento'] && this.instrumento) {
-      this.tipo = this.instrumento.tipo;
-      this.chartOptions.title.text = `Gráfico de: ${this.instrumento.nombre}`;
+    if (changes['simbolo'] || changes['tipo']) {
+      this.chartOptions.title.text = `Gráfico de: ${this.simbolo}`;
       this.obtenerDatos();
     }
   }
 
   obtenerDatos(): void {
-    this.http.get<any[]>(`http://localhost:8096/api/trading/bars/${this.tipo}`).subscribe(barras => {
+    const token = localStorage.getItem('token');
+    const headers = token
+      ? new HttpHeaders().set('Authorization', `Bearer ${token}`)
+      : new HttpHeaders();
+
+    const url = `http://localhost:8096/api/trading/bars/${this.tipo}/${this.simbolo}`;
+    this.http.get<any[]>(url, { headers }).subscribe(barras => {
       const datos = barras.map(bar => bar.close);
       const categorias = barras.map(bar => new Date(bar.timestamp).toLocaleTimeString());
 

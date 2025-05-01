@@ -1,15 +1,31 @@
-/* acciones-compra.component.html */
-<div class="acciones-container">
-  <h2>Acciones Disponibles</h2>
+<div class="acciones-container glass-card">
+  <h2 class="titulo">Acciones Más Rentables</h2>
+
+  <!-- Lista de acciones -->
   <div class="lista-acciones" *ngIf="!accionSeleccionada">
     <div *ngFor="let accion of acciones" class="card" (click)="seleccionarAccion(accion)">
       <h3>{{ accion.nombre }}</h3>
       <p>{{ accion.descripcion }}</p>
+
+      <!-- Botón gráfico para todas -->
+      <button (click)="verGraficaDesdeLista(accion); $event.stopPropagation()">
+        📈 Ver Gráfica
+      </button>
     </div>
   </div>
 
+  <!-- Gráfica -->
+<div *ngIf="mostrarGrafica && accionSeleccionada?.simbolo && !confirmacion" class="grafica-accion">
+  <div class="grafica-box">
+    <app-chart-wrapper [tipo]="'acciones'" [simbolo]="accionSeleccionada.simbolo"></app-chart-wrapper>
+  </div>
+</div>
+
+
+  <!-- Formulario de inversión -->
   <div *ngIf="accionSeleccionada && !confirmacion" class="formulario">
     <h3>Invertir en {{ accionSeleccionada.nombre }}</h3>
+
     <label>Monto (MXN):</label>
     <input type="number" [(ngModel)]="monto" placeholder="Ej. 1000" min="100" />
 
@@ -26,15 +42,16 @@
     </div>
   </div>
 
-  <div *ngIf="confirmacion" class="confirmacion">
-    <h3>Confirmar Inversión</h3>
-    <p>Acción: {{ accionSeleccionada.nombre }}</p>
-    <p>Monto: ${{ monto }}</p>
-    <p>Plazo: {{ plazo }} días</p>
-
-    <div class="acciones">
-      <button (click)="finalizar()">Confirmar</button>
-      <button (click)="cancelar()" class="cancelar">Cancelar</button>
-    </div>
+  <!-- Confirmación -->
+  <div *ngIf="confirmacion" class="confirmacion-cards">
+    <h2>✅ Confirmación de compra</h2>
+    <p>Tu inversión se registró exitosamente.</p>
+    <ul>
+      <li><strong>Acción:</strong> {{ accionSeleccionada.nombre }}</li>
+      <li><strong>Monto:</strong> ${{ monto }}</li>
+      <li><strong>Plazo:</strong> {{ plazo }} días</li>
+      <li><strong>Forma de pago:</strong> Fondos en cuenta</li>
+    </ul>
+    <button class="btn-cancelar" (click)="cancelar()">Inicio</button>
   </div>
 </div>

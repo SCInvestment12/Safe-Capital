@@ -54,7 +54,7 @@ export class PerfilComponent {
 
   cargarPerfil() {
     this.userService.obtenerPerfil().subscribe({
-      next: (data) => {
+      next: (data: any) => {
         this.nombre = data.nombre;
         this.apellidos = data.apellidos;
         this.curp = data.curp;
@@ -69,7 +69,7 @@ export class PerfilComponent {
   }
 
   cargarSaldo() {
-    this.saldo = 12500; // 🔄 Por ahora sigue simulado
+    this.saldo = 12500; // Simulado
   }
 
   calcularResumen() {
@@ -127,8 +127,6 @@ export class PerfilComponent {
         this.alert.error('Error al actualizar perfil.');
       }
     });
-    console.log('Payload enviado:', payload);
-
   }
 
   cancelarEdicion() {

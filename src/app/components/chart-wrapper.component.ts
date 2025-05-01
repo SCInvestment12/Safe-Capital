@@ -6,19 +6,19 @@ import { TradingChartComponent } from './trading-chart.component';
   selector: 'app-chart-wrapper',
   standalone: true,
   template: `
-    <ng-container *ngIf="isBrowser">
+    <ng-container *ngIf="isBrowser && tipo !== 'cetes' && simbolo">
       <app-trading-chart
         #chart
         [tipo]="tipo"
-        [instrumento]="instrumento">
+        [simbolo]="simbolo">
       </app-trading-chart>
     </ng-container>
   `,
   imports: [CommonModule, TradingChartComponent]
 })
 export class ChartWrapperComponent {
-  @Input() tipo: string = 'cetes';
-  @Input() instrumento: any = null;
+  @Input() tipo: string = '';     // acciones | etfs | cripto
+  @Input() simbolo: string = '';  // TSLA | QQQ | BTC
 
   isBrowser: boolean;
   @ViewChild('chart', { static: false }) chartComponent: any;

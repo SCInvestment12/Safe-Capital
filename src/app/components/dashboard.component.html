@@ -1,13 +1,8 @@
-<div class="dashboard">
-  <!-- Barra superior -->
-  <div class="cuenta-info animate__animated animate__fadeInDown">
-    <span>Saldo actual: {{ saldo | currency:'MXN' }}</span>
-    <div class="acciones">
-      <button routerLink="/perfil">👤 Perfil</button>
-      <button (click)="abrirDeposito()">💳 Depósito / Retiro</button>
-    </div>
-  </div>
+<app-navbar></app-navbar>
 
+<div class="dashboard">
+ 
+<p> Mis Instrumentos de inversión con mayor seguridad y rentabilidad.</p>
   <!-- Tabs de tipo de activo -->
   <div class="top5-tabs">
     <div class="tab-buttons">
@@ -20,10 +15,15 @@
   </div>
 
   <!-- Render dinámico del componente según selección -->
+
   <div class="contenedor-activo animate__animated animate__fadeIn">
-    <app-cetes-compra *ngIf="tipoActivoSeleccionado === 'cetes'"></app-cetes-compra>
+    
+
     <app-etfs-compra *ngIf="tipoActivoSeleccionado === 'etfs'"></app-etfs-compra>
     <app-acciones-compra *ngIf="tipoActivoSeleccionado === 'acciones'"></app-acciones-compra>
-    <app-cripto-compra *ngIf="tipoActivoSeleccionado === 'cripto'"></app-cripto-compra>
+     <app-cetes-compra *ngIf="tipoActivoSeleccionado === 'cetes'">
+
+     </app-cetes-compra><app-cripto-compra *ngIf="tipoActivoSeleccionado === 'cripto'"></app-cripto-compra>
+
   </div>
 </div>

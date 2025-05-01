@@ -1,0 +1,36 @@
+<div class="modal-backdrop" (click)="cerrarModal()"></div>
+<div class="modal-content">
+  <button class="cerrar" (click)="cerrarModal()">✖</button>
+  <h2>Selecciona método de depósito</h2>
+
+  <div class="opciones">
+    <button (click)="seleccionarMetodo('SPEI')">💳 SPEI</button>
+    <button (click)="seleccionarMetodo('TARJETA')">💳 Visa / Mastercard</button>
+  </div>
+
+  <!-- SPEI -->
+  <div *ngIf="metodoSeleccionado === 'SPEI'" class="metodo-spei">
+    <h3>Datos Bancarios</h3>
+    <ul>
+      <li><strong>Banco:</strong> BBVA</li>
+      <li><strong>CLABE:</strong> 0123 4567 8910 1112 131</li>
+      <li><strong>Cuenta:</strong> 00123456789</li>
+      <li><strong>Nombre:</strong> {{ nombreCompleto }}</li>
+<li><strong>Referencia:</strong> {{ referencia }}</li>
+
+      
+      
+    </ul>
+    <p class="instrucciones">
+      Una vez realizado el depósito, presiona el botón de abajo y sube tu comprobante desde tu perfil.
+    </p>
+    <button class="btn-notificar" (click)="notificarDeposito()">📤 Notificar Depósito</button>
+  </div>
+
+  <!-- TARJETA -->
+  <div *ngIf="metodoSeleccionado === 'TARJETA'" class="metodo-tarjeta">
+    <p class="mensaje-tarjeta">
+      ❌ Este método aún no está disponible. Pronto habilitaremos pagos con tarjeta Visa y Mastercard.
+    </p>
+  </div>
+</div>

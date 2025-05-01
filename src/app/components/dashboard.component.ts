@@ -9,6 +9,7 @@ import { CetesCompraComponent } from './cetes-compra.component';
 import { EtfsCompraComponent } from './etfs-compra.component';
 import { AccionesCompraComponent } from './acciones-compra.component';
 import { CriptoCompraComponent } from './cripto-compra.component';
+import { NavbarComponent } from './navbar.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -16,7 +17,7 @@ import { CriptoCompraComponent } from './cripto-compra.component';
   imports: [
     CommonModule,
     FormsModule,
-    
+    NavbarComponent,
     CetesCompraComponent,
     EtfsCompraComponent,
     AccionesCompraComponent,
@@ -30,9 +31,9 @@ import { CriptoCompraComponent } from './cripto-compra.component';
 export class DashboardComponent implements OnInit {
   @ViewChild(ChartWrapperComponent) chartWrapper!: ChartWrapperComponent;
 
-  tipo = 'cetes';
-  tiposActivos = ['cetes', 'cripto', 'etfs', 'acciones'];
-  tipoActivoSeleccionado = 'cetes';
+  tipo = 'acciones';
+  tiposActivos = ['acciones','cetes', 'etfs', 'cripto', ];
+  tipoActivoSeleccionado = 'acciones';
 
   instrumentoSeleccionado: any = null;
   userRole = '';

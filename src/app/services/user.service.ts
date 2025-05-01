@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UserService {
-  private baseUrl = 'http://localhost:8096/api/usuarios'; // debe ser /usuarios, no /auth
+  private baseUrl = 'http://localhost:8096/api/usuarios';
 
   constructor(private http: HttpClient) {}
 
@@ -15,13 +15,12 @@ export class UserService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(`${this.baseUrl}/perfil`, { headers });
   }
+
   actualizarPerfil(datos: any): Observable<any> {
     const token = localStorage.getItem('token') || '';
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${token}`)
       .set('Content-Type', 'application/json');
-  
-    return this.http.put(`http://localhost:8096/api/usuarios/perfil`, datos, { headers });
+    return this.http.put(`${this.baseUrl}/perfil`, datos, { headers });
   }
-  
 }
