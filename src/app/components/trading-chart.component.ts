@@ -121,7 +121,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
       ? new HttpHeaders().set('Authorization', `Bearer ${token}`)
       : new HttpHeaders();
 
-    const url = `http://localhost:8096/api/trading/bars/${this.tipo}/${this.simbolo}`;
+    const url = `https://safe-capital-backend.onrender.com/api/trading/bars/${this.tipo}/${this.simbolo}`;
     this.http.get<any[]>(url, { headers }).subscribe(barras => {
       const datos = barras.map(bar => bar.close);
       const categorias = barras.map(bar => new Date(bar.timestamp).toLocaleTimeString());
