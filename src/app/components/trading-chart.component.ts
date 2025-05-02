@@ -13,7 +13,7 @@ import {
   ApexYAxis
 } from 'ng-apexcharts';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { interval, Subscription } from 'rxjs';
 
 @Component({
@@ -56,21 +56,17 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         },
         toolbar: { show: false },
         zoom: { enabled: false },
-        foreColor: '#ffffff' // Estilo general blanco
+        foreColor: '#ffffff'
       },
       xaxis: {
         categories: [],
         labels: {
-          style: {
-            colors: '#ffffff'
-          }
+          style: { colors: '#ffffff' }
         }
       },
       yaxis: {
         labels: {
-          style: {
-            colors: '#ffffff'
-          }
+          style: { colors: '#ffffff' }
         }
       },
       dataLabels: { enabled: false },
@@ -116,13 +112,8 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   obtenerDatos(): void {
-    const token = localStorage.getItem('token');
-    const headers = token
-      ? new HttpHeaders().set('Authorization', `Bearer ${token}`)
-      : new HttpHeaders();
-
     const url = `https://safe-capital-backend.onrender.com/api/trading/bars/${this.tipo}/${this.simbolo}`;
-    this.http.get<any[]>(url, { headers }).subscribe(barras => {
+    this.http.get<any[]>(url).subscribe(barras => {
       const datos = barras.map(bar => bar.close);
       const categorias = barras.map(bar => new Date(bar.timestamp).toLocaleTimeString());
 

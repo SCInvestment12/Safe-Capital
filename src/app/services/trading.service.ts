@@ -4,27 +4,28 @@ import { Observable } from 'rxjs';
 
 export interface TradingBarDTO {
   timestamp: string;
-  open: number;
-  high: number;
-  low: number;
+  open?: number;
+  high?: number;
+  low?: number;
   close: number;
-  volume: number;
+  volume?: number;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class TradingService {
-  private apiUrl = 'https://safe-capital-backend.onrender.com/api/trading'; // Cambia a tu dominio si es necesario
+  private apiUrl = 'https://safe-capital-backend.onrender.com/api/trading';
 
   constructor(private http: HttpClient) {}
 
-  getBarsByTipo(tipo: string): Observable<TradingBarDTO[]> {
-    return this.http.get<TradingBarDTO[]>(`${this.apiUrl}/bars/${tipo}`);
+  // ✅ Obtener datos para la gráfica según el tipo y símbolo
+  getBarsByTipoYSimbolo(tipo: string, simbolo: string): Observable<TradingBarDTO[]> {
+    return this.http.get<TradingBarDTO[]>(`${this.apiUrl}/bars/${tipo}/${simbolo}`);
   }
 
+  // ✅ (Si implementas los Top 5 en el backend)
   getTop5(tipo: string): Observable<any[]> {
-    return this.http.get<any[]>(`/api/activos/top5/${tipo}`);
+    return this.http.get<any[]>(`${this.apiUrl}/top5/${tipo}`);
   }
-  
 }
