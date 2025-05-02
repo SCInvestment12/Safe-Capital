@@ -15,7 +15,7 @@ export interface TradingBarDTO {
   providedIn: 'root'
 })
 export class TradingService {
-  private apiUrl = 'http://localhost:8096/api/trading'; // Cambia a tu dominio si es necesario
+  private apiUrl = 'https://safe-capital-backend.onrender.com/api/trading'; // Cambia a tu dominio si es necesario
 
   constructor(private http: HttpClient) {}
 
