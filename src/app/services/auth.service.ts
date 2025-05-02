@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class AuthService {
 
-  private base = 'http://localhost:8096/api/auth';
+  private base = 'https://safe-capital-backend.onrender.com/api/auth';
 
   constructor(private http: HttpClient) {}
 
@@ -46,7 +46,7 @@ export class AuthService {
   }
   getSaldo(): Observable<number> {
     const token = this.getToken();
-    return this.http.get<number>('http://localhost:8096/api/auth/saldo', {
+    return this.http.get<number>('https://safe-capital-backend.onrender.com/api/auth/saldo', {
       headers: {
         Authorization: `Bearer ${token}`
       }

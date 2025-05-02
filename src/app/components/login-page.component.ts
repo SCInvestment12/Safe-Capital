@@ -28,7 +28,7 @@ export class LoginPageComponent {
       contrasena: this.password
     };
 
-    this.http.post<any>('http://localhost:8096/api/auth/login', loginData).subscribe({
+    this.http.post<any>('https://safe-capital-backend.onrender.com/api/auth/login', loginData).subscribe({
       next: (response) => {
         const token = response.token;
         if (!token) {
