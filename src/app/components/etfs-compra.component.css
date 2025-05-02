@@ -72,7 +72,7 @@ button {
 }
 
 button:hover {
-  background-color: #00a57a;
+  background-color: #009f75; /* Actualizado para coincidir con acciones */
 }
 
 button.cancelar {
@@ -92,6 +92,7 @@ button.cancelar:hover {
   border-radius: 12px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
 }
+
 .grafica-box {
   background-color: rgba(0, 0, 0, 0.85);
   padding: 15px;

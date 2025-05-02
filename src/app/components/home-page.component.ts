@@ -15,7 +15,7 @@ export class HomePageComponent {
     {
       img: 'assets/img/slide10.jpg',
       titulo: 'CETES:',
-      descripcion: 'Una opción confiable respaldada por el gobierno mexicano, que ofrce rendimientos atractivos con bajo riesgo y alta liquidez.'
+      descripcion: 'Una opción confiable respaldada por el gobierno mexicano, que ofrece rendimientos atractivos con bajo riesgo y alta liquidez.'
     },
     {
       img: 'assets/img/slide11.jpg',
@@ -29,7 +29,7 @@ export class HomePageComponent {
     },
     {
       img: 'assets/img/slide13.jpg',
-      titulo: 'Mercado Forex y Criptomonedas:',
+      titulo: 'Criptomonedas:',
       descripcion: 'Aunque son más volátiles, representan una alternativa innovadora y con gran proyección a futuro, ideal para perfiles que buscan diversificación y están dispuestos a asumir mayores riesgos.'
     }
   

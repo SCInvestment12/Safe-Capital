@@ -90,4 +90,43 @@
     color: white;
     cursor: pointer;
   }
+
+  .mensaje-reloj {
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mensaje-reloj h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: white;
+  }
+  
+  .reloj-icono {
+    font-size: 100px;
+    margin: 15px 0;
+    color: white;
+  }
+  
+  .reloj-texto {
+    font-size: 16px;
+    max-width: 400px;
+    line-height: 1.5;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: normal;
+    color: white;
+  }
+  
+  /* Aumentamos el tamaño solo si está mostrando el reloj */
+  .modal-content.reloj-activo {
+    max-width: 600px;
+    padding: 40px;
+  }
   

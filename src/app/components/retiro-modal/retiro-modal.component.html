@@ -1,13 +1,16 @@
 <div class="modal-backdrop" (click)="cerrarModal()"></div>
 
-<div class="modal-content">
+<div class="modal-content" [ngClass]="{ 'reloj-activo': confirmado }">
   <button class="cerrar" (click)="cerrarModal()">✖</button>
   <h2>Solicitar Retiro</h2>
 
   <!-- Formulario -->
   <div *ngIf="!confirmado && !rechazado">
     <label>Monto a retirar (MXN):</label>
-    <input type="number" [(ngModel)]="monto" placeholder="Ej. 1000" />
+    <input type="number" [(ngModel)]="monto" placeholder="Ej. 1000" min="1000" />
+
+    <label>Titular de la cuenta:</label>
+    <input type="text" [(ngModel)]="titular" placeholder="Nombre completo" readonly />
 
     <label>Banco:</label>
     <select [(ngModel)]="banco">
@@ -18,17 +21,19 @@
     <label>CLABE / Cuenta / Tarjeta:</label>
     <input type="text" [(ngModel)]="cuenta" placeholder="18 dígitos" maxlength="18" />
 
-    <label>Titular de la cuenta:</label>
-    <input type="text" [(ngModel)]="titular" placeholder="Nombre completo" />
-
     <button class="btn-confirmar" (click)="solicitarRetiro()" [disabled]="!formularioValido()">
       💸 Solicitar Retiro
     </button>
   </div>
 
-  <!-- Confirmación -->
-  <div *ngIf="confirmado" class="mensaje-confirmacion">
-    <p>⏳ Retiro en proceso de validación...</p>
+  <!-- Vista tipo reloj -->
+  <div *ngIf="confirmado" class="mensaje-reloj">
+    <h3>RETIRO EN PROCESO DE VALIDACIÓN</h3>
+    <div class="reloj-icono">🕒</div>
+    <p class="reloj-texto">
+      SU RETIRO SERÁ REFLEJADO EN SU CUENTA SELECCIONADA AL CONCLUIR EL PROCESO DE VALIDACIÓN EN UN LAPSO
+      APROXIMADO DE 60 MINUTOS EN DÍAS HÁBILES
+    </p>
   </div>
 
   <!-- Rechazado -->

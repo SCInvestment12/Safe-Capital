@@ -22,7 +22,7 @@ export interface Transaction {
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
   // Ajusta esta URL si tu API corre en otro host/puerto
-  private baseUrl = 'http://localhost:8096/api/account';
+  private baseUrl = 'https://safe-capital-backend.onrender.com/api/account';
 
   constructor(private http: HttpClient) {}
 

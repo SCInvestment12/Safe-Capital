@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-retiro-modal',
@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './retiro-modal.component.html',
   styleUrls: ['./retiro-modal.component.css']
 })
-export class RetiroModalComponent {
+export class RetiroModalComponent implements OnInit {
   @Output() cerrar = new EventEmitter<void>();
 
   monto: number = 0;
@@ -22,16 +22,22 @@ export class RetiroModalComponent {
 
   bancos: string[] = ['BBVA', 'Santander', 'Citibanamex', 'Banorte', 'HSBC', 'Scotiabank'];
 
+  ngOnInit() {
+    const nombre = localStorage.getItem('nombre') || '';
+    const apellidos = localStorage.getItem('apellidos') || '';
+    this.titular = `${nombre} ${apellidos}`.trim();
+  }
+
   cerrarModal() {
     this.cerrar.emit();
   }
 
   formularioValido(): boolean {
     return (
-      this.monto > 0 &&
+      this.monto >= 1000 &&
+      this.titular.trim().length > 3 &&
       this.banco.trim() !== '' &&
-      this.cuenta.trim().length === 18 &&
-      this.titular.trim().length > 3
+      this.cuenta.trim().length === 18
     );
   }
 
@@ -39,13 +45,10 @@ export class RetiroModalComponent {
     this.confirmado = true;
     this.rechazado = false;
 
-    // Cancelar cualquier timeout previo antes de asignar uno nuevo
     if (this.timeoutId) clearTimeout(this.timeoutId);
-
-    // Configura la simulación de "validación"
     this.timeoutId = setTimeout(() => {
       this.confirmado = false;
       this.rechazado = true;
-    }, 60 * 60 * 1000); // 60 minutos
+    }, 60 * 60 * 1000);
   }
 }

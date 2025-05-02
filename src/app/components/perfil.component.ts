@@ -150,7 +150,7 @@ export class PerfilComponent {
     const formData = new FormData();
     formData.append('archivo', this.archivoComprobante);
 
-    fetch('http://localhost:8096/api/depositos/subir', {
+    fetch('https://safe-capital-backend.onrender.com/api/depositos/subir', {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: formData

@@ -2,13 +2,14 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { NavbarComponent } from './navbar.component';
 
 @Component({
   selector: 'app-register-page',
   standalone: true,
   templateUrl: './register-page.component.html',
   styleUrls: ['./register-page.component.css'],
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, NavbarComponent]
 })
 export class RegisterPageComponent {
   nombre: string = '';
