@@ -15,16 +15,21 @@ export class RoleGuard implements CanActivate {
       return false;
     }
 
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const userRole = payload.rol; // ✅ Aquí extraemos el rol desde el JWT
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const userRole = payload.rol;
 
-    const requiredRole = route.data['role'];
+      const requiredRoles: string[] = route.data['roles'] || [route.data['role']];
+      if (requiredRoles.includes(userRole)) {
+        return true;
+      }
 
-    if (userRole === requiredRole) {
-      return true;
+      this.router.navigate(['/login']);
+      return false;
+    } catch (error) {
+      console.error('Error al validar token:', error);
+      this.router.navigate(['/login']);
+      return false;
     }
-
-    this.router.navigate(['/login']);
-    return false;
   }
 }

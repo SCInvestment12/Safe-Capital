@@ -13,13 +13,13 @@ import {
   ApexYAxis
 } from 'ng-apexcharts';
 import { CommonModule } from '@angular/common';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { interval, Subscription } from 'rxjs';
+import { TradingService, TradingBarDTO } from '../services/trading.service';
 
 @Component({
   selector: 'app-trading-chart',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, NgApexchartsModule],
+  imports: [CommonModule, NgApexchartsModule],
   templateUrl: './trading-chart.component.html',
   styleUrls: ['./trading-chart.component.css']
 })
@@ -42,7 +42,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
 
   subscription!: Subscription;
 
-  constructor(private http: HttpClient) {
+  constructor(private tradingService: TradingService) {
     this.chartOptions = {
       series: [{ name: 'Valor', data: [] }],
       chart: {
@@ -60,31 +60,22 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
       },
       xaxis: {
         categories: [],
-        labels: {
-          style: { colors: '#ffffff' }
-        }
+        labels: { style: { colors: '#ffffff' } }
       },
       yaxis: {
-        labels: {
-          style: { colors: '#ffffff' }
-        }
+        labels: { style: { colors: '#ffffff' } }
       },
       dataLabels: { enabled: false },
       stroke: { curve: 'smooth' },
       title: {
         text: '',
-        style: {
-          color: '#ffffff',
-          fontSize: '16px'
-        }
+        style: { color: '#ffffff', fontSize: '16px' }
       },
       tooltip: {
         enabled: true,
         theme: 'dark',
         x: { show: true, format: 'HH:mm:ss' },
-        y: {
-          formatter: (value: number) => `$${value.toFixed(2)}`
-        }
+        y: { formatter: (value: number) => `$${value.toFixed(2)}` }
       },
       markers: {
         size: 5,
@@ -92,9 +83,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         strokeColors: '#fff',
         strokeWidth: 2
       },
-      annotations: {
-        points: []
-      }
+      annotations: { points: [] }
     };
   }
 
@@ -112,10 +101,15 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   obtenerDatos(): void {
-    const url = `https://safe-capital-backend.onrender.com/api/trading/bars/${this.tipo}/${this.simbolo}`;
-    this.http.get<any[]>(url).subscribe(barras => {
+    this.tradingService.getBarsByTipoYSimbolo(this.tipo, this.simbolo).subscribe(barras => {
       const datos = barras.map(bar => bar.close);
-      const categorias = barras.map(bar => new Date(bar.timestamp).toLocaleTimeString());
+
+      const categorias = barras.map(bar => {
+        const fecha = typeof bar.timestamp === 'number'
+          ? new Date(bar.timestamp)
+          : new Date(Date.parse(bar.timestamp));
+        return fecha.toLocaleTimeString();
+      });
 
       this.chartOptions.series = [{ name: 'Valor', data: datos }];
       this.chartOptions.xaxis.categories = categorias;

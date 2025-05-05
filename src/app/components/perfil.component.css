@@ -2,7 +2,7 @@
 
 /* ENVOLTORIO GENERAL */
 .perfil-wrapper {
-  background: rgba(12, 12, 12, 0.08);
+  background: rgba(12, 12, 12, 0.05);
   background-size: cover;
   min-height: 100vh;
   display: flex;
@@ -13,7 +13,7 @@
 
 
 .perfil-card {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(20px);
   padding: 40px;
   border-radius: 20px;
@@ -25,7 +25,7 @@
 
 /* ENCABEZADO */
 .encabezado-perfil {
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 15px;
   padding: 20px 30px;
   box-shadow: 0 0 20px rgba(0, 255, 200, 0.2);

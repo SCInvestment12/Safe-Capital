@@ -45,4 +45,24 @@ export class NavbarComponent {
     this.mostrarModalDeposito = false;
     this.mostrarModalRetiro = false;
   }
+
+  get rol(): string {
+    return localStorage.getItem('rol') || '';
+  }
+
+  get esAdmin(): boolean {
+    return this.rol === 'ROLE_ADMIN' || this.rol === 'ROLE_SUPER_ADMIN';
+  }
+
+  get esUsuario(): boolean {
+    return this.rol === 'ROLE_USER';
+  }
+
+  get esModerador(): boolean {
+    return this.rol === 'ROLE_MODERATOR';
+  }
+
+  get esSuperAdmin(): boolean {
+    return this.rol === 'ROLE_SUPER_ADMIN';
+  }
 }

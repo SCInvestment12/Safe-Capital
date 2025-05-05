@@ -69,8 +69,12 @@ export class PerfilComponent {
   }
 
   cargarSaldo() {
-    this.saldo = 12500; // Simulado
+    this.userService.obtenerSaldo().subscribe({
+      next: (saldo) => this.saldo = saldo,
+      error: () => this.alert.error('Error al cargar el saldo')
+    });
   }
+  
 
   calcularResumen() {
     const depositos = this.movimientos.filter(m => m.tipo === 'Depósito');

@@ -1,0 +1,43 @@
+.admin-panel {
+    max-width: 1000px;
+    margin: auto;
+    padding: 20px;
+    background: #222;
+    color: white;
+    border-radius: 15px;
+    box-shadow: 0 0 15px rgba(0,255,200,0.2);
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  th, td {
+    padding: 12px;
+    border-bottom: 1px solid #444;
+  }
+  
+  button {
+    margin-right: 10px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    opacity: 0.9;
+  }
+  
+  button:first-child {
+    background-color: #00c897;
+    color: white;
+  }
+  
+  button:last-child {
+    background-color: #ff6464;
+    color: white;
+  }
+  

@@ -1,0 +1,32 @@
+.tabla-comprobantes {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .tabla-comprobantes th, .tabla-comprobantes td {
+    border: 1px solid #ddd;
+    padding: 10px;
+  }
+  
+  .tabla-comprobantes th {
+    background-color: #f2f2f2;
+  }
+  
+  .btn-aprobar {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    margin-right: 5px;
+    cursor: pointer;
+  }
+  
+  .btn-rechazar {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    cursor: pointer;
+  }
+  

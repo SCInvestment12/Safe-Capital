@@ -7,6 +7,7 @@ import { RegisterPageComponent } from './components/register-page.component';
 import { PerfilComponent } from './components/perfil.component';
 import { DashboardComponent } from './components/dashboard.component';
 import { NotFoundComponent } from './not-found.component';
+import { AdminDashboardComponent } from './components/admin-dashboard.component';
 
 import { RoleGuard } from './guards/role.guard';
 import { DashboardRedirectGuard } from './guards/dashboard-redirect.guard';
@@ -49,6 +50,13 @@ export const routes: Routes = [
     component: DashboardComponent,
     canActivate: [RoleGuard],
     data: { role: 'ROLE_SUPER_ADMIN' }
+  },
+
+  {
+    path: 'admin-dashboard',
+    component: AdminDashboardComponent,
+    canActivate: [RoleGuard],
+    data: { roles: ['ADMIN', 'SUPER_ADMIN'] }
   },
 
   // Wildcard 404
