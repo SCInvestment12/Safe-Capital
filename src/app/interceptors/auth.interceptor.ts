@@ -1,3 +1,4 @@
+// src/app/interceptors/auth.interceptor.ts
 import { Injectable } from '@angular/core';
 import {
   HttpInterceptor,
@@ -15,21 +16,19 @@ import { Router } from '@angular/router';
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private auth: AuthService, private router: Router) {}
 
-  intercept(
-    req: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    // Si tuvieras un token JWT:
-    // const token = this.auth.getToken();
-    // const authReq = token
-    //   ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
-    //   : req;
-    const authReq = req;  // Sin token por ahora
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    const token = localStorage.getItem('token');
+
+    // Si la URL es pública (/api/trading o /api/auth), no añadir token
+    const isPublic = req.url.includes('/api/trading') || req.url.includes('/api/auth');
+
+    const authReq = token && !isPublic
+      ? req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })
+      : req;
 
     return next.handle(authReq).pipe(
       catchError((err: HttpErrorResponse) => {
         if (err.status === 401) {
-          // redirige al login si no autorizado
           this.router.navigate(['/login']);
         }
         return throwError(() => err);

@@ -1,8 +1,41 @@
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import { Injectable } from '@angular/core';
+import {
+  HttpInterceptor,
+  HttpRequest,
+  HttpHandler,
+  HttpEvent,
+  HttpErrorResponse
+} from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
-import { routes } from './app.routes';
+@Injectable()
+export class AuthInterceptor implements HttpInterceptor {
+  constructor(private router: Router) {}
 
-export const appConfig: ApplicationConfig = {
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes)]
-};
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    const token = localStorage.getItem('token');
+
+    let authReq = req;
+    if (token) {
+      authReq = req.clone({
+        setHeaders: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    }
+
+    return next.handle(authReq).pipe(
+      catchError((err: HttpErrorResponse) => {
+        if (err.status === 401) {
+          this.router.navigate(['/login']);
+        }
+        return throwError(() => err);
+      })
+    );
+  }
+}
