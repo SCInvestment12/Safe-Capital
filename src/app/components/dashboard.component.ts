@@ -21,7 +21,8 @@ import { NavbarComponent } from './navbar.component';
     CetesCompraComponent,
     EtfsCompraComponent,
     AccionesCompraComponent,
-    CriptoCompraComponent
+    CriptoCompraComponent,
+    ChartWrapperComponent 
   ],
   
 

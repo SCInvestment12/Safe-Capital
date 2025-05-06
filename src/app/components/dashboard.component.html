@@ -1,8 +1,8 @@
 <app-navbar></app-navbar>
 
 <div class="dashboard">
- 
-<p> Mis Instrumentos de inversión con mayor seguridad y rentabilidad.</p>
+  <p>Mis Instrumentos de inversión con mayor seguridad y rentabilidad.</p>
+
   <!-- Tabs de tipo de activo -->
   <div class="top5-tabs">
     <div class="tab-buttons">
@@ -15,15 +15,29 @@
   </div>
 
   <!-- Render dinámico del componente según selección -->
-
   <div class="contenedor-activo animate__animated animate__fadeIn">
-    
+    <app-etfs-compra *ngIf="tipoActivoSeleccionado === 'etfs'"
+                     (seleccionarInstrumento)="cambiarInstrumento($event)">
+    </app-etfs-compra>
 
-    <app-etfs-compra *ngIf="tipoActivoSeleccionado === 'etfs'"></app-etfs-compra>
-    <app-acciones-compra *ngIf="tipoActivoSeleccionado === 'acciones'"></app-acciones-compra>
-     <app-cetes-compra *ngIf="tipoActivoSeleccionado === 'cetes'">
+    <app-acciones-compra *ngIf="tipoActivoSeleccionado === 'acciones'"
+                         (seleccionarInstrumento)="cambiarInstrumento($event)">
+    </app-acciones-compra>
 
-     </app-cetes-compra><app-cripto-compra *ngIf="tipoActivoSeleccionado === 'cripto'"></app-cripto-compra>
+    <app-cetes-compra *ngIf="tipoActivoSeleccionado === 'cetes'"
+                      (seleccionarInstrumento)="cambiarInstrumento($event)">
+    </app-cetes-compra>
 
+    <app-cripto-compra *ngIf="tipoActivoSeleccionado === 'cripto'"
+                       (seleccionarInstrumento)="cambiarInstrumento($event)">
+    </app-cripto-compra>
+  </div>
+
+  <!-- 👇 Mostrar la gráfica si se ha seleccionado un instrumento válido y no es CETES -->
+  <div *ngIf="instrumentoSeleccionado && instrumentoSeleccionado.tipo !== 'cetes'" class="grafica animate__animated animate__fadeInUp">
+    <app-chart-wrapper
+      [tipo]="instrumentoSeleccionado.tipo"
+      [simbolo]="instrumentoSeleccionado.simbolo">
+    </app-chart-wrapper>
   </div>
 </div>

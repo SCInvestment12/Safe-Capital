@@ -27,7 +27,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
   @Input() tipo: string = 'acciones';
   @Input() simbolo: string = 'TSLA';
 
-  chartOptions: {
+  chartOptions!: {
     series: ApexAxisChartSeries;
     chart: ApexChart;
     xaxis: ApexXAxis;
@@ -42,7 +42,22 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
 
   subscription!: Subscription;
 
-  constructor(private tradingService: TradingService) {
+  constructor(private tradingService: TradingService) {}
+
+  ngOnInit(): void {
+    this.initChart();
+    this.obtenerDatos();
+    this.subscription = interval(5000).subscribe(() => this.obtenerDatos());
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['simbolo'] || changes['tipo']) {
+      this.initChart();
+      this.obtenerDatos();
+    }
+  }
+
+  initChart(): void {
     this.chartOptions = {
       series: [{ name: 'Valor', data: [] }],
       chart: {
@@ -68,7 +83,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
       dataLabels: { enabled: false },
       stroke: { curve: 'smooth' },
       title: {
-        text: '',
+        text: `Gráfico de: ${this.simbolo}`,
         style: { color: '#ffffff', fontSize: '16px' }
       },
       tooltip: {
@@ -87,21 +102,15 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
     };
   }
 
-  ngOnInit(): void {
-    this.chartOptions.title.text = `Gráfico de: ${this.simbolo}`;
-    this.obtenerDatos();
-    this.subscription = interval(5000).subscribe(() => this.obtenerDatos());
-  }
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['simbolo'] || changes['tipo']) {
-      this.chartOptions.title.text = `Gráfico de: ${this.simbolo}`;
-      this.obtenerDatos();
-    }
-  }
-
   obtenerDatos(): void {
     this.tradingService.getBarsByTipoYSimbolo(this.tipo, this.simbolo).subscribe(barras => {
+      if (!barras || barras.length === 0) {
+        console.warn('⚠️ No se recibieron datos para la gráfica.');
+        return;
+      }
+
+      console.log('✅ Datos recibidos:', barras);
+
       const datos = barras.map(bar => bar.close);
 
       const categorias = barras.map(bar => {
@@ -111,8 +120,13 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         return fecha.toLocaleTimeString();
       });
 
-      this.chartOptions.series = [{ name: 'Valor', data: datos }];
-      this.chartOptions.xaxis.categories = categorias;
+      this.chartOptions = {
+        ...this.chartOptions,
+        series: [{ name: 'Valor', data: datos }],
+        xaxis: { ...this.chartOptions.xaxis, categories: categorias }
+      };
+    }, error => {
+      console.error('❌ Error al obtener datos de trading:', error);
     });
   }
 

@@ -1,3 +1,4 @@
+// ✅ chart-wrapper.component.ts
 import { Component, Inject, Input, PLATFORM_ID, ViewChild } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { TradingChartComponent } from './trading-chart.component';
@@ -17,8 +18,8 @@ import { TradingChartComponent } from './trading-chart.component';
   imports: [CommonModule, TradingChartComponent]
 })
 export class ChartWrapperComponent {
-  @Input() tipo: string = '';     // acciones | etfs | cripto
-  @Input() simbolo: string = '';  // TSLA | QQQ | BTC
+  @Input() tipo: string = '';
+  @Input() simbolo: string = '';
 
   isBrowser: boolean;
   @ViewChild('chart', { static: false }) chartComponent: any;

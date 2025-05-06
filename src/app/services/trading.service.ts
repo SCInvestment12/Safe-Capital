@@ -23,6 +23,7 @@ export class TradingService {
   getBarsByTipoYSimbolo(tipo: string, simbolo: string): Observable<TradingBarDTO[]> {
     return this.http.get<TradingBarDTO[]>(`${this.apiUrl}/bars/${tipo}/${simbolo}`);
   }
+  
 
   // ✅ (Si implementas los Top 5 en el backend)
   getTop5(tipo: string): Observable<any[]> {
