@@ -5,13 +5,13 @@
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-radius: 20px;
-  padding: 25px;
+  padding: 50px;
   color: #ffffff;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
 }
 
 .acciones-container {
-  max-width: 900px;
+  max-width: 9000px;
   margin: auto;
   margin-top: 20px;
 }

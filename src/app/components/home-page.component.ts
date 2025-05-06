@@ -31,6 +31,11 @@ export class HomePageComponent {
       img: 'assets/img/slide13.jpg',
       titulo: 'Criptomonedas:',
       descripcion: 'Aunque son más volátiles, representan una alternativa innovadora y con gran proyección a futuro, ideal para perfiles que buscan diversificación y están dispuestos a asumir mayores riesgos.'
+    },
+    {
+      img: 'assets/img/slide20.png',
+      titulo: 'Forex:',
+      descripcion: ' El mercado financiero en el que se intercambian monedas de diferentes países, como dólares, euros o pesos. Las variaciones en su valor permiten a los inversionistas buscar rendimientos. Es una alternativa dinámica y global para hacer crecer tu dinero. '
     }
   
   

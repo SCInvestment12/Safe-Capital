@@ -698,3 +698,19 @@ footer {
   font-weight: bold; /* Hazlo en negrita */
   text-transform: uppercase; /* Convierte el texto a mayúsculas */
 }
+
+
+.bono-banner {
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+  text-align: right;
+  max-width: 750px;
+}
+
+.bono-text {
+  color: white;
+  font-size: 3.2rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px #000;
+}
