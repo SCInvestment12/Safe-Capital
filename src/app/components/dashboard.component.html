@@ -17,20 +17,19 @@
   <!-- Render dinámico del componente según selección -->
   <div class="contenedor-activo animate__animated animate__fadeIn">
     <app-etfs-compra *ngIf="tipoActivoSeleccionado === 'etfs'"
-                     (seleccionarInstrumento)="cambiarInstrumento($event)">
-    </app-etfs-compra>
+                     (seleccionarInstrumento)="cambiarInstrumento($event)"></app-etfs-compra>
 
     <app-acciones-compra *ngIf="tipoActivoSeleccionado === 'acciones'"
-                         (seleccionarInstrumento)="cambiarInstrumento($event)">
-    </app-acciones-compra>
+                         (seleccionarInstrumento)="cambiarInstrumento($event)"></app-acciones-compra>
 
     <app-cetes-compra *ngIf="tipoActivoSeleccionado === 'cetes'"
-                      (seleccionarInstrumento)="cambiarInstrumento($event)">
-    </app-cetes-compra>
+                      (seleccionarInstrumento)="cambiarInstrumento($event)"></app-cetes-compra>
 
     <app-cripto-compra *ngIf="tipoActivoSeleccionado === 'cripto'"
-                       (seleccionarInstrumento)="cambiarInstrumento($event)">
-    </app-cripto-compra>
+                       (seleccionarInstrumento)="cambiarInstrumento($event)"></app-cripto-compra>
+
+    <app-forex-compra *ngIf="tipoActivoSeleccionado === 'forex'"
+                      (seleccionarInstrumento)="cambiarInstrumento($event)"></app-forex-compra>
   </div>
 
   <!-- 👇 Mostrar la gráfica si se ha seleccionado un instrumento válido y no es CETES -->

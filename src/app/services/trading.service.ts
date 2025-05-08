@@ -21,9 +21,16 @@ export class TradingService {
 
   // ✅ Obtener datos para la gráfica según el tipo y símbolo
   getBarsByTipoYSimbolo(tipo: string, simbolo: string): Observable<TradingBarDTO[]> {
+    if (tipo === 'forex') {
+      return this.getBarsForex(simbolo);
+    }
     return this.http.get<TradingBarDTO[]>(`${this.apiUrl}/bars/${tipo}/${simbolo}`);
   }
-  
+
+  // ✅ Obtener datos de Forex
+  getBarsForex(symbol: string): Observable<TradingBarDTO[]> {
+    return this.http.get<TradingBarDTO[]>(`${this.apiUrl}/forex/bars/${symbol}`);
+  }
 
   // ✅ (Si implementas los Top 5 en el backend)
   getTop5(tipo: string): Observable<any[]> {

@@ -1,0 +1,81 @@
+.forex-container {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .titulo {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #00ffcc;
+  }
+
+  .lista-pares {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .card {
+    background: #00a676;
+    padding: 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+    color: white;
+  }
+
+  .card:hover {
+    transform: scale(1.05);
+    background: #007b55;
+  }
+
+  .formulario label,
+  .formulario input {
+    display: block;
+    margin-bottom: 12px;
+  }
+
+  input {
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+  }
+
+  .acciones button {
+    margin-right: 8px;
+    background-color: #007bff;
+    color: #fff;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+  }
+
+  .acciones button.cancelar {
+    background-color: #dc3545;
+  }
+
+  .confirmacion-cards {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    color: white;
+    text-align: center;
+  }
+
+  .confirmacion-cards ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .confirmacion-cards li {
+    margin-bottom: 10px;
+  }
+
+  .grafica-par {
+    background: rgba(0, 0, 0, 0.8);
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 15px;
+  }

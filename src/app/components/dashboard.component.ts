@@ -1,4 +1,3 @@
-// dashboard.component.ts actualizado
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
@@ -9,6 +8,7 @@ import { CetesCompraComponent } from './cetes-compra.component';
 import { EtfsCompraComponent } from './etfs-compra.component';
 import { AccionesCompraComponent } from './acciones-compra.component';
 import { CriptoCompraComponent } from './cripto-compra.component';
+import { ForexCompraComponent } from './forex-compra/forex-compra.component';
 import { NavbarComponent } from './navbar.component';
 
 @Component({
@@ -16,16 +16,15 @@ import { NavbarComponent } from './navbar.component';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
     NavbarComponent,
+    FormsModule,
+    ChartWrapperComponent,
     CetesCompraComponent,
     EtfsCompraComponent,
     AccionesCompraComponent,
     CriptoCompraComponent,
-    ChartWrapperComponent 
+    ForexCompraComponent
   ],
-  
-
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -33,27 +32,18 @@ export class DashboardComponent implements OnInit {
   @ViewChild(ChartWrapperComponent) chartWrapper!: ChartWrapperComponent;
 
   tipo = 'acciones';
-  tiposActivos = ['acciones','cetes', 'etfs', 'cripto', ];
+  tiposActivos = ['acciones', 'cetes', 'etfs', 'cripto', 'forex'];
   tipoActivoSeleccionado = 'acciones';
 
   instrumentoSeleccionado: any = null;
   userRole = '';
   saldo = 0;
-  isCuentaDemo = true;
   mostrarModal = false;
-  esRetiro = false;
-
-  historial: any[] = [];
-  transacciones: any[] = [];
 
   constructor(private alertService: AlertService, private authService: AuthService) {}
 
   ngOnInit(): void {
     const token = localStorage.getItem('token');
-    const demo = localStorage.getItem('isCuentaDemo');
-    const sl = localStorage.getItem('saldo');
-    const hist = localStorage.getItem('historial');
-    const tx = localStorage.getItem('transacciones');
 
     if (token) {
       try {
@@ -64,20 +54,17 @@ export class DashboardComponent implements OnInit {
       }
     }
 
-    if (hist) this.historial = JSON.parse(hist);
-    if (tx) this.transacciones = JSON.parse(tx);
-    if (sl) this.saldo = parseFloat(sl);
-    if (demo) this.isCuentaDemo = demo === 'true';
+    this.obtenerSaldo();
+  }
 
-    if (!this.isCuentaDemo) {
-      this.authService.getSaldo().subscribe({
-        next: (realSaldo) => {
-          this.saldo = realSaldo;
-          localStorage.setItem('saldo', this.saldo.toString());
-        },
-        error: (err) => console.error('Error al obtener saldo:', err)
-      });
-    }
+  obtenerSaldo() {
+    this.authService.getSaldo().subscribe({
+      next: (realSaldo) => {
+        this.saldo = realSaldo;
+        localStorage.setItem('saldo', this.saldo.toString());
+      },
+      error: (err) => console.error('Error al obtener saldo:', err)
+    });
   }
 
   cambiarTab(tipo: string) {
@@ -95,16 +82,5 @@ export class DashboardComponent implements OnInit {
 
   cerrarDeposito() {
     this.mostrarModal = false;
-  }
-
-  esAdmin() { return this.userRole === 'ROLE_ADMIN'; }
-  esModerador() { return this.userRole === 'ROLE_MODERATOR'; }
-  esSuperAdmin() { return this.userRole === 'ROLE_SUPER_ADMIN'; }
-
-  persistir() {
-    localStorage.setItem('historial', JSON.stringify(this.historial));
-    localStorage.setItem('transacciones', JSON.stringify(this.transacciones));
-    localStorage.setItem('saldo', this.saldo.toString());
-    localStorage.setItem('isCuentaDemo', this.isCuentaDemo.toString());
   }
 }
