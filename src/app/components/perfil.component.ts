@@ -211,7 +211,7 @@ export class PerfilComponent {
       case 'ROLE_SUPER_ADMIN':
         window.location.href = '/dashboard/super-admin'; break;
       default:
-        window.location.href = '/dashboard';
+        window.location.href = '/dashboard/user';
     }
   }
 }
