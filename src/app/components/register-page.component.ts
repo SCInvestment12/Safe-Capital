@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { RouterModule, Router } from '@angular/router'; // <-- AÑADIDO RouterModule
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar.component';
 
@@ -9,7 +9,7 @@ import { NavbarComponent } from './navbar.component';
   standalone: true,
   templateUrl: './register-page.component.html',
   styleUrls: ['./register-page.component.css'],
-  imports: [CommonModule, FormsModule, NavbarComponent]
+  imports: [CommonModule, FormsModule, RouterModule, NavbarComponent] // <-- AÑADIDO RouterModule
 })
 export class RegisterPageComponent {
   nombre: string = '';

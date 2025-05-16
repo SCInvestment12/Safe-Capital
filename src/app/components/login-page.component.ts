@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { RouterModule, Router } from '@angular/router'; // <-- AÑADIDO RouterModule
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar.component';
 import { HttpClient } from '@angular/common/http';
@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 @Component({
   selector: 'app-login-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, NavbarComponent],
+  imports: [CommonModule, FormsModule, RouterModule, NavbarComponent], // <-- AÑADIDO RouterModule
   templateUrl: './login-page.component.html',
   styleUrls: ['./login-page.component.css']
 })

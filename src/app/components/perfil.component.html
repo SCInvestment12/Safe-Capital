@@ -1,22 +1,22 @@
-<!-- PERFIL COMPONENT HTML CORREGIDO -->
+<!-- PERFIL COMPONENT HTML COMPLETO CON PORTAFOLIO -->
 
 <div class="perfil-wrapper">
   <div class="perfil-card animate__animated animate__fadeInUp">
 
     <!-- ENCABEZADO -->
-    <div class="encabezado-perfil d-flex align-items-center justify-content-between mb-4">
-      <div class="d-flex align-items-center">
-        <div>
-          <h2 class="titulo-perfil">Bienvenido de nuevo</h2>
-          <p class="sub-perfil">Aquí puedes ver y administrar tu cuenta</p>
-        </div>
+    <div class="encabezado-perfil mb-4" style="display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <h2 class="titulo-perfil">Bienvenido de nuevo</h2>
+        <p class="sub-perfil">Aquí puedes ver y administrar tu cuenta</p>
       </div>
+      <button class="btn-editar" style="white-space: nowrap;" (click)="irADashboard()">
+        <i class="fas fa-arrow-left me-2"></i> Ir al Dashboard
+      </button>
     </div>
 
     <!-- DATOS PERSONALES -->
     <div class="datos-personales mb-4">
       <h5 class="mb-3"><i class="fas fa-user-circle me-2"></i>Datos del Usuario</h5>
-
       <div *ngIf="!modoEdicion">
         <ul class="datos-lista">
           <li><strong>Nombre:</strong> {{ nombre }}</li>
@@ -28,7 +28,6 @@
         </ul>
         <button class="btn-editar" (click)="editarPerfil()"><i class="fas fa-edit me-2"></i>Editar Perfil</button>
       </div>
-
       <form *ngIf="modoEdicion" (ngSubmit)="guardarPerfil()" class="form-editar-perfil">
         <div class="mb-3">
           <label>Nombre</label>
@@ -54,7 +53,6 @@
           <label>Fecha de Nacimiento</label>
           <input type="text" [(ngModel)]="fechaNacimiento" name="fechaNacimiento" class="form-control" disabled />
         </div>
-
         <div class="d-flex gap-3">
           <button type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>Guardar</button>
           <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()"><i class="fas fa-times me-2"></i>Cancelar</button>
@@ -62,7 +60,7 @@
       </form>
     </div>
 
-    <!-- SALDO + HISTORIAL + DEPÓSITO -->
+    <!-- SALDO + PORTAFOLIO + HISTORIAL -->
     <div class="card-fila">
 
       <div class="tarjeta-saldo animate__animated animate__fadeInUp animate__delay-1s">
@@ -70,26 +68,31 @@
         <p class="saldo-cantidad">{{ saldo | currency:'MXN':'symbol' }}</p>
         <small class="text-light">Actualizado el 24 April 2025, 03:45:41</small>
         <button class="btn-verde" (click)="abrirModal()">Ver movimientos</button>
-      </div>
 
-      <div class="historial-card animate__animated animate__fadeInUp animate__delay-2s">
-        <h5 class="mb-3">Resumen de Movimientos</h5>
-        <div class="historial-grid">
-          <div class="historial-card" *ngIf="ultimoDeposito">
-            <h6>Último Depósito</h6>
-            <p>{{ ultimoDeposito.monto | currency:'MXN' }}</p>
-            <small>{{ ultimoDeposito.fecha }}</small>
+        <!-- PORTAFOLIO -->
+        <div class="mt-4">
+          <h6 class="mb-2 text-info"><i class="fas fa-briefcase me-2"></i>Mi portafolio</h6>
+          <div *ngIf="portafolio.length > 0; else sinInversiones">
+            <table class="tabla-movimientos w-100 text-white">
+              <thead>
+                <tr>
+                  <th>Instrumento</th>
+                  <th>Monto</th>
+                  <th>Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of portafolio">
+                  <td>{{ item.instrumento }}</td>
+                  <td>{{ item.monto | currency:'MXN' }}</td>
+                  <td>{{ item.fecha }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
-          <div class="historial-card" *ngIf="ultimoRetiro">
-            <h6>Último Retiro</h6>
-            <p>{{ ultimoRetiro.monto | currency:'MXN' }}</p>
-            <small>{{ ultimoRetiro.fecha }}</small>
-          </div>
-          <div class="historial-card">
-            <h6>Apuestas Realizadas</h6>
-            <p>{{ totalApuestas }}</p>
-            <small>Este mes</small>
-          </div>
+          <ng-template #sinInversiones>
+            <p class="text-light">No tienes inversiones en curso.</p>
+          </ng-template>
         </div>
       </div>
 
@@ -138,38 +141,18 @@
       <form #retiroForm="ngForm" (ngSubmit)="solicitarRetiro()" class="formulario-retiro">
         <div>
           <label>Monto</label>
-          <input
-            type="number"
-            [(ngModel)]="montoRetiro"
-            name="montoRetiro"
-            class="form-control"
-            required
-            min="1"
-            #monto="ngModel"
-          />
+          <input type="number" [(ngModel)]="montoRetiro" name="montoRetiro" class="form-control" required min="1" #monto="ngModel" />
           <div class="texto-error" *ngIf="monto.invalid && monto.touched">
             El monto debe ser mayor a $0.00
           </div>
         </div>
-    
         <div>
           <label>CLABE</label>
-          <input
-            type="text"
-            [(ngModel)]="clabe"
-            name="clabe"
-            maxlength="18"
-            minlength="18"
-            pattern="\\d{18}"
-            class="form-control"
-            required
-            #clabeInput="ngModel"
-          />
+          <input type="text" [(ngModel)]="clabe" name="clabe" maxlength="18" minlength="18" pattern="\\d{18}" class="form-control" required #clabeInput="ngModel" />
           <div class="texto-error" *ngIf="clabeInput.invalid && clabeInput.touched">
             Ingresa una CLABE válida de 18 dígitos
           </div>
         </div>
-    
         <div class="boton-retiro">
           <button [disabled]="retiroForm.invalid" type="submit" class="btn btn-success btn-retiro">
             <i class="fas fa-money-bill-wave me-2"></i>Solicitar retiro
@@ -177,7 +160,6 @@
         </div>
       </form>
     </div>
-    
 
     <!-- ACCIONES RÁPIDAS -->
     <div class="acciones-rapidas mt-4">
@@ -191,7 +173,6 @@
         <i class="fas fa-chart-line"></i><span>Ir a Trading</span>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -227,6 +208,7 @@
     </div>
   </div>
 </div>
+
 <!-- FOOTER -->
 <footer class="footer-perfil mt-5">
   <p>© 2025 Safe Capital Investment. Todos los derechos reservados.</p>

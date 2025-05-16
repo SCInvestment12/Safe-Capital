@@ -3,13 +3,14 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule, NgClass, NgFor, CurrencyPipe } from '@angular/common';
 import { AlertService } from '../services/alert.service';
 import { UserService } from '../services/user.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.css'],
-  imports: [CommonModule, FormsModule, NgClass, NgFor, CurrencyPipe]
+  imports: [CommonModule, FormsModule, NgClass, NgFor, CurrencyPipe, RouterModule]
 })
 export class PerfilComponent {
   montoRetiro: number = 0;
@@ -32,6 +33,7 @@ export class PerfilComponent {
   ultimoDeposito: any;
   ultimoRetiro: any;
   totalApuestas: number = 0;
+  mostrarModal = false;
 
   movimientos = [
     { tipo: 'Depósito', monto: 2000, fecha: '03 abril 2025' },
@@ -39,7 +41,11 @@ export class PerfilComponent {
     { tipo: 'Apuesta', monto: 150, fecha: '27 marzo 2025' }
   ];
 
-  mostrarModal = false;
+  portafolio = [
+    { instrumento: 'CETES 28D', monto: 3000, fecha: '10 abril 2025', tipo: 'CETES' },
+    { instrumento: 'BTC/USD', monto: 1500, fecha: '15 abril 2025', tipo: 'Cripto' },
+    { instrumento: 'NASDAQ ETF', monto: 2200, fecha: '20 abril 2025', tipo: 'ETF' }
+  ];
 
   constructor(
     private alert: AlertService,
@@ -74,7 +80,6 @@ export class PerfilComponent {
       error: () => this.alert.error('Error al cargar el saldo')
     });
   }
-  
 
   calcularResumen() {
     const depositos = this.movimientos.filter(m => m.tipo === 'Depósito');
@@ -192,5 +197,21 @@ export class PerfilComponent {
 
   cerrarModal() {
     this.mostrarModal = false;
+  }
+
+  irADashboard() {
+    const rol = localStorage.getItem('rol');
+    switch (rol) {
+      case 'ROLE_USER':
+        window.location.href = '/dashboard/user'; break;
+      case 'ROLE_MODERATOR':
+        window.location.href = '/dashboard/moderator'; break;
+      case 'ROLE_ADMIN':
+        window.location.href = '/dashboard/admin'; break;
+      case 'ROLE_SUPER_ADMIN':
+        window.location.href = '/dashboard/super-admin'; break;
+      default:
+        window.location.href = '/dashboard';
+    }
   }
 }
