@@ -1,0 +1,85 @@
+@import 'animate.css';
+
+.register-wrapper {
+ 
+  background: url('/assets/img/FondoRegis.png');
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 30px;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  
+}
+
+.glass-box {
+  max-width: 1000px; /* AUMENTADO */
+  background: rgb(54, 53, 53);
+  padding: 40px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  width: 100%;
+  text-align: center;
+  color: white;
+}
+
+
+
+.glass-box h2 {
+  margin-bottom: 20px;
+}
+
+.glass-box input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.glass-box input::placeholder {
+  color: #ddd;
+}
+
+.glass-box button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: #198754;
+  color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.glass-box .ya-cuenta {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.glass-box .ya-cuenta a {
+  color: #f0f0f0;
+  text-decoration: underline;
+}
+
+.glass-box form .form-control {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+}
+
+.glass-box form label {
+  color: #f0f0f0;
+  font-weight: 500;
+}
+
+.glass-box .form-check-label a {
+  color: #aad;
+}

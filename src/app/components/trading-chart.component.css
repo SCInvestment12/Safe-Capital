@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+apx-chart {
+  max-width: 800px;
+  margin: 0 auto;
+}

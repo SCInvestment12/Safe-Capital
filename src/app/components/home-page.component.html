@@ -1,0 +1,193 @@
+<app-navbar></app-navbar>
+
+<main class="flex-grow-1 d-flex flex-column">
+  <!-- HERO -->
+  <section class="hero">
+    <div>
+      <h1 class="texto-maquina">Safe Capital Investment</h1>
+      
+      <p class="hero-subtitle mt-3">Comienza el camino hacia tu <br> libertad financiera hoy mismo. </p>
+      <a routerLink="/dashboard" class="btn btn-dashboard"> Comienza 
+        ahora</a>
+    </div>
+    <div class="bono-banner animate__animated animate__fadeInUp">
+      <h2 class="bono-text">
+        Regístrate y obten un bono de Bienvenida por tiempo limitado
+      </h2>
+    </div>
+    
+    
+  </section>
+  <!-- BIENVENIDA -->
+  <section class="bienvenida-section">
+    <div class="bienvenida-box">
+      <h2>¡Bienvenido a Safe Capital Investment!</h2>
+      <p class="sub">Donde tu dinero trabaja con estrategia y respaldo. Te acompañamos en la toma de 
+        decisiones financieras inteligentes en México y Estados Unidos, con total 
+        cumplimiento regulatorio. Potencia tu patrimonio con asesoría experta y 
+        oportunidades reales de inversión.</p>
+      <hr />
+      <p class="desc">Explora nuestras herramientas, descubre los beneficios y prepárate para un nuevo nivel de inversión.</p>
+    </div>
+  </section>
+
+ <!-- FUTUROS -->
+ <section class="futuros-section">
+  <div class="container">
+    <!-- CAJA DE TEXTO CENTRALIZADA -->
+<div class="futuros-intro-wrapper">
+  <div class="futuros-intro-box">
+    Nos especializamos en inversiones a través de instrumentos sólidos y seguros, diseñados para proteger tu capital y asegurar un crecimiento constante, también ofrecemos opciones para quienes buscan mayores rendimientos a través de instrumentos con un perfil más dinámico.
+  </div>
+</div>
+
+    <br>
+
+    <div class="futuros-wrapper">
+      <div class="futuro-tarjeta" *ngFor="let futuro of futuros">
+        <img [src]="futuro.img" [alt]="futuro.titulo" class="fondo-img" />
+
+        <div class="info-tarjeta">
+          <div class="titulo">{{ futuro.titulo }}</div>
+          <div class="descripcion">{{ futuro.descripcion }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+  <!-- BENEFICIOS -->
+  <section class="container my-5 beneficios-totales">
+    <h2 class="text-center text-white mb-5 display-5 fw-bold">Beneficios Destacados</h2>
+
+    <div class="beneficios-grid">
+      <div class="card-neon small-benefit p-3"> 
+        <img src="https://cdn-icons-png.flaticon.com/512/860/860395.png" width="50" alt="Progreso continuo" />
+        <h6 class="mt-2">Alto Rendimiento</h6>
+        <p class="mb-0">Multiplica tu capital con operaciones rápidas.</p>
+      </div>
+      <div class="card-neon small-benefit p-3">
+        <img src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png" width="50" alt="Seguridad" />
+        <h6 class="mt-2">Seguridad Garantizada</h6>
+        <p class="mb-0">Protección avanzada de tus datos y transacciones.</p>
+      </div>
+      <div class="card-neon small-benefit p-3">
+        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135789.png" width="50" alt="Soporte técnico" />
+        <h6 class="mt-2">Soporte </h6>
+        <p class="mb-0">Asesoría personalizada.</p>
+      </div>
+    </div>
+
+    <h2 class="text-center text-white mt-5 mb-4 display-6">¿Por qué elegir Safe Capital Investment?</h2>
+
+    <div class="beneficios-grid">
+      <div class="small-benefit">
+        <i class="fas fa-bolt fa-2x text-warning mb-2"></i>
+        <h6>Transacciones Rápidas</h6>
+        <p>Ejecuta órdenes en milisegundos.</p>
+      </div>
+      <div class="small-benefit">
+        <i class="fas fa-shield-alt fa-2x text-info mb-2"></i>
+        <h6>Plataforma Segura</h6>
+        <p>Con encriptación y doble verificación.</p>
+      </div>
+      <div class="small-benefit">
+        <i class="fas fa-users fa-2x text-success mb-2"></i>
+        <h6>Comunidad Activa</h6>
+        <p>Comparte ideas con miles de traders.</p>
+      </div>
+    </div>
+  </section>
+
+ <!-- GUIA TRADING -->
+<section class="guia-section">
+  <div class="container">
+    <h2 class="text-center mb-5 display-5 fw-bold text-white">
+      Invierte con tranquilidad ya que estamos regulados por las instituciones 
+      correspondientes.    </h2>
+
+    <div class="guia-wrapper">
+      <div class="guia-tarjeta" *ngFor="let g of guia">
+        <img [src]="g.img" [alt]="g.titulo" class="fondo-img" />
+
+        <div class="info-tarjeta">
+          <div class="titulo">{{ g.titulo }}</div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+  <!-- CONTACTO + MAPA -->
+  <section class="fila-contacto container-fluid my-5">
+    <div class="contacto-wrapper">
+      <div class="contacto-item mapa-estilizado">
+        <iframe
+          src="https://www.google.com/maps?q=Javier+Barros+Sierra+495,+Piso+18,+Torre+Park+Plaza+III,+Colonia+Santa+Fe,+Álvaro+Obregón,+CDMX,+01376&output=embed"
+          allowfullscreen
+          loading="lazy">
+        </iframe>
+      </div>
+      <div class="contacto-item whatsapp-estilizado whatsapp-box-personalizada d-flex flex-column justify-content-center text-white text-center">
+        
+        <i class="fab fa-whatsapp fa-4x mb-3 text-success"></i>
+        <h5 class="mb-3">¿Tienes dudas?</h5>
+        
+        <p>Escríbenos directamente por WhatsApp y recibe asesoría personalizada.</p>
+        <a href="https://wa.me/5215616375549" target="_blank" class="btn btn-success mt-2">Enviar WhatsApp</a>
+      </div>
+    </div>
+    
+  </section>
+
+  <p>Javier Barros Sierra No. 
+    495, Piso 18, Torre Park Plaza III, Colonia Santa Fe, Alcaldía Álvaro Obregón, Código 
+    Postal 01376, en la Ciudad de México, México</p>
+ <!-- TESTIMONIOS -->
+ <section class="testimonios-section py-5">
+  <h2 class="text-center mb-5 text-white">Testimonios</h2>
+  <div class="testimonios-grid">
+    <div class="testimonio-card" *ngFor="let t of testimonios">
+      <p class="comentario">"{{ t.comentario }}"</p>
+      <small class="autor">- {{ t.nombre }}</small>
+      <small class="autor">- {{ t.correo }}</small>
+    </div>
+  </div>
+</section>
+<br>
+  <!-- CTA FINAL -->
+  <section class="cta-section text-white text-center py-5 animate__animated animate__fadeInUp">
+    <div class="container">
+      <h2 class="mb-3">🚀 <strong>¡Listo para comenzar tu viaje financiero?</strong></h2>
+      <p class="lead">Regístrate hoy y recibe <strong>beneficios exclusivos</strong> de bienvenida.</p>
+      <a routerLink="/register" class="btn btn-outline-light mt-3"> ¡Regístrate Ahora!</a>
+
+      
+      <h4 class="social-title fw-bold mb-3">Síguenos en redes sociales</h4>
+      <br><br>
+      <br><br>
+      <br>
+      <div class="social-icons mb-3 mb-md-0">
+        <a href="https://www.facebook.com/share/1F9Ka3bpBD/" target="_blank"><i class="fab fa-facebook fa-lg me-3"></i></a>
+        <a href="https://www.instagram.com/investmentsafecapital" target="_blank"><i class="fab fa-instagram fa-lg me-3"></i></a>
+        <a href="https://www.tiktok.com/@safecapitalinvestment" target="_blank"><i class="fab fa-tiktok fa-lg"></i></a>
+      </div>
+
+      
+      <br>
+      <br>
+      <br>
+<br>
+<br>
+      <br>
+<!-- FOOTER -->
+<footer class="footer-perfil mt-5">
+  <p>© 2025 Safe Capital Investment. Todos los derechos reservados.</p>
+  
+
+</footer>

@@ -1,0 +1,18 @@
+<!-- src/app/components/login-page.component.html -->
+<app-navbar></app-navbar>
+<div class="login-wrapper">
+  <div class="glass-box animate__animated animate__fadeInDown">
+    <h2>Iniciar sesión</h2>
+
+    <input type="text" [(ngModel)]="correoElectronico" placeholder="Correo electrónico" />
+    <input type="password" [(ngModel)]="password" placeholder="Contraseña" />
+
+    <button (click)="login()">Ingresar</button>
+    <p class="error" *ngIf="error">{{ error }}</p>
+
+    <p class="registro">
+      ¿No tienes cuenta?
+      <a routerLink="/register" class="link-registro">Regístrate</a>
+    </p>
+  </div>
+</div>

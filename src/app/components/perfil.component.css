@@ -1,0 +1,610 @@
+@import 'animate.css';
+
+/* ENVOLTORIO GENERAL */
+.perfil-wrapper {
+  background: rgba(12, 12, 12, 0.05);
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+
+.perfil-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 850px;
+  width: 100%;
+  color: white;
+  box-shadow: 0 0 30px rgba(0,0,0,0.5);
+}
+
+/* ENCABEZADO */
+.encabezado-perfil {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 15px;
+  padding: 20px 30px;
+  box-shadow: 0 0 20px rgba(0, 255, 200, 0.2);
+}
+
+.icono-perfil {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: white; /* Asegura visibilidad */
+  padding: 8px;
+  object-fit: contain; /* Ajuste al contenedor */
+}
+
+
+.titulo-perfil {
+  margin: 0;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #00ffc8;
+}
+
+.sub-perfil {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin: 0;
+}
+
+/* DATOS PERSONALES */
+.datos-personales {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 20px 25px;
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.1);
+}
+
+.datos-lista {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 15px;
+  color: #e3e3e3;
+}
+
+.datos-lista li {
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+/* BOTÓN EDITAR */
+.btn-editar {
+  background-color: #00ffc8;
+  color: #111;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  transition: all 0.3s ease;
+}
+
+.btn-editar:hover {
+  background: #00d6a7;
+  color: white;
+}
+
+/* SALDO Y DEPÓSITO */
+.card-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.card-fila > div {
+  flex: 1 1 300px;
+  max-width: 400px;
+}
+
+.tarjeta-saldo, .tarjeta-deposito {
+  padding: 25px;
+  border-radius: 15px;
+  background: rgba(0,0,0,0.4);
+  box-shadow: 0 0 20px rgba(0,255,200,0.3);
+}
+
+.tarjeta-saldo .cantidad {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #00ffc8;
+  margin: 10px 0;
+}
+
+.btn-verde {
+  background-color: #00c897;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.btn-verde:hover {
+  background-color: #00a27a;
+}
+
+.tarjeta-deposito ul {
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+
+.tarjeta-deposito li {
+  margin-bottom: 5px;
+}
+
+/* SECCIÓN DE RETIRO */
+.retiro-box {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 25px;
+  border-radius: 15px;
+}
+
+.retiro-box h4 {
+  margin-bottom: 20px;
+}
+
+.formulario-retiro {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.formulario-retiro div {
+  flex: 1 1 45%;
+  display: flex;
+  flex-direction: column;
+}
+
+input[type="number"],
+input[type="text"] {
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  transition: all 0.3s ease;
+  font-size: 0.95rem;
+}
+
+input[type="number"]:focus,
+input[type="text"]:focus {
+  outline: none;
+  border: 1px solid #00ffc8;
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.3);
+  background: rgba(255, 255, 255, 0.2);
+}
+input:focus {
+  outline: none;
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.5);
+  background-color: rgba(255,255,255,0.2);
+}
+
+button, .btn {
+  transition: all 0.3s ease-in-out !important;
+}
+
+
+.boton-retiro {
+  width: 100%;
+  text-align: center;
+  margin-top: 25px;
+}
+
+.btn-retiro {
+  width: 100%;
+  max-width: 320px;
+  display: inline-block;
+}
+
+
+.btn-retiro:hover {
+  background: linear-gradient(to right, #00a27a, #00d097);
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.5);
+}
+.texto-error {
+  font-size: 0.85rem;
+  color: #ff6464;
+  margin-top: 5px;
+}
+
+
+/* COMPROBANTE */
+.comprobante-box {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 25px;
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 15px rgba(0, 255, 200, 0.1);
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  font-weight: bold;
+  font-size: 15px;
+  border-radius: 10px;
+  padding: 10px 25px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #005dc1;
+}
+
+/* HISTORIAL Y MOVIMIENTOS */
+.historial-section,
+.movimientos-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 25px;
+  border-radius: 15px;
+  margin-top: 30px;
+}
+
+.historial-grid {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.historial-card {
+  flex: 1 1 200px;
+  min-width: 180px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid #00ffc8;
+  border-radius: 10px;
+  padding: 15px 20px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.3);
+  transition: all 0.3s ease;
+}
+
+.historial-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.5);
+}
+
+.historial-card h6 {
+  font-weight: bold;
+  color: #00ffc8;
+}
+
+.historial-card p {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 5px 0;
+}
+
+.historial-card small {
+  color: #ccc;
+}
+
+.tabla-movimientos {
+  width: 100%;
+  border-collapse: collapse;
+  color: white;
+}
+
+.tabla-movimientos th,
+.tabla-movimientos td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.positivo {
+  color: #00ffae;
+}
+
+.negativo {
+  color: #ff6464;
+}
+
+/* ACCIONES RÁPIDAS */
+.acciones-rapidas {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.accion-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 15px;
+  padding: 20px;
+  color: white;
+  font-weight: 600;
+  text-align: center;
+  flex: 1 1 150px;
+  min-width: 120px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.2);
+  transform: scale(1);
+}
+
+
+.accion-card:hover {
+  transform: translateY(-5px) scale(1.05);
+  background-color: rgba(0, 255, 200, 0.12);
+  box-shadow: 0 0 20px rgba(0, 255, 200, 0.5);
+}
+
+.accion-card i {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  display: block;
+  color: #00ffc8;
+  transition: transform 0.3s ease;
+}
+
+.accion-card:hover i {
+  transform: scale(1.2) rotate(5deg);
+}
+
+
+.tarjeta-saldo,
+.tarjeta-deposito,
+.historial-card,
+.retiro-box,
+.comprobante-box,
+.movimientos-box,
+.datos-personales {
+  transition: all 0.3s ease-in-out;
+  transform: scale(1);
+}
+
+.tarjeta-saldo:hover,
+.tarjeta-deposito:hover,
+.historial-card:hover,
+.retiro-box:hover,
+.comprobante-box:hover,
+.movimientos-box:hover,
+.datos-personales:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.4);
+}
+
+
+/* MOVIMIENTOS */
+.movimientos-recientes-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.movimiento-card {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 5px solid #ccc;
+  box-shadow: 0 0 12px rgba(0, 255, 200, 0.1);
+  transition: all 0.3s ease;
+}
+
+.movimiento-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.25);
+}
+
+.icono-mov i {
+  font-size: 1.5rem;
+  margin-right: 15px;
+  color: white;
+}
+
+.detalle-mov .tipo {
+  font-weight: bold;
+  margin-bottom: 3px;
+  color: #fff;
+}
+
+.detalle-mov .monto {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 3px;
+  color: #00ffc8;
+}
+
+.detalle-mov .fecha {
+  font-size: 0.85rem;
+  color: #bbb;
+}
+
+.movimiento-card.deposito {
+  border-left-color: #00ffc8;
+}
+
+.movimiento-card.retiro {
+  border-left-color: #ff6464;
+}
+
+.movimiento-card.apuesta {
+  border-left-color: #ffc107;
+}
+
+/* modal */ 
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-movimientos {
+  background: #111;
+  color: white;
+  padding: 30px;
+  border-radius: 15px;
+  max-width: 700px;
+  width: 90%;
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.3);
+  position: relative;
+}
+
+.modal-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 10px;
+}
+
+.btn-close {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.btn-close:hover {
+  color: #00ffc8;
+}
+
+
+.perfil-wrapper::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  background: linear-gradient(120deg, #0f2027, #203a43, #2c5364);
+  background-size: 500% 500%;
+  animation: fondoAnimado 15s ease infinite;
+  opacity: 0.25;
+  border-radius: 20px;
+}
+
+@keyframes fondoAnimado {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.perfil-card {
+  position: relative;
+  z-index: 2;
+}
+
+
+.footer-perfil {
+  text-align: center;
+  padding: 20px;
+  margin-top: 40px;
+  background: rgba(255, 255, 255, 0.05);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ccc;
+  font-size: 0.9rem;
+  backdrop-filter: blur(10px);
+  border-radius: 0 0 15px 15px;
+  box-shadow: 0 -5px 15px rgba(0, 255, 200, 0.1);
+}
+
+@media (max-width: 768px) {
+  .perfil-card {
+    padding: 25px;
+  }
+
+  .encabezado-perfil {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+
+  
+
+  .card-fila {
+    flex-direction: column;
+  }
+
+  .formulario-retiro {
+    flex-direction: column;
+  }
+
+  .formulario-retiro div {
+    width: 100%;
+  }
+
+  .acciones-rapidas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .accion-card {
+    flex: none;
+    width: 100%;
+  }
+
+  .movimientos-recientes-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .movimiento-card {
+    width: 100%;
+    max-width: 350px;
+  }
+}
+
+
+/* TRANSICIONES SUAVES GLOBALES */
+.perfil-card,
+.tarjeta-saldo,
+.tarjeta-deposito,
+.historial-card,
+.movimiento-card,
+.accion-card,
+.retiro-box,
+.datos-personales,
+.comprobante-box {
+  transition: all 0.4s ease-in-out;
+}
+
+/* EFECTO HOVER EN TARJETAS */
+.tarjeta-saldo:hover,
+.tarjeta-deposito:hover,
+.historial-card:hover,
+.accion-card:hover,
+.movimiento-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 25px rgba(0, 255, 200, 0.4);
+}
+
+/* INPUTS ANIMADOS */
+input[type="text"],
+input[type="number"],
+input[type="email"],
+input[type="file"] {
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+input:focus {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.02);
+  outline: none;
+}
+

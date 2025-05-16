@@ -1,0 +1,132 @@
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #111;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 480px;
+    width: 90%;
+    z-index: 1001;
+    color: white;
+    box-shadow: 0 0 20px rgba(0, 255, 200, 0.3);
+  }
+  
+  .modal-content h2 {
+    margin-bottom: 20px;
+    color: #00ffcc;
+    text-align: center;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+  }
+  
+  input,
+  select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    margin-bottom: 16px;
+    background: #222;
+    color: white;
+  }
+  
+  .btn-confirmar {
+    width: 100%;
+    padding: 12px;
+    background-color: #00c896;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  
+  .btn-confirmar:hover {
+    background-color: #00a67a;
+  }
+  
+  .mensaje-confirmacion,
+  .mensaje-rechazo {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 16px;
+  }
+  
+  .mensaje-confirmacion {
+    color: #00ffcc;
+  }
+  
+  .mensaje-rechazo {
+    color: #ff4f4f;
+  }
+  
+  .cerrar {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 22px;
+    color: white;
+    cursor: pointer;
+  }
+
+  .mensaje-reloj {
+    text-align: center;
+    padding: 30px 20px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mensaje-reloj h3 {
+    font-size: 22px;
+    margin-bottom: 20px;
+    color: white;
+  }
+  
+  .reloj-icono {
+    font-size: 100px;
+    margin: 15px 0;
+    color: white;
+  }
+  
+  .reloj-texto {
+    font-size: 16px;
+    max-width: 400px;
+    line-height: 1.5;
+    margin-top: 10px;
+    text-align: center;
+    font-weight: normal;
+    color: white;
+  }
+  
+  /* Aumentamos el tamaño solo si está mostrando el reloj */
+  .modal-content.reloj-activo {
+    max-width: 600px;
+    padding: 40px;
+  }
+  

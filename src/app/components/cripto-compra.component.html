@@ -1,0 +1,50 @@
+<div class="cripto-container glass-card">
+  <h3>Selecciona una Criptomoneda</h3>
+  <label for="cripto">Criptomoneda:</label>
+  <select id="cripto" [(ngModel)]="criptoSeleccionada">
+    <option value="" disabled selected>Selecciona una criptomoneda</option>
+    <option *ngFor="let cripto of criptos" [value]="cripto.simbolo">
+      {{ cripto.nombre }} ({{ cripto.simbolo }})
+    </option>
+  </select>
+
+  <div *ngIf="mostrarBotonGrafica()">
+    <button (click)="verGrafica()">📈 Ver Gráfica</button>
+  </div>
+
+  <!-- Mostrar la gráfica -->
+<div *ngIf="mostrarGrafica" class="grafica-cripto">
+  <div class="grafica-box">
+    <app-chart-wrapper [tipo]="'cripto'" [simbolo]="criptoSeleccionada"></app-chart-wrapper>
+  </div>
+</div>
+
+
+  <div class="inversion-form" *ngIf="criptoSeleccionada && !confirmacion">
+    <p>Criptomoneda: <strong>{{ criptoSeleccionada }}</strong></p>
+
+    <label>Monto a invertir:</label>
+    <input type="number" [(ngModel)]="monto" placeholder="Ej. 1000" />
+
+    <label>Duración (días):</label>
+    <select [(ngModel)]="duracion">
+      <option value="30">30 días</option>
+      <option value="60">60 días</option>
+      <option value="90">90 días</option>
+    </select>
+
+    <button (click)="confirmarInversion()">Confirmar Inversión</button>
+  </div>
+
+  <div *ngIf="confirmacion" class="confirmacion-cards">
+    <h2>✅ Confirmación de compra</h2>
+    <p>Tu inversión en criptomoneda fue registrada exitosamente.</p>
+    <ul>
+      <li><strong>Criptomoneda:</strong> {{ criptoSeleccionada }}</li>
+      <li><strong>Monto:</strong> ${{ monto }}</li>
+      <li><strong>Duración:</strong> {{ duracion }} días</li>
+      <li><strong>Forma de pago:</strong> Fondos en cuenta</li>
+    </ul>
+    <button class="btn-cancelar" (click)="reiniciar()">Inicio</button>
+  </div>
+</div>

@@ -1,0 +1,27 @@
+<h2>Comprobantes Pendientes</h2>
+
+<table class="tabla-comprobantes">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Usuario</th>
+      <th>Archivo</th>
+      <th>Fecha</th>
+      <th>Estado</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let c of comprobantes">
+      <td>{{ c.id }}</td>
+      <td>{{ c.usuario.correoElectronico }}</td>
+      <td>{{ c.nombreArchivo }}</td>
+      <td>{{ c.fechaSubida | date:'short' }}</td>
+      <td>{{ c.estado }}</td>
+      <td>
+        <button (click)="aprobar(c.id)" class="btn-aprobar">Aprobar</button>
+        <button (click)="rechazar(c.id)" class="btn-rechazar">Rechazar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>

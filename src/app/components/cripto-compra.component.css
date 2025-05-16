@@ -1,0 +1,112 @@
+/* Estilo glassmorphism base */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 20px;
+  color: white;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Contenedor principal */
+.cripto-container {
+  padding: 30px;
+  max-width: 6000px;
+  margin: 40px auto;
+}
+
+/* Estilo para el label y select */
+label {
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+select,
+input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+/* Formulario */
+.inversion-form {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Botón verde */
+.inversion-form button {
+  align-self: start;
+  padding: 12px 24px;
+  background-color: #00c896;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.inversion-form button:hover {
+  background-color: #00a982;
+}
+
+
+.confirmacion-cards {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  padding: 30px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.confirmacion-cards ul {
+  text-align: left;
+  margin-top: 20px;
+  padding-left: 0;
+  list-style: none;
+}
+
+.confirmacion-cards li {
+  margin-bottom: 10px;
+}
+
+.confirmacion-cards h2 {
+  font-size: 24px;
+  color: #00ffb3;
+}
+
+.confirmacion-cards button.btn-cancelar {
+  background: #e74c3c;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
+.grafica-cripto,
+.grafica-etf,
+.grafica-accion {
+  background-color: rgba(0, 0, 0, 0.986); /* fondo negro semi-transparente */
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+.grafica-box {
+  background-color: rgba(0, 0, 0, 0.85);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+}

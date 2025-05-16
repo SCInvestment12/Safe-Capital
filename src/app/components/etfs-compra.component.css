@@ -1,0 +1,101 @@
+/* Estilo tipo glassmorphism */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-radius: 16px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.25);
+  color: white;
+}
+
+/* Contenedor general */
+.etfs-container {
+  padding: 30px;
+  max-width: 6000px;
+  margin: 40px auto;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.etfs-container h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 26px;
+}
+
+/* Lista de selección */
+.etfs-lista ul {
+  list-style: none;
+  padding: 0;
+}
+
+.etfs-lista li {
+  background: rgba(0, 128, 128, 0.2);
+  padding: 18px;
+  margin-bottom: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.etfs-lista li:hover {
+  background: rgba(0, 128, 128, 0.35);
+}
+
+/* Formulario y resumen */
+.etf-formulario,
+.confirmacion-final {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Inputs y selects */
+input, select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+/* Botones */
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #00c896;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+button:hover {
+  background-color: #009f75; /* Actualizado para coincidir con acciones */
+}
+
+button.cancelar {
+  background-color: #f8f9fa;
+  color: #222;
+}
+
+button.cancelar:hover {
+  background-color: #e0e0e0;
+}
+
+.grafica-cripto,
+.grafica-etf,
+.grafica-accion {
+  background-color: rgba(0, 0, 0, 0.986); /* fondo negro semi-transparente */
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+}
+
+.grafica-box {
+  background-color: rgba(0, 0, 0, 0.85);
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+}

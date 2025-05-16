@@ -1,0 +1,52 @@
+<div class="contenedor-cetes glass-card">
+  <h2 class="titulo">CETES</h2>
+
+  <!-- Paso 1: Selección -->
+  <div *ngIf="!plazoSeleccionado">
+    <h4 class="subtitulo">Selecciona el plazo</h4>
+    <ul class="lista-plazos">
+      <li *ngFor="let p of plazos" (click)="seleccionar(p)">
+        <strong>CETES</strong><br />
+        <small>{{ p.tasa }}</small><br />
+        <span class="plazo">{{ p.plazo }}</span>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Paso 2: Formulario de compra -->
+  <div *ngIf="plazoSeleccionado && !confirmar" class="formulario-compra">
+    <h4 class="subtitulo">Compra de instrumento</h4>
+    <p><strong>Plazo:</strong> {{ plazoSeleccionado.plazo }}</p>
+    <p><strong>Tasa Indicativa:</strong> {{ plazoSeleccionado.tasa }}</p>
+    <p><strong>Fecha de subasta:</strong> 28/04/2025</p>
+    <p><strong>Serie:</strong> 250529</p>
+
+    <label for="monto">Monto de la compra:</label>
+    <input id="monto" type="number" placeholder="Ej. 10000" />
+
+    <div class="reinv">
+      <label>¿Reinvertir al vencimiento?</label>
+      <button>Sí</button>
+      <button class="activo">No</button>
+    </div>
+
+    <div class="acciones">
+      <button class="btn-cancelar" (click)="reiniciar()">Cancelar</button>
+      <button class="btn-continuar" (click)="continuarCompra()">Aceptar</button>
+    </div>
+  </div>
+
+  <!-- Paso 3: Confirmación -->
+  <div *ngIf="confirmar" class="confirmacion glass-card">
+    <h4>✅ Confirmación de compra</h4>
+    <p>Su transacción se registró exitosamente.</p>
+    <ul>
+      <li><strong>Instrumento:</strong> CETES</li>
+      <li><strong>Fecha de compra:</strong> 28/04/2025</li>
+      <li><strong>Plazo de inversión:</strong> {{ plazoSeleccionado.plazo }}</li>
+      <li><strong>Reinversión automática:</strong> NO</li>
+      <li><strong>Forma de pago:</strong> Fondos en cuenta</li>
+    </ul>
+    <button class="btn-cancelar" (click)="reiniciar()">Inicio</button>
+  </div>
+</div>

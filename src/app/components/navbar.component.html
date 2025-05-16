@@ -1,0 +1,31 @@
+<nav class="navbar-custom">
+  <div class="logo-area">
+    <img src="assets/img/logo.jpg" alt="Safe Capital" class="logo-navbar" />
+    <span class="brand-text">Safe Capital Investment</span>
+  </div>
+
+  <div class="nav-links" *ngIf="estaLogueado()">
+    <a routerLink="/perfil">Mi perfil</a>
+
+    <!-- Solo USER, MODERATOR, ADMIN, SUPER_ADMIN -->
+    <a (click)="abrirModalDeposito()">Depósito</a>
+    <a (click)="abrirModalRetiro()">Retiro</a>
+
+    <!-- Solo ADMIN y SUPER_ADMIN -->
+    <a *ngIf="esAdmin" routerLink="/admin-dashboard">Panel Admin</a>
+
+    <!-- Saldo -->
+    <span class="saldo-usuario">Saldo: {{ obtenerSaldo() }}</span>
+
+    <a (click)="logout()">Cerrar sesión</a>
+  </div>
+
+  <div class="nav-links" *ngIf="!estaLogueado()">
+    <a routerLink="/login">Entrar</a>
+    <a routerLink="/register">Registrarte</a>
+  </div>
+</nav>
+
+<!-- Modales -->
+<app-deposito-modal *ngIf="mostrarModalDeposito" (cerrar)="cerrarModales()"></app-deposito-modal>
+<app-retiro-modal *ngIf="mostrarModalRetiro" (cerrar)="cerrarModales()"></app-retiro-modal>

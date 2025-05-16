@@ -1,0 +1,49 @@
+<div *ngIf="secretKeyPressed">
+    <h2 class="text-center mb-4 text-success">Panel de Super Administrador</h2>
+  
+    <div class="dashboard-cards">
+      <!-- Estadísticas avanzadas -->
+      <div class="card"><h4>Usuarios Totales</h4><p>154</p></div>
+      <div class="card"><h4>Reportes Pendientes</h4><p>12</p></div>
+      <div class="card"><h4>Actividades Críticas</h4><p>5</p></div>
+      <div class="card"><h4>Alertas Pendientes</h4><p>7</p></div>
+      <div class="card"><h4>Bitácora de Cambios</h4><p>150</p></div>
+      <div class="card"><h4>Usuarios Suspendidos</h4><p>3</p></div>
+    </div>
+  
+    <div class="dashboard-actions mb-4">
+      <!-- Acciones administrativas -->
+      <button class="btn btn-success">Registrar Nuevo Usuario</button>
+      <button class="btn btn-primary">Listar Usuarios</button>
+      <button class="btn btn-danger">Eliminar Usuario</button>
+      <button class="btn btn-warning">Ver Bitácora</button>
+      <button class="btn btn-dark">Configurar Sistema</button>
+      <button class="btn btn-info">Ver Logs del Sistema</button>
+      <button class="btn btn-outline-secondary">Respaldar Base de Datos</button>
+      <button class="btn btn-outline-danger">Restaurar Base de Datos</button>
+    </div>
+  
+    <div class="super-admin-panel">
+      <h5>Logs del Sistema</h5>
+      <ul class="list-group">
+        <li class="list-group-item">Usuario ID 23 eliminado</li>
+        <li class="list-group-item">Se restableció la contraseña del Admin</li>
+        <li class="list-group-item">Acceso fallido desde IP 192.168.0.44</li>
+        <li class="list-group-item">Se configuraron nuevas políticas de seguridad</li>
+      </ul>
+  
+      <h5 class="mt-4">Alertas Críticas</h5>
+      <div class="alert alert-danger">Revisar módulos de pagos</div>
+      <div class="alert alert-warning">Nueva actualización de seguridad disponible</div>
+      <div class="alert alert-info">Verificar respaldo de la base de datos</div>
+  
+      <h5 class="mt-4">Administración Avanzada</h5>
+      <div class="btn-group">
+        <button class="btn btn-outline-primary">Configurar App</button>
+        <button class="btn btn-outline-secondary">Gestionar Roles</button>
+        <button class="btn btn-outline-danger">Eliminar Datos del Sistema</button>
+        <button class="btn btn-outline-success">Soporte Técnico</button>
+      </div>
+    </div>
+  </div>
+  
