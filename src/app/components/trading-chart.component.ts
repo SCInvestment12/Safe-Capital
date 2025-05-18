@@ -62,7 +62,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
     this.chartOptions = {
       series: [{ name: 'Valor', data: [] }],
       chart: {
-        height: 350,
+        height: 400,
         type: 'line',
         animations: {
           enabled: true,
@@ -104,26 +104,34 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   obtenerDatos(): void {
-    this.tradingService.getBarsByTipoYSimbolo(this.tipo, this.simbolo).subscribe(barras => {
-      if (!barras || barras.length === 0) return;
+  this.tradingService.getBarsByTipoYSimbolo(this.tipo, this.simbolo).subscribe(barras => {
+    if (!barras || barras.length === 0) return;
 
-      const datos = barras.map(bar => bar.close);
-      const categorias = barras.map(bar => {
-        const fecha = typeof bar.timestamp === 'number'
-          ? new Date(bar.timestamp)
-          : new Date(Date.parse(bar.timestamp));
-        return fecha.toLocaleTimeString();
-      });
-
-this.precioActual = datos[datos.length - 1];  // 👈 último precio
-
-      this.chartOptions = {
-        ...this.chartOptions,
-        series: [{ name: 'Valor', data: datos }],
-        xaxis: { ...this.chartOptions.xaxis, categories: categorias }
-      };
+    // ✅ Ordenar por timestamp ascendente
+    barras.sort((a, b) => {
+      const fechaA = typeof a.timestamp === 'number' ? a.timestamp : Date.parse(a.timestamp);
+      const fechaB = typeof b.timestamp === 'number' ? b.timestamp : Date.parse(b.timestamp);
+      return fechaA - fechaB;
     });
-  }
+
+    const datos = barras.map(bar => bar.close);
+    const categorias = barras.map(bar => {
+      const fecha = typeof bar.timestamp === 'number'
+        ? new Date(bar.timestamp)
+        : new Date(Date.parse(bar.timestamp));
+      return fecha.toLocaleTimeString('es-MX', { timeZone: 'America/Mexico_City' });
+    });
+
+    this.precioActual = datos[datos.length - 1];
+
+    this.chartOptions = {
+      ...this.chartOptions,
+      series: [{ name: 'Valor', data: datos }],
+      xaxis: { ...this.chartOptions.xaxis, categories: categorias }
+    };
+  });
+}
+
 
   mostrarApuesta(direccion: 'up' | 'down') {
     const index = this.chartOptions.series[0].data.length - 1;
