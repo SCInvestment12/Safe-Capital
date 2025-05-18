@@ -1,51 +1,67 @@
 .admin-wrapper {
-    padding: 30px;
-    background-color: #111;
-    color: white;
-  }
-  
-  h2 {
-    margin-bottom: 20px;
-    color: #00ffc8;
-  }
-  
-  .tabla-admin {
-    width: 100%;
-    border-collapse: collapse;
-    background: rgba(255, 255, 255, 0.03);
-  }
-  
-  .tabla-admin th, .tabla-admin td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
-  
-  .tabla-admin th {
-    background-color: rgba(0, 255, 200, 0.1);
-  }
-  
-  a {
-    color: #00ffc8;
-    text-decoration: underline;
-  }
-  
-  button {
-    padding: 6px 12px;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    margin-right: 6px;
-    cursor: pointer;
-  }
-  
-  .btn-aprobar {
-    background-color: #00b894;
-    color: white;
-  }
-  
-  .btn-rechazar {
-    background-color: #d63031;
-    color: white;
-  }
-  
+  padding: 30px;
+  background-color: #111;
+  color: white;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #00ffc8;
+}
+
+.tabla-admin {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.03);
+  margin-top: 10px;
+}
+
+.tabla-admin th, .tabla-admin td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tabla-admin th {
+  background-color: rgba(0, 255, 200, 0.1);
+}
+
+a {
+  color: #00ffc8;
+  text-decoration: underline;
+}
+
+button {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  margin-right: 6px;
+  cursor: pointer;
+}
+
+.btn-aprobar {
+  background-color: #00b894;
+  color: white;
+}
+
+.btn-rechazar {
+  background-color: #d63031;
+  color: white;
+}
+
+.btn-actualizar {
+  background-color: #0984e3;
+  color: white;
+  margin-top: 10px;
+  padding: 8px 16px;
+  border-radius: 6px;
+}
+
+.tasa-cetes-config {
+  margin-top: 15px;
+}
+
+.mt-4 {
+  margin-top: 40px;
+}

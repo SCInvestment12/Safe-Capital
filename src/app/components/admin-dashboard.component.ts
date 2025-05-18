@@ -15,6 +15,7 @@ export class AdminDashboardComponent implements OnInit {
   tasaCetes: number = 0.0;
   clabe: string = '';
   clabeNueva: string = '';
+  loading = false;
 
   constructor(private http: HttpClient) {}
 
@@ -25,12 +26,19 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   cargarComprobantes() {
+    this.loading = true;
     const token = localStorage.getItem('token') || '';
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     this.http.get<any[]>('https://safe-capital-backend.onrender.com/api/comprobantes/pending', { headers })
       .subscribe({
-        next: (data) => this.comprobantes = data,
-        error: () => alert('Error al cargar comprobantes')
+        next: (data) => {
+          this.comprobantes = data;
+          this.loading = false;
+        },
+        error: () => {
+          alert('Error al cargar comprobantes');
+          this.loading = false;
+        }
       });
   }
 

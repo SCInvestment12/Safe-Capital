@@ -1,0 +1,26 @@
+.moderador-wrapper {
+  padding: 30px;
+  background-color: #1e1e1e;
+  color: white;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #00ffc8;
+}
+
+.tabla-moderador {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.tabla-moderador th, .tabla-moderador td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tabla-moderador th {
+  background-color: rgba(0, 255, 200, 0.1);
+}

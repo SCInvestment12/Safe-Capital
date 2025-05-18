@@ -1,7 +1,10 @@
 <div class="admin-wrapper">
   <h2>Comprobantes Pendientes</h2>
 
-  <table class="tabla-admin">
+  <p *ngIf="loading">Cargando comprobantes...</p>
+  <p *ngIf="!loading && comprobantes.length === 0">No hay comprobantes pendientes.</p>
+
+  <table class="tabla-admin" *ngIf="!loading && comprobantes.length > 0">
     <thead>
       <tr>
         <th>ID</th>
@@ -16,7 +19,11 @@
       <tr *ngFor="let c of comprobantes">
         <td>{{ c.id }}</td>
         <td>{{ c.usuario.correoElectronico }}</td>
-        <td><a [href]="'https://safe-capital-backend.onrender.com/uploads/' + c.nombreArchivo" target="_blank">Ver archivo</a></td>
+        <td>
+          <a [href]="'https://safe-capital-backend.onrender.com/uploads/' + c.nombreArchivo" target="_blank">
+            Ver archivo ({{ c.nombreArchivo }})
+          </a>
+        </td>
         <td>{{ c.fechaSubida | date:'short' }}</td>
         <td>{{ c.estado }}</td>
         <td>
@@ -33,12 +40,11 @@
     <input type="number" [(ngModel)]="tasaCetes" class="form-control" />
     <button class="btn-actualizar" (click)="actualizarTasaCetes()">Actualizar Tasa</button>
   </div>
-</div>
 
-<h2 class="mt-4">Editar CLABE Bancaria</h2>
-<div class="tasa-cetes-config">
-  <label>CLABE actual:</label>
-  <input type="text" [(ngModel)]="clabeNueva" class="form-control" />
-  <button class="btn-actualizar" (click)="actualizarClabe()">Actualizar CLABE</button>
+  <h2 class="mt-4">Editar CLABE Bancaria</h2>
+  <div class="tasa-cetes-config">
+    <label>CLABE actual:</label>
+    <input type="text" [(ngModel)]="clabeNueva" class="form-control" />
+    <button class="btn-actualizar" (click)="actualizarClabe()">Actualizar CLABE</button>
+  </div>
 </div>
-
