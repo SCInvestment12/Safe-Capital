@@ -1,11 +1,19 @@
-<apx-chart
-  [series]="chartOptions.series"
-  [chart]="chartOptions.chart"
-  [xaxis]="chartOptions.xaxis"
-  [dataLabels]="chartOptions.dataLabels"
-  [stroke]="chartOptions.stroke"
-  [title]="chartOptions.title"
-  [tooltip]="chartOptions.tooltip"
-  [markers]="chartOptions.markers"
-  [annotations]="chartOptions.annotations">
-</apx-chart>
+<div class="grafica-wrapper">
+  <div class="precio-actual">
+    <span>Precio actual:</span>
+    <strong class="valor">${{ precioActual }}</strong>
+  </div>
+
+  <apx-chart
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [xaxis]="chartOptions.xaxis"
+    [yaxis]="chartOptions.yaxis"
+    [dataLabels]="chartOptions.dataLabels"
+    [stroke]="chartOptions.stroke"
+    [title]="chartOptions.title"
+    [tooltip]="chartOptions.tooltip"
+    [markers]="chartOptions.markers"
+    [annotations]="chartOptions.annotations">
+  </apx-chart>
+</div>

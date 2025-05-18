@@ -14,7 +14,7 @@ import {
 } from 'ng-apexcharts';
 import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
-import { TradingService, TradingBarDTO } from '../services/trading.service';
+import { TradingService } from '../services/trading.service';
 
 @Component({
   selector: 'app-trading-chart',
@@ -40,6 +40,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
     annotations: ApexAnnotations;
   };
 
+  precioActual: number | null = null;
   subscription!: Subscription;
 
   constructor(private tradingService: TradingService) {}
@@ -104,15 +105,9 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
 
   obtenerDatos(): void {
     this.tradingService.getBarsByTipoYSimbolo(this.tipo, this.simbolo).subscribe(barras => {
-      if (!barras || barras.length === 0) {
-        console.warn('⚠️ No se recibieron datos para la gráfica.');
-        return;
-      }
-
-      console.log('✅ Datos recibidos:', barras);
+      if (!barras || barras.length === 0) return;
 
       const datos = barras.map(bar => bar.close);
-
       const categorias = barras.map(bar => {
         const fecha = typeof bar.timestamp === 'number'
           ? new Date(bar.timestamp)
@@ -120,13 +115,13 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         return fecha.toLocaleTimeString();
       });
 
+this.precioActual = datos[datos.length - 1];  // 👈 último precio
+
       this.chartOptions = {
         ...this.chartOptions,
         series: [{ name: 'Valor', data: datos }],
         xaxis: { ...this.chartOptions.xaxis, categories: categorias }
       };
-    }, error => {
-      console.error('❌ Error al obtener datos de trading:', error);
     });
   }
 
