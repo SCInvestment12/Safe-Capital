@@ -104,3 +104,51 @@
     margin-top: 10px;
   }
   
+  .input-monto {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #00c896;
+  border-radius: 6px;
+  background: #1a1a1a;
+  color: white;
+}
+
+.input-monto::placeholder {
+  color: #888;
+}
+
+.instrucciones-chicas {
+  font-size: 13px;
+  color: #ccc;
+  line-height: 1.5;
+  background: #141414;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #333;
+}
+
+.label-monto {
+  font-size: 27px;
+  font-weight: bold;
+  margin-bottom: 6px;
+  display: block;
+  color: #00ffcc;
+}
+
+.input-monto-grande {
+  width: 100%;
+  padding: 15px;
+  font-size: 22px;
+  border: 2px solid #00ffcc;
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #fff;
+  margin-bottom: 25px;
+}
+
+.input-monto-grande::placeholder {
+  color: #888;
+}

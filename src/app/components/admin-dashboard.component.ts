@@ -13,12 +13,15 @@ import { FormsModule } from '@angular/forms';
 export class AdminDashboardComponent implements OnInit {
   comprobantes: any[] = [];
   tasaCetes: number = 0.0;
+  clabe: string = '';
+  clabeNueva: string = '';
 
   constructor(private http: HttpClient) {}
 
   ngOnInit(): void {
     this.cargarComprobantes();
     this.obtenerTasaCetes();
+    this.obtenerClabe();
   }
 
   cargarComprobantes() {
@@ -39,7 +42,6 @@ export class AdminDashboardComponent implements OnInit {
     }
 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token')}`);
-
     this.http.post('https://safe-capital-backend.onrender.com/api/usuarios/saldo/acreditar', {
       correoElectronico: correo,
       monto: parseFloat(monto)
@@ -77,5 +79,30 @@ export class AdminDashboardComponent implements OnInit {
         next: () => alert('Tasa de CETES actualizada correctamente.'),
         error: () => alert('Error al actualizar la tasa de CETES')
       });
+  }
+
+  obtenerClabe() {
+    this.http.get('https://safe-capital-backend.onrender.com/api/config/clabe', { responseType: 'text' })
+      .subscribe({
+        next: (valor) => {
+          this.clabe = valor;
+          this.clabeNueva = valor;
+        },
+        error: () => alert('Error al obtener la CLABE')
+      });
+  }
+
+  actualizarClabe() {
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token')}`);
+    this.http.put('https://safe-capital-backend.onrender.com/api/config/clabe', this.clabeNueva, {
+      headers,
+      responseType: 'text'
+    }).subscribe({
+      next: () => {
+        alert('CLABE actualizada correctamente');
+        this.clabe = this.clabeNueva;
+      },
+      error: () => alert('Error al actualizar la CLABE')
+    });
   }
 }

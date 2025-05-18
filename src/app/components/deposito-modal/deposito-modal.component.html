@@ -3,27 +3,33 @@
   <button class="cerrar" (click)="cerrarModal()">✖</button>
   <h2>Selecciona método de depósito</h2>
 
+  <!-- Pestañas de método -->
   <div class="opciones">
-    <button (click)="seleccionarMetodo('SPEI')">💳 SPEI</button>
-    <button (click)="seleccionarMetodo('TARJETA')">💳 Visa / Mastercard</button>
+    <button [class.activa]="metodoSeleccionado === 'SPEI'" (click)="seleccionarMetodo('SPEI')">💳 SPEI</button>
+    <button [class.activa]="metodoSeleccionado === 'TARJETA'" (click)="seleccionarMetodo('TARJETA')">💳 Visa / Mastercard</button>
   </div>
 
   <!-- SPEI -->
   <div *ngIf="metodoSeleccionado === 'SPEI'" class="metodo-spei">
-    <h3>Datos Bancarios</h3>
-    <ul>
-      <li><strong>Banco:</strong> BBVA</li>
-      <li><strong>CLABE:</strong> 0123 4567 8910 1112 131</li>
-      <li><strong>Cuenta:</strong> 00123456789</li>
-      <li><strong>Nombre:</strong> {{ nombreCompleto }}</li>
-<li><strong>Referencia:</strong> {{ referencia }}</li>
+    <label class="label-monto">Monto a depositar:</label>
+    <input type="number" min="1" placeholder="$0.00" class="input-monto" />
 
-      
-      
-    </ul>
-    <p class="instrucciones">
-      Una vez realizado el depósito, presiona el botón de abajo y sube tu comprobante desde tu perfil.
+<h3>Datos Bancarios</h3>
+<ul>
+  <li><strong>Banco:</strong> BBVA</li>
+<li><strong>CLABE:</strong> {{ clabe }}</li>
+  <li><strong>Nombre:</strong> {{ nombreCompleto }}</li>
+  <li><strong>Referencia:</strong> {{ referencia }}</li>
+</ul>
+
+
+    <p class="instrucciones-chicas">
+      <strong>Pasos para realizar tu pago:</strong><br />
+      Ingresa a tu banca electrónica y presiona la opción de transferir, ingresa tu nombre y número de cuenta especificada así mismo en concepto Ingresa nuevamente tu nombre completo.<br /><br />
+      <strong>Nota importante:</strong> Pague su ingreso por la cantidad exacta a los datos bancarios generados en el siguiente recuadro. En caso de que la información no coincida entre los datos especificados, su ingreso no será acreditado correctamente en su cuenta.<br /><br />
+      Después de haber realizado y notificado su depósito, este se verá reflejado en su saldo disponible al concluir el proceso de validación en un lapso de 60 minutos.
     </p>
+
     <button class="btn-notificar" (click)="notificarDeposito()">📤 Notificar Depósito</button>
   </div>
 
