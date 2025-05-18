@@ -1,4 +1,3 @@
-// src/app/app.routes.ts
 import { Routes } from '@angular/router';
 
 import { HomePageComponent } from './components/home-page.component';
@@ -41,23 +40,23 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard/admin',
-    component: DashboardComponent,
+    component: AdminDashboardComponent,
     canActivate: [RoleGuard],
     data: { role: 'ROLE_ADMIN' }
   },
   {
     path: 'dashboard/super-admin',
-    component: DashboardComponent,
+    component: AdminDashboardComponent,
     canActivate: [RoleGuard],
     data: { role: 'ROLE_SUPER_ADMIN' }
   },
 
-  // Panel exclusivo para administradores y super administradores
+  // Panel directo opcional para Admin o SuperAdmin
   {
     path: 'admin-dashboard',
     component: AdminDashboardComponent,
     canActivate: [RoleGuard],
-    data: { role: 'ROLE_ADMIN' } // ✅ Aquí puedes cambiar a un array si RoleGuard lo soporta: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] }
+    data: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] }
   },
 
   // Ruta de error 404
