@@ -8,10 +8,10 @@ import { PerfilComponent } from './components/perfil.component';
 import { DashboardComponent } from './components/dashboard.component';
 import { NotFoundComponent } from './not-found.component';
 import { AdminDashboardComponent } from './components/admin-dashboard.component';
+import { DashboardRedirectComponent } from './components/dashboard-redirect/dashboard-redirect.component';
 
 import { RoleGuard } from './guards/role.guard';
 import { DashboardRedirectGuard } from './guards/dashboard-redirect.guard';
-import { DashboardRedirectComponent } from './components/dashboard-redirect/dashboard-redirect.component';
 
 export const routes: Routes = [
   { path: '', component: HomePageComponent },
@@ -19,14 +19,14 @@ export const routes: Routes = [
   { path: 'register', component: RegisterPageComponent },
   { path: 'perfil', component: PerfilComponent },
 
-  // /dashboard redirige al sub-dashboard según rol
+  // Redireccionamiento dinámico según el rol
   {
     path: 'dashboard',
     component: DashboardRedirectComponent,
     canActivate: [DashboardRedirectGuard]
   },
 
-  // Sub-dashboards protegidos
+  // Dashboards por rol
   {
     path: 'dashboard/user',
     component: DashboardComponent,
@@ -52,13 +52,14 @@ export const routes: Routes = [
     data: { role: 'ROLE_SUPER_ADMIN' }
   },
 
+  // Panel exclusivo para administradores y super administradores
   {
     path: 'admin-dashboard',
     component: AdminDashboardComponent,
     canActivate: [RoleGuard],
-    data: { roles: ['ADMIN', 'SUPER_ADMIN'] }
+    data: { role: 'ROLE_ADMIN' } // ✅ Aquí puedes cambiar a un array si RoleGuard lo soporta: { roles: ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'] }
   },
 
-  // Wildcard 404
+  // Ruta de error 404
   { path: '**', component: NotFoundComponent }
 ];
