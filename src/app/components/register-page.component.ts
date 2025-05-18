@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent } from './navbar.component';
-import { AuthService } from '../services/auth.service'; // ✅ IMPORTANTE
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-register-page',
@@ -14,7 +14,7 @@ import { AuthService } from '../services/auth.service'; // ✅ IMPORTANTE
 })
 export class RegisterPageComponent {
   nombre: string = '';
-  apellido: string = '';
+  apellidos: string = '';  // <- CAMBIADO de 'apellido' a 'apellidos'
   username: string = '';
   curp: string = '';
   email: string = '';
@@ -26,7 +26,7 @@ export class RegisterPageComponent {
   constructor(private router: Router, private authService: AuthService) {}
 
   registrarse() {
-    if (!this.nombre || !this.apellido || !this.username || !this.curp || !this.email || !this.telefono || !this.fechaNacimiento || !this.password || !this.confirmar) {
+    if (!this.nombre || !this.apellidos || !this.username || !this.curp || !this.email || !this.telefono || !this.fechaNacimiento || !this.password || !this.confirmar) {
       alert('Todos los campos son obligatorios');
       return;
     }
@@ -38,7 +38,7 @@ export class RegisterPageComponent {
 
     const nuevoUsuario = {
       nombre: this.nombre,
-      apellidos: this.apellido,
+      apellidos: this.apellidos,
       curp: this.curp,
       fechaNacimiento: this.fechaNacimiento,
       telefono: this.telefono,

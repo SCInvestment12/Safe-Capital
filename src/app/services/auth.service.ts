@@ -14,7 +14,17 @@ export class AuthService {
   constructor(private http: HttpClient) {}
 
   register(user: any): Observable<any> {
-    return this.http.post(`${this.base}/register`, user);
+    const payload = {
+      nombre: user.nombre,
+      apellidos: user.apellido,
+      curp: user.curp,
+      fechaNacimiento: this.convertirFecha(user.fechaNacimiento),
+      telefono: user.telefono,
+      correoElectronico: user.email,
+      contrasena: user.password
+    };
+
+    return this.http.post(`${this.base}/register`, payload);
   }
 
   login(correoElectronico: string, contrasena: string): Observable<string> {
@@ -44,13 +54,21 @@ export class AuthService {
       return '';
     }
   }
+
   getSaldo(): Observable<number> {
     const token = this.getToken();
-    return this.http.get<number>('https://safe-capital-backend.onrender.com/api/auth/saldo', {
+    return this.http.get<number>(`${this.base}/saldo`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
   }
-  
+
+  private convertirFecha(fecha: string): string {
+    const parsed = new Date(fecha);
+    const yyyy = parsed.getFullYear();
+    const mm = ('0' + (parsed.getMonth() + 1)).slice(-2);
+    const dd = ('0' + parsed.getDate()).slice(-2);
+    return `${yyyy}-${mm}-${dd}`;
+  }
 }
