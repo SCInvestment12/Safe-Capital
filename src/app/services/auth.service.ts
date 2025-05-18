@@ -1,6 +1,6 @@
 // src/app/services/auth.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
@@ -16,21 +16,23 @@ export class AuthService {
   register(user: any): Observable<any> {
     const payload = {
       nombre: user.nombre,
-      apellidos: user.apellido,
+      apellidos: user.apellidos, // ✅ corregido
       curp: user.curp,
       fechaNacimiento: this.convertirFecha(user.fechaNacimiento),
       telefono: user.telefono,
-      correoElectronico: user.email,
-      contrasena: user.password
+      correoElectronico: user.correoElectronico, // ✅ debe ser igual que backend
+      contrasena: user.contrasena // ✅ corregido
     };
 
-    return this.http.post(`${this.base}/register`, payload);
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    return this.http.post(`${this.base}/register`, payload, { headers });
   }
 
   login(correoElectronico: string, contrasena: string): Observable<string> {
     return this.http.post(`${this.base}/login`, { correoElectronico, contrasena }, { responseType: 'text' }).pipe(
       tap(token => {
-        localStorage.setItem('token', token);  // ✅ Guarda el token plano
+        localStorage.setItem('token', token);
       })
     );
   }

@@ -14,7 +14,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class RegisterPageComponent {
   nombre: string = '';
-  apellidos: string = '';  // <- CAMBIADO de 'apellido' a 'apellidos'
+  apellidos: string = '';
   username: string = '';
   curp: string = '';
   email: string = '';
@@ -43,8 +43,10 @@ export class RegisterPageComponent {
       fechaNacimiento: this.fechaNacimiento,
       telefono: this.telefono,
       correoElectronico: this.email,
-      contrasena: this.password
+      contrasena: this.password // ✅ nombre correcto
     };
+
+    console.log('Usuario que se envía al backend:', nuevoUsuario);
 
     this.authService.register(nuevoUsuario).subscribe({
       next: () => {
