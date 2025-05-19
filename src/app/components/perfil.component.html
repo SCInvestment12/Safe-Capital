@@ -122,7 +122,7 @@
       <h5 class="mb-3"><i class="fas fa-history me-2"></i>Movimientos recientes</h5>
       <div class="movimientos-recientes-grid">
         <div class="movimiento-card" *ngFor="let movimiento of movimientos"
-             [ngClass]="{ 'deposito': movimiento.tipo === 'Depósito', 'retiro': movimiento.tipo === 'Retiro', 'apuesta': movimiento.tipo === 'Apuesta' }">
+             [ngClass]="{ 'deposito': movimiento.tipo === 'Depósito', 'retiro': movimiento.tipo === 'Retiro', 'inversion': movimiento.tipo === 'Inversion' }">
           <div class="icono-mov">
             <i [ngClass]="getIconoMovimiento(movimiento.tipo)"></i>
           </div>
@@ -135,40 +135,14 @@
       </div>
     </div>
 
-    <!-- FORM RETIRO -->
-    <div class="retiro-box animate__animated animate__fadeInUp animate__delay-3s">
-      <h4>Solicitar retiro</h4>
-      <form #retiroForm="ngForm" (ngSubmit)="solicitarRetiro()" class="formulario-retiro">
-        <div>
-          <label>Monto</label>
-          <input type="number" [(ngModel)]="montoRetiro" name="montoRetiro" class="form-control" required min="1" #monto="ngModel" />
-          <div class="texto-error" *ngIf="monto.invalid && monto.touched">
-            El monto debe ser mayor a $0.00
-          </div>
-        </div>
-        <div>
-          <label>CLABE</label>
-          <input type="text" [(ngModel)]="clabe" name="clabe" maxlength="18" minlength="18" pattern="\\d{18}" class="form-control" required #clabeInput="ngModel" />
-          <div class="texto-error" *ngIf="clabeInput.invalid && clabeInput.touched">
-            Ingresa una CLABE válida de 18 dígitos
-          </div>
-        </div>
-        <div class="boton-retiro">
-          <button [disabled]="retiroForm.invalid" type="submit" class="btn btn-success btn-retiro">
-            <i class="fas fa-money-bill-wave me-2"></i>Solicitar retiro
-          </button>
-        </div>
-      </form>
-    </div>
+
 
     <!-- ACCIONES RÁPIDAS -->
     <div class="acciones-rapidas mt-4">
       <div class="accion-card" (click)="irAFondos()">
         <i class="fas fa-wallet"></i><span>Agregar Fondos</span>
       </div>
-      <div class="accion-card" (click)="irAHistorial()">
-        <i class="fas fa-clock"></i><span>Historial</span>
-      </div>
+     
       <div class="accion-card" (click)="irATrading()">
         <i class="fas fa-chart-line"></i><span>Ir a Trading</span>
       </div>

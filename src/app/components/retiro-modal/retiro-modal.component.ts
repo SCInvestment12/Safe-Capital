@@ -20,7 +20,30 @@ export class RetiroModalComponent implements OnInit {
   rechazado = false;
   timeoutId: any = null;
 
-  bancos: string[] = ['BBVA', 'Santander', 'Citibanamex', 'Banorte', 'HSBC', 'Scotiabank'];
+// Lista completa de bancos
+bancos: string[] = [
+  'AFIRME',
+  'AZTECA',
+  'BANAMEX',
+  'BANCO DEL BAJÍO',
+  'BANCO DEL BIENESTAR',
+  'BANCOPPEL',
+  'BANREGIO',
+  'BANORTE',
+  'BBVA',
+  'HEY BANCO',
+  'HSBC',
+  'INBURSA',
+  'KLAR',
+  'MERCADO PAGO',
+  'NU MEXICO',
+  
+  'SANTANDER',
+  'SPIN BY OXXO',
+  'STP',
+  'OTROS BANCOS'
+];
+
 
   ngOnInit() {
     const nombre = localStorage.getItem('nombre') || '';
@@ -37,7 +60,7 @@ export class RetiroModalComponent implements OnInit {
       this.monto >= 1000 &&
       this.titular.trim().length > 3 &&
       this.banco.trim() !== '' &&
-      this.cuenta.trim().length === 18
+      this.cuenta.trim().length === 10
     );
   }
 

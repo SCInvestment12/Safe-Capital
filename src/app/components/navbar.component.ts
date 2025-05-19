@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { RouterModule, Router } from '@angular/router';
 import { DepositoModalComponent } from '../components/deposito-modal/deposito-modal.component';
 import { RetiroModalComponent } from '../components/retiro-modal/retiro-modal.component';
@@ -7,15 +8,25 @@ import { RetiroModalComponent } from '../components/retiro-modal/retiro-modal.co
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [CommonModule, RouterModule, DepositoModalComponent, RetiroModalComponent],
+    imports: [CommonModule, RouterModule, DepositoModalComponent, RetiroModalComponent],
+
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  mostrarModalDeposito: boolean = false;
-  mostrarModalRetiro: boolean = false;
+  mostrarModalDeposito = false;
+  mostrarModalRetiro = false;
 
   constructor(private router: Router) {}
+
+  ngOnInit(): void {}
+
+  /**
+   * Muestra el botón de regresar solo en la página de registro
+   */
+  get isRegisterPage(): boolean {
+    return this.router.url === '/register';
+  }
 
   estaLogueado(): boolean {
     return localStorage.getItem('token') !== null;
@@ -24,7 +35,10 @@ export class NavbarComponent {
   obtenerSaldo(): string {
     const saldo = localStorage.getItem('saldo');
     return saldo
-      ? parseFloat(saldo).toLocaleString('es-MX', { style: 'currency', currency: 'MXN' })
+      ? parseFloat(saldo).toLocaleString('es-MX', {
+          style: 'currency',
+          currency: 'MXN'
+        })
       : '$0.00';
   }
 

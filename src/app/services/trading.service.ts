@@ -24,17 +24,18 @@ export class TradingService {
    */
   getBarsByTipoYSimbolo(tipo: string, simbolo: string): Observable<TradingBarDTO[]> {
     if (tipo === 'forex') {
-      // Aseguramos que el símbolo llegue sin slash: EUR/USD → EURUSD
-      return this.getBarsForex(simbolo.replace('/', ''));
+      // EUR/USD → EURUSD
+      const cleanSymbol = simbolo.replace('/', '');
+      return this.getBarsForex(cleanSymbol);
     }
-    // Resto de activos (cetes, cripto, etfs, acciones)
+    // CETES, ETFs, Cripto o Acciones
     return this.http.get<TradingBarDTO[]>(
       `${this.apiUrl}/trading/bars/${tipo}/${simbolo}`
     );
   }
 
   /**
-   * 🔓 Forex (no usa el segmento "trading")
+   * 🔓 Forex (usa ruta /api/forex)
    */
   getBarsForex(symbol: string): Observable<TradingBarDTO[]> {
     return this.http.get<TradingBarDTO[]>(

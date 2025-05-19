@@ -1,125 +1,119 @@
+/* Backdrop y contenedor */
 .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 998;
-  }
-  
-  .modal-content {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #111;
-    color: white;
-    padding: 30px;
-    border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
-    z-index: 999;
-    box-shadow: 0 0 20px rgba(0, 255, 170, 0.3);
-  }
-  
-  .cerrar {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    background: transparent;
-    border: none;
-    font-size: 22px;
-    color: white;
-    cursor: pointer;
-  }
-  
-  h2 {
-    font-size: 22px;
-    margin-bottom: 20px;
-    color: #00ffcc;
-  }
-  
-  .opciones {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-    gap: 10px;
-  }
-  
-  .opciones button {
-    flex: 1;
-    padding: 10px;
-    border: none;
-    border-radius: 8px;
-    font-weight: bold;
-    background-color: #00c896;
-    color: white;
-    cursor: pointer;
-    transition: 0.2s;
-  }
-  
-  .opciones button:hover {
-    background-color: #00a57a;
-  }
-  
-  .metodo-spei, .metodo-tarjeta {
-    margin-top: 20px;
-  }
-  
-  .metodo-spei ul {
-    list-style: none;
-    padding-left: 0;
-  }
-  
-  .metodo-spei li {
-    margin-bottom: 8px;
-    font-size: 15px;
-  }
-  
-  .instrucciones {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #ccc;
-  }
-  
-  .btn-notificar {
-    margin-top: 20px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    background: #00e1a2;
-    color: #000;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  .btn-notificar:hover {
-    background: #00b98b;
-  }
-  
-  .mensaje-tarjeta {
-    font-size: 15px;
-    color: #ff5e5e;
-    margin-top: 10px;
-  }
-  
-  .input-monto {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 998;
+}
+
+.modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #111;
+  color: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
+  z-index: 999;
+  box-shadow: 0 0 20px rgba(0, 255, 170, 0.3);
+}
+
+/* Botón cerrar */
+.cerrar {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Títulos */
+h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+  color: #00ffcc;
+}
+
+/* Selector de método */
+.opciones {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+.opciones button {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  background-color: #00c896;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.opciones button:hover {
+  background-color: #00a57a;
+}
+.opciones button.activa {
+  background-color: #00ffcc;
+  color: #000;
+}
+
+/* Método SPEI / TARJETA */
+.metodo-spei,
+.metodo-tarjeta {
+  margin-top: 20px;
+}
+.mensaje-tarjeta {
+  font-size: 15px;
+  color: #ff5e5e;
+  margin-top: 10px;
+}
+
+/* Input monto paso 1 */
+.input-monto {
   width: 100%;
   padding: 10px;
   font-size: 16px;
   margin-top: 10px;
-  margin-bottom: 20px;
   border: 1px solid #00c896;
   border-radius: 6px;
   background: #1a1a1a;
   color: white;
 }
-
 .input-monto::placeholder {
   color: #888;
 }
 
+/* Botón confirmar (paso 1) */
+.btn-confirmar {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #00ffcc;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-confirmar:hover {
+  background: #00e6b3;
+}
+
+/* Instrucciones pequeñas (paso 1) */
 .instrucciones-chicas {
   font-size: 13px;
   color: #ccc;
@@ -128,27 +122,72 @@
   padding: 10px;
   border-radius: 6px;
   border: 1px solid #333;
+  margin-top: 15px;
 }
 
-.label-monto {
-  font-size: 27px;
-  font-weight: bold;
-  margin-bottom: 6px;
-  display: block;
+/* Comprobante de pago (paso 2) */
+.comprobante {
+  margin-top: 20px;
+}
+.texto-grande {
+  font-size: 18px;
   color: #00ffcc;
+  margin-bottom: 4px;
 }
-
-.input-monto-grande {
-  width: 100%;
-  padding: 15px;
-  font-size: 22px;
+.monto-grande {
+  font-size: 36px;
+  font-weight: bold;
+  color: #00ffcc;
+  margin-bottom: 16px;
   border: 2px solid #00ffcc;
+  padding: 10px;
   border-radius: 8px;
   background: #1a1a1a;
-  color: #fff;
-  margin-bottom: 25px;
 }
 
-.input-monto-grande::placeholder {
-  color: #888;
+/* Datos bancarios dentro del comprobante */
+.comprobante ul {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 12px;
+}
+.comprobante li {
+  margin-bottom: 6px;
+  font-size: 15px;
+}
+.comprobante strong {
+  color: #fff;
+}
+
+/* Leyendas dentro del comprobante */
+.leyenda-subir,
+.leyenda-validacion {
+  font-size: 13px;
+  color: #ccc;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+.leyenda-subir::before {
+  content: '📎 ';
+}
+.leyenda-validacion::before {
+  content: '🕒 ';
+}
+
+/* Botón Notificar Depósito (paso 2) */
+.btn-notificar {
+  display: block;
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #00e1a2;
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.btn-notificar:hover {
+  background: #00b98b;
 }

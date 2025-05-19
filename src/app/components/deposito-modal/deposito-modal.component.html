@@ -1,42 +1,61 @@
 <div class="modal-backdrop" (click)="cerrarModal()"></div>
 <div class="modal-content">
   <button class="cerrar" (click)="cerrarModal()">✖</button>
-  <h2>Selecciona método de depósito</h2>
 
-  <!-- Pestañas de método -->
-  <div class="opciones">
-    <button [class.activa]="metodoSeleccionado === 'SPEI'" (click)="seleccionarMetodo('SPEI')">💳 SPEI</button>
-    <button [class.activa]="metodoSeleccionado === 'TARJETA'" (click)="seleccionarMetodo('TARJETA')">💳 Visa / Mastercard</button>
-  </div>
+  <h2 *ngIf="!pasoComprobante">Selecciona método de depósito</h2>
+  <h2 *ngIf="pasoComprobante">Comprobante de pago</h2>
 
-  <!-- SPEI -->
-  <div *ngIf="metodoSeleccionado === 'SPEI'" class="metodo-spei">
-    <label class="label-monto">Monto a depositar:</label>
-    <input type="number" min="1" placeholder="$0.00" class="input-monto" />
+  <!-- Paso 1: elegir método y monto -->
+  <ng-container *ngIf="!pasoComprobante">
+    <div class="opciones">
+      <button
+        [class.activa]="metodoSeleccionado === 'SPEI'"
+        (click)="seleccionarMetodo('SPEI')"
+      >💳 SPEI</button>
+      <button
+        [class.activa]="metodoSeleccionado === 'TARJETA'"
+        (click)="seleccionarMetodo('TARJETA')"
+      >💳 Visa / Mastercard</button>
+    </div>
 
-<h3>Datos Bancarios</h3>
-<ul>
-  <li><strong>Banco:</strong> BBVA</li>
-<li><strong>CLABE:</strong> {{ clabe }}</li>
-  <li><strong>Nombre:</strong> {{ nombreCompleto }}</li>
-  <li><strong>Referencia:</strong> {{ referencia }}</li>
-</ul>
+    <div *ngIf="metodoSeleccionado === 'SPEI'" class="metodo-spei">
+      <label class="label-monto">Monto a depositar:</label>
+      <input
+        type="number"
+        min="1"
+        [(ngModel)]="monto"
+        placeholder="$0.00"
+        class="input-monto"
+      />
 
+      <button class="btn-confirmar" (click)="confirmarMonto()">
+        ✔ Confirmar
+      </button>
+    </div>
 
-    <p class="instrucciones-chicas">
-      <strong>Pasos para realizar tu pago:</strong><br />
-      Ingresa a tu banca electrónica y presiona la opción de transferir, ingresa tu nombre y número de cuenta especificada así mismo en concepto Ingresa nuevamente tu nombre completo.<br /><br />
-      <strong>Nota importante:</strong> Pague su ingreso por la cantidad exacta a los datos bancarios generados en el siguiente recuadro. En caso de que la información no coincida entre los datos especificados, su ingreso no será acreditado correctamente en su cuenta.<br /><br />
-      Después de haber realizado y notificado su depósito, este se verá reflejado en su saldo disponible al concluir el proceso de validación en un lapso de 60 minutos.
+    <div *ngIf="metodoSeleccionado === 'TARJETA'" class="metodo-tarjeta">
+      <p class="mensaje-tarjeta">
+        ❌ Este método aún no está disponible. Pronto habilitaremos pagos con tarjeta.
+      </p>
+    </div>
+  </ng-container>
+
+  <!-- Paso 2: mostrar comprobante -->
+  <div *ngIf="pasoComprobante" class="comprobante">
+    <p class="texto-grande">Monto a depositar:</p>
+    <p class="monto-grande">${{ monto }}</p>
+
+    <h3>Datos Bancarios</h3>
+    <ul>
+      <li><strong>Banco:</strong> {{ banco }}</li>
+      <li><strong>Cuenta:</strong> {{ cuenta }}</li>
+      <li><strong>CLABE:</strong> {{ clabe }}</li>
+      <li><strong>Nombre:</strong> {{ nombreCompleto }}</li>
+      <li><strong>Referencia:</strong> {{ referencia }}</li>
+    </ul>
+
+    <p class="leyenda-subir">
+      📎 Sube tu comprobante de depósito para que sea validado por el administrador.
     </p>
-
-    <button class="btn-notificar" (click)="notificarDeposito()">📤 Notificar Depósito</button>
-  </div>
-
-  <!-- TARJETA -->
-  <div *ngIf="metodoSeleccionado === 'TARJETA'" class="metodo-tarjeta">
-    <p class="mensaje-tarjeta">
-      ❌ Este método aún no está disponible. Pronto habilitaremos pagos con tarjeta Visa y Mastercard.
-    </p>
-  </div>
-</div>
+    <p class="leyenda-validacion">
+      🕒 Pasos para realizar tu pago: Ingresa a tu banca electrónica y presiona la opción

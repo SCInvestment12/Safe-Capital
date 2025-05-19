@@ -14,7 +14,7 @@ import {
 } from 'ng-apexcharts';
 import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
-import { TradingService } from '../services/trading.service';
+import { TradingService, TradingBarDTO } from '../services/trading.service';
 
 @Component({
   selector: 'app-trading-chart',
@@ -41,24 +41,26 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
   };
 
   precioActual: number | null = null;
-  subscription!: Subscription;
+  private subscription!: Subscription;
 
   constructor(private tradingService: TradingService) {}
 
   ngOnInit(): void {
     this.initChart();
-    this.obtenerDatos();
-    this.subscription = interval(5000).subscribe(() => this.obtenerDatos());
+    this.startPolling();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['simbolo'] || changes['tipo']) {
       this.initChart();
-      this.obtenerDatos();
+      this.startPolling();
     }
   }
 
-  initChart(): void {
+  private initChart(): void {
+    if (this.subscription) {
+      this.subscription.unsubscribe();
+    }
     this.chartOptions = {
       series: [{ name: 'Valor', data: [] }],
       chart: {
@@ -103,64 +105,55 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
     };
   }
 
-  obtenerDatos(): void {
-    const simboloFormateado = this.tipo === 'forex' ? this.simbolo.replace('/', '') : this.simbolo;
-
-    this.tradingService.getBarsByTipoYSimbolo(this.tipo, simboloFormateado).subscribe(barras => {
-      if (!barras || barras.length === 0) return;
-
-      barras.sort((a, b) => {
-        const fechaA = typeof a.timestamp === 'number' ? a.timestamp : Date.parse(a.timestamp);
-        const fechaB = typeof b.timestamp === 'number' ? b.timestamp : Date.parse(b.timestamp);
-        return fechaA - fechaB;
-      });
-
-      const datos = barras.map(bar => bar.close);
-      const categorias = barras.map(bar => {
-        const fecha = typeof bar.timestamp === 'number'
-          ? new Date(bar.timestamp)
-          : new Date(Date.parse(bar.timestamp));
-        return fecha.toLocaleTimeString('es-MX', { timeZone: 'America/Mexico_City' });
-      });
-
-      this.precioActual = datos[datos.length - 1];
-
-      this.chartOptions = {
-        ...this.chartOptions,
-        series: [{ name: 'Valor', data: datos }],
-        xaxis: { ...this.chartOptions.xaxis, categories: categorias }
-      };
-    });
+  private startPolling(): void {
+    this.subscription = interval(5000).subscribe(() => this.fetchData());
+    // fetch immediately
+    this.fetchData();
   }
 
-  mostrarApuesta(direccion: 'up' | 'down') {
-    const index = this.chartOptions.series[0].data.length - 1;
-    const valor = this.chartOptions.series[0].data[index];
-    if (typeof valor !== 'number') return;
+  private fetchData(): void {
+    this.tradingService
+      .getBarsByTipoYSimbolo(this.tipo, this.simbolo)
+      .subscribe((barras: TradingBarDTO[]) => {
+        if (!barras.length) return;
 
+        // Ordenar por timestamp
+        barras.sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
+
+        const datos = barras.map(bar => bar.close);
+        const categorias = barras.map(bar =>
+          new Date(Date.parse(bar.timestamp)).toLocaleTimeString('es-MX', {
+            timeZone: 'America/Mexico_City'
+          })
+        );
+
+        this.precioActual = datos[datos.length - 1];
+
+        this.chartOptions = {
+          ...this.chartOptions,
+          series: [{ name: 'Valor', data: datos }],
+          xaxis: { ...this.chartOptions.xaxis, categories: categorias }
+        };
+      });
+  }
+
+  mostrarApuesta(direccion: 'up' | 'down'): void {
+    const idx = this.chartOptions.series[0].data.length - 1;
+    const valor = this.chartOptions.series[0].data[idx] as number;
     const flecha = direccion === 'up' ? '↑' : '↓';
     const color = direccion === 'up' ? '#28a745' : '#dc3545';
 
-    if (!this.chartOptions.annotations.points) {
-      this.chartOptions.annotations.points = [];
-    }
-
-    this.chartOptions.annotations.points.push({
-      x: this.chartOptions.xaxis.categories[index],
+    this.chartOptions.annotations.points!.push({
+      x: this.chartOptions.xaxis.categories[idx],
       y: valor,
       label: {
         text: flecha,
-        style: {
-          color: '#fff',
-          background: color
-        }
+        style: { color: '#fff', background: color }
       }
     });
   }
 
   ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
+    this.subscription.unsubscribe();
   }
 }

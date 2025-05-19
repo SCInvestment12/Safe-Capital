@@ -38,7 +38,7 @@ export class PerfilComponent {
   movimientos = [
     { tipo: 'Depósito', monto: 2000, fecha: '03 abril 2025' },
     { tipo: 'Retiro', monto: 500, fecha: '28 marzo 2025' },
-    { tipo: 'Apuesta', monto: 150, fecha: '27 marzo 2025' }
+    { tipo: 'Inversion', monto: 150, fecha: '27 marzo 2025' }
   ];
 
   portafolio = [
@@ -84,7 +84,7 @@ export class PerfilComponent {
   calcularResumen() {
     const depositos = this.movimientos.filter(m => m.tipo === 'Depósito');
     const retiros = this.movimientos.filter(m => m.tipo === 'Retiro');
-    const apuestas = this.movimientos.filter(m => m.tipo === 'Apuesta');
+    const apuestas = this.movimientos.filter(m => m.tipo === 'Inversion');
 
     this.ultimoDeposito = depositos[depositos.length - 1];
     this.ultimoRetiro = retiros[retiros.length - 1];
@@ -186,7 +186,7 @@ export class PerfilComponent {
     switch (tipo) {
       case 'Depósito': return 'fas fa-arrow-down text-success';
       case 'Retiro': return 'fas fa-arrow-up text-danger';
-      case 'Apuesta': return 'fas fa-coins text-warning';
+      case 'Inversion': return 'fas fa-coins text-warning';
       default: return 'fas fa-exchange-alt';
     }
   }

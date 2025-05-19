@@ -1,31 +1,35 @@
+<!-- navbar.component.html -->
+
 <nav class="navbar-custom">
   <div class="logo-area">
     <img src="assets/img/logo.jpg" alt="Safe Capital" class="logo-navbar" />
     <span class="brand-text">Safe Capital Investment</span>
   </div>
 
-  <div class="nav-links" *ngIf="estaLogueado()">
-    <a routerLink="/perfil">Mi perfil</a>
-
-    <!-- Solo USER, MODERATOR, ADMIN, SUPER_ADMIN -->
-    <a (click)="abrirModalDeposito()">Depósito</a>
-    <a (click)="abrirModalRetiro()">Retiro</a>
-
-    <!-- Solo ADMIN y SUPER_ADMIN -->
-    <a *ngIf="esAdmin" routerLink="/admin-dashboard">Panel Admin</a>
-
-    <!-- Saldo -->
-    <span class="saldo-usuario">Saldo: {{ obtenerSaldo() }}</span>
-
-    <a (click)="logout()">Cerrar sesión</a>
+  <!-- Enlaces cuando no hay sesión: Inicio, Entrar, Registrarte -->
+  <div class="nav-links" *ngIf="!estaLogueado()">
+    <a routerLink="/" class="nav-link">Inicio</a>
+    <a routerLink="/login" class="nav-link">Entrar</a>
+    <a routerLink="/register" class="nav-link">Registrarte</a>
   </div>
 
-  <div class="nav-links" *ngIf="!estaLogueado()">
-    <a routerLink="/login">Entrar</a>
-    <a routerLink="/register">Registrarte</a>
+  <!-- Enlaces cuando hay sesión -->
+  <div class="nav-links" *ngIf="estaLogueado()">
+    <a routerLink="/perfil" class="nav-link">Mi perfil</a>
+    <a (click)="abrirModalDeposito()" class="nav-link">Depósito</a>
+    <a (click)="abrirModalRetiro()" class="nav-link">Retiro</a>
+    <a *ngIf="esAdmin" routerLink="/admin-dashboard" class="nav-link">Panel Admin</a>
+    <span class="saldo-usuario nav-link">Saldo: {{ obtenerSaldo() }}</span>
+    <a (click)="logout()" class="nav-link">Cerrar sesión</a>
   </div>
 </nav>
 
 <!-- Modales -->
-<app-deposito-modal *ngIf="mostrarModalDeposito" (cerrar)="cerrarModales()"></app-deposito-modal>
-<app-retiro-modal *ngIf="mostrarModalRetiro" (cerrar)="cerrarModales()"></app-retiro-modal>
+<app-deposito-modal
+  *ngIf="mostrarModalDeposito"
+  (cerrar)="cerrarModales()"
+></app-deposito-modal>
+<app-retiro-modal
+  *ngIf="mostrarModalRetiro"
+  (cerrar)="cerrarModales()"
+></app-retiro-modal>
