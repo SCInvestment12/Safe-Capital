@@ -15,25 +15,24 @@ export interface TradingBarDTO {
   providedIn: 'root'
 })
 export class TradingService {
-  private apiUrl = 'https://safe-capital-backend.onrender.com/api/trading';
+  private apiUrl = 'https://safe-capital-backend.onrender.com/api';
 
   constructor(private http: HttpClient) {}
 
-  // ✅ Obtener datos para la gráfica según el tipo y símbolo
+  // 🔀 Decide internamente si es forex o no
   getBarsByTipoYSimbolo(tipo: string, simbolo: string): Observable<TradingBarDTO[]> {
     if (tipo === 'forex') {
-      return this.getBarsForex(simbolo);
+      return this.getBarsForex(simbolo.replace('/', '')); // EUR/USD → EURUSD
     }
-    return this.http.get<TradingBarDTO[]>(`${this.apiUrl}/bars/${tipo}/${simbolo}`);
+    return this.http.get<TradingBarDTO[]>(`${this.apiUrl}/trading/bars/${tipo}/${simbolo}`);
   }
 
-  // ✅ Obtener datos de Forex
+  // 🔓 Forex sin token
   getBarsForex(symbol: string): Observable<TradingBarDTO[]> {
-    return this.http.get<TradingBarDTO[]>(`${this.apiUrl}/forex/bars/${symbol}`);
+    return this.http.get<TradingBarDTO[]>(`${this.apiUrl}/trading/forex/bars/${symbol}`);
   }
 
-  // ✅ (Si implementas los Top 5 en el backend)
   getTop5(tipo: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/top5/${tipo}`);
+    return this.http.get<any[]>(`${this.apiUrl}/trading/top5/${tipo}`);
   }
 }
