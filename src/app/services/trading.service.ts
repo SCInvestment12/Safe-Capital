@@ -19,20 +19,35 @@ export class TradingService {
 
   constructor(private http: HttpClient) {}
 
-  // 🔀 Decide internamente si es forex o no
+  /**
+   * 🔀 Decide internamente si es forex o no
+   */
   getBarsByTipoYSimbolo(tipo: string, simbolo: string): Observable<TradingBarDTO[]> {
     if (tipo === 'forex') {
-      return this.getBarsForex(simbolo.replace('/', '')); // EUR/USD → EURUSD
+      // Aseguramos que el símbolo llegue sin slash: EUR/USD → EURUSD
+      return this.getBarsForex(simbolo.replace('/', ''));
     }
-    return this.http.get<TradingBarDTO[]>(`${this.apiUrl}/trading/bars/${tipo}/${simbolo}`);
+    // Resto de activos (cetes, cripto, etfs, acciones)
+    return this.http.get<TradingBarDTO[]>(
+      `${this.apiUrl}/trading/bars/${tipo}/${simbolo}`
+    );
   }
 
-  // 🔓 Forex sin token
+  /**
+   * 🔓 Forex (no usa el segmento "trading")
+   */
   getBarsForex(symbol: string): Observable<TradingBarDTO[]> {
-    return this.http.get<TradingBarDTO[]>(`${this.apiUrl}/trading/forex/bars/${symbol}`);
+    return this.http.get<TradingBarDTO[]>(
+      `${this.apiUrl}/forex/bars/${symbol}`
+    );
   }
 
+  /**
+   * Top 5 por tipo de activo
+   */
   getTop5(tipo: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/trading/top5/${tipo}`);
+    return this.http.get<any[]>(
+      `${this.apiUrl}/trading/top5/${tipo}`
+    );
   }
 }
