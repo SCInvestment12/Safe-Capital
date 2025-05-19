@@ -11,15 +11,16 @@ import { ChartWrapperComponent } from '../chart-wrapper.component';
   styleUrls: ['./forex-compra.component.css']
 })
 export class ForexCompraComponent {
-  paresDivisas = [
-    { nombre: 'Euro / Dólar', simbolo: 'EUR/USD' },
-    { nombre: 'Libra / Dólar', simbolo: 'GBP/USD' },
-    { nombre: 'Dólar / Yen', simbolo: 'USD/JPY' },
-    { nombre: 'Dólar / Franco Suizo', simbolo: 'USD/CHF' },
-    { nombre: 'Dólar Australiano / Dólar', simbolo: 'AUD/USD' },
-    { nombre: 'Dólar Neozelandés / Dólar', simbolo: 'NZD/USD' },
-    { nombre: 'Dólar / Dólar Canadiense', simbolo: 'USD/CAD' }
-  ];
+ paresDivisas = [
+  { nombre: 'Euro / Dólar', simbolo: 'EURUSD' },
+  { nombre: 'Libra / Dólar', simbolo: 'GBPUSD' },
+  { nombre: 'Dólar / Yen', simbolo: 'USDJPY' },
+  { nombre: 'Dólar / Franco Suizo', simbolo: 'USDCHF' },
+  { nombre: 'Dólar Australiano / Dólar', simbolo: 'AUDUSD' },
+  { nombre: 'Dólar Neozelandés / Dólar', simbolo: 'NZDUSD' },
+  { nombre: 'Dólar / Dólar Canadiense', simbolo: 'USDCAD' }
+];
+
 
   parSeleccionado: any = null;
   monto: number | null = null;

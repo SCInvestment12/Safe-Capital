@@ -1,4 +1,3 @@
-// src/app/components/dashboard-redirect/dashboard-redirect.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -18,25 +17,28 @@ export class DashboardRedirectComponent implements OnInit {
       return;
     }
 
-    const payload = JSON.parse(atob(token.split('.')[1]));
-    const role = payload.rol;
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const role = payload.rol;
 
-    switch (role) {
-      case 'ROLE_USER':
-        this.router.navigate(['/dashboard/user']);
-        break;
-      case 'ROLE_MODERATOR':
-        this.router.navigate(['/dashboard/moderator']);
-        break;
-      case 'ROLE_ADMIN':
-        this.router.navigate(['/dashboard/admin']);
-        break;
-      case 'ROLE_SUPER_ADMIN':
-        this.router.navigate(['/dashboard/super-admin']);
-        break;
-      default:
-        this.router.navigate(['/login']);
-        break;
+      switch (role) {
+        case 'ROLE_USER':
+          this.router.navigate(['/dashboard/user']);
+          break;
+        case 'ROLE_MODERATOR':
+          this.router.navigate(['/dashboard/moderator']);
+          break;
+        case 'ROLE_ADMIN':
+          this.router.navigate(['/dashboard/admin']);
+          break;
+        case 'ROLE_SUPER_ADMIN':
+          this.router.navigate(['/dashboard/super-admin']);
+          break;
+        default:
+          this.router.navigate(['/login']);
+      }
+    } catch (e) {
+      this.router.navigate(['/login']);
     }
   }
 }

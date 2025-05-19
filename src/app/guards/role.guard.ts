@@ -27,11 +27,9 @@ export class RoleGuard implements CanActivate {
         return true;
       }
 
-      // Rol no permitido
       this.router.navigate(['/login']);
       return false;
     } catch (error) {
-      console.error('Error al validar token:', error);
       this.router.navigate(['/login']);
       return false;
     }

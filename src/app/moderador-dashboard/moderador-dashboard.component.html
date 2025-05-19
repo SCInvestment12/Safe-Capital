@@ -1,14 +1,12 @@
 <div class="moderador-wrapper">
   <h2>Usuarios Registrados</h2>
 
-  <table class="tabla-moderador">
+  <table class="tabla-moderador" *ngIf="usuarios.length > 0">
     <thead>
       <tr>
         <th>ID</th>
         <th>Nombre</th>
         <th>Correo</th>
-        <th>CURP</th>
-        <th>Fecha de Nacimiento</th>
         <th>Rol</th>
       </tr>
     </thead>
@@ -17,10 +15,11 @@
         <td>{{ u.idUsuario }}</td>
         <td>{{ u.nombre }} {{ u.apellidos }}</td>
         <td>{{ u.correoElectronico }}</td>
-        <td>{{ u.curp }}</td>
-        <td>{{ u.fechaNacimiento | date:'yyyy-MM-dd' }}</td>
         <td>{{ u.rol }}</td>
       </tr>
     </tbody>
   </table>
+
+  <p *ngIf="usuarios.length === 0 && !loading">No hay usuarios registrados.</p>
+  <p *ngIf="loading">Cargando...</p>
 </div>
