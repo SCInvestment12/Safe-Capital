@@ -9,14 +9,19 @@ import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http'
   imports: [
     CommonModule,
     FormsModule,
-    HttpClientModule      // <-- necesario para HttpClient en standalone
+    HttpClientModule
   ],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
   comprobantes: any[] = [];
-  tasaCetes = 0.0;
+  loading = false;
+
+  // CETES
+  tasaCetes = 0;
+  fechaSubasta = '';
+  fechaSubastaNueva = '';
 
   // Configuración bancaria
   banco = '';
@@ -26,9 +31,8 @@ export class AdminDashboardComponent implements OnInit {
   clabe = '';
   clabeNueva = '';
 
-  loading = false;
-
   private headers: HttpHeaders;
+  private base = 'https://safe-capital-backend.onrender.com/api';
 
   constructor(private http: HttpClient) {
     const token = localStorage.getItem('token') || '';
@@ -38,36 +42,26 @@ export class AdminDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.cargarComprobantes();
     this.obtenerTasaCetes();
-    this.obtenerConfiguracion();
+    this.obtenerFechaSubasta();
+    this.obtenerConfiguracionBancaria();
   }
 
-  // Comprobantes
+  // --- Comprobantes ---
   cargarComprobantes() {
     this.loading = true;
-    this.http.get<any[]>(
-      'https://safe-capital-backend.onrender.com/api/comprobantes/pending',
-      { headers: this.headers }
-    ).subscribe({
-      next: data => {
-        this.comprobantes = data;
-        this.loading = false;
-      },
-      error: () => {
-        alert('Error al cargar comprobantes');
-        this.loading = false;
-      }
-    });
+    this.http.get<any[]>(`${this.base}/comprobantes/pending`, { headers: this.headers })
+      .subscribe({
+        next: data => { this.comprobantes = data; this.loading = false; },
+        error: () => { alert('Error al cargar comprobantes'); this.loading = false; }
+      });
   }
 
   acreditarSaldo(id: number, correo: string) {
     const montoStr = prompt('Ingresa el monto a acreditar:');
     const monto = montoStr ? parseFloat(montoStr) : NaN;
-    if (isNaN(monto)) {
-      alert('Monto inválido.');
-      return;
-    }
+    if (isNaN(monto)) { alert('Monto inválido.'); return; }
     this.http.post(
-      'https://safe-capital-backend.onrender.com/api/usuarios/saldo/acreditar',
+      `${this.base}/usuarios/saldo/acreditar`,
       { correoElectronico: correo, monto },
       { headers: this.headers }
     ).subscribe({
@@ -77,12 +71,8 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   rechazar(id: number) {
-    this.actualizarEstado(id, 'RECHAZADO');
-  }
-
-  private actualizarEstado(id: number, estado: string) {
     this.http.put(
-      `https://safe-capital-backend.onrender.com/api/comprobantes/${id}/estado?estado=${estado}`,
+      `${this.base}/comprobantes/${id}/estado?estado=RECHAZADO`,
       null,
       { headers: this.headers }
     ).subscribe({
@@ -91,105 +81,96 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  // CETES
+  // --- CETES ---
   obtenerTasaCetes() {
     this.http.get<number>(
-      'https://safe-capital-backend.onrender.com/api/cetes/tasa',
+      `${this.base}/config/cetes/tasa`,
       { headers: this.headers }
-    ).subscribe({
-      next: tasa => this.tasaCetes = tasa,
-      error: () => alert('Error al obtener la tasa de CETES')
-    });
+    ).subscribe(t => this.tasaCetes = t);
   }
 
   actualizarTasaCetes() {
     this.http.put(
-      `https://safe-capital-backend.onrender.com/api/cetes/configurar-tasa?tasa=${this.tasaCetes}`,
+      `${this.base}/config/cetes/tasa?tasa=${this.tasaCetes}`,
       null,
       { headers: this.headers }
     ).subscribe({
-      next: () => alert('Tasa de CETES actualizada correctamente.'),
+      next: () => alert('Tasa de CETES actualizada'),
       error: () => alert('Error al actualizar la tasa de CETES')
     });
   }
 
-  // Configuración bancaria
-  private obtenerConfiguracion() {
+  obtenerFechaSubasta() {
+    this.http.get<string>(
+      `${this.base}/config/cetes/subasta`,
+      { headers: this.headers, responseType: 'text' as 'json' }
+    ).subscribe(f => {
+      this.fechaSubasta = f;
+      this.fechaSubastaNueva = f;
+    });
+  }
+
+  actualizarFechaSubasta() {
+    this.http.put(
+      `${this.base}/config/cetes/subasta?fechaIso=${encodeURIComponent(this.fechaSubastaNueva)}`,
+      null,
+      { headers: this.headers }
+    ).subscribe({
+      next: () => alert('Fecha de subasta actualizada'),
+      error: () => alert('Error al actualizar la fecha de subasta')
+    });
+  }
+
+  // --- Configuración bancaria ---
+  obtenerConfiguracionBancaria() {
     // Banco
-    this.http.get('https://safe-capital-backend.onrender.com/api/config/banco', {
+    this.http.get(`${this.base}/config/banco`, {
       headers: this.headers,
       responseType: 'text'
-    }).subscribe({
-      next: v => {
-        this.banco = v;
-        this.bancoNueva = v;
-      },
-      error: () => alert('Error al obtener el banco')
-    });
+    }).subscribe(v => { this.banco = v; this.bancoNueva = v; });
 
     // Cuenta
-    this.http.get('https://safe-capital-backend.onrender.com/api/config/cuenta', {
+    this.http.get(`${this.base}/config/cuenta`, {
       headers: this.headers,
       responseType: 'text'
-    }).subscribe({
-      next: v => {
-        this.cuenta = v;
-        this.cuentaNueva = v;
-      },
-      error: () => alert('Error al obtener la cuenta')
-    });
+    }).subscribe(v => { this.cuenta = v; this.cuentaNueva = v; });
 
     // CLABE
-    this.http.get('https://safe-capital-backend.onrender.com/api/config/clabe', {
+    this.http.get(`${this.base}/config/clabe`, {
       headers: this.headers,
       responseType: 'text'
-    }).subscribe({
-      next: v => {
-        this.clabe = v;
-        this.clabeNueva = v;
-      },
-      error: () => alert('Error al obtener la CLABE')
-    });
+    }).subscribe(v => { this.clabe = v; this.clabeNueva = v; });
   }
 
   actualizarBanco() {
     this.http.put(
-      'https://safe-capital-backend.onrender.com/api/config/banco',
+      `${this.base}/config/banco`,
       this.bancoNueva,
       { headers: this.headers, responseType: 'text' as 'json' }
     ).subscribe({
-      next: () => {
-        alert('Banco actualizado correctamente');
-        this.banco = this.bancoNueva;
-      },
+      next: () => { this.banco = this.bancoNueva; alert('Banco actualizado'); },
       error: () => alert('Error al actualizar el banco')
     });
   }
 
   actualizarCuenta() {
     this.http.put(
-      'https://safe-capital-backend.onrender.com/api/config/cuenta',
+      `${this.base}/config/cuenta`,
       this.cuentaNueva,
       { headers: this.headers, responseType: 'text' as 'json' }
     ).subscribe({
-      next: () => {
-        alert('Cuenta actualizada correctamente');
-        this.cuenta = this.cuentaNueva;
-      },
+      next: () => { this.cuenta = this.cuentaNueva; alert('Cuenta actualizada'); },
       error: () => alert('Error al actualizar la cuenta')
     });
   }
 
   actualizarClabe() {
     this.http.put(
-      'https://safe-capital-backend.onrender.com/api/config/clabe',
+      `${this.base}/config/clabe`,
       this.clabeNueva,
       { headers: this.headers, responseType: 'text' as 'json' }
     ).subscribe({
-      next: () => {
-        alert('CLABE actualizada correctamente');
-        this.clabe = this.clabeNueva;
-      },
+      next: () => { this.clabe = this.clabeNueva; alert('CLABE actualizada'); },
       error: () => alert('Error al actualizar la CLABE')
     });
   }

@@ -1,108 +1,85 @@
-import { Component } from '@angular/core';
+// src/app/modules/profile/perfil.component.ts
+import { Component, OnInit } from '@angular/core';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, NgClass, NgFor, CurrencyPipe } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { AlertService } from '../services/alert.service';
 import { UserService } from '../services/user.service';
-import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    CurrencyPipe,
+    RouterModule,
+    HttpClientModule
+  ],
   templateUrl: './perfil.component.html',
-  styleUrls: ['./perfil.component.css'],
-  imports: [CommonModule, FormsModule, NgClass, NgFor, CurrencyPipe, RouterModule]
+  styleUrls: ['./perfil.component.css']
 })
-export class PerfilComponent {
-  montoRetiro: number = 0;
-  clabe: string = '';
-  saldo: number = 0;
-  archivoComprobante: File | null = null;
-  modoEdicion = false;
-
+export class PerfilComponent implements OnInit {
+  // Perfil
   nombre = '';
   apellidos = '';
-  curp = '';
   correo = '';
+  curp = '';
   telefono = '';
   fechaNacimiento = '';
-
+  modoEdicion = false;
   nombreEditado = '';
   apellidosEditado = '';
   telefonoEditado = '';
 
-  ultimoDeposito: any;
-  ultimoRetiro: any;
-  totalApuestas: number = 0;
+  // Finanzas
+  saldo = 0;
+  movimientos: Array<{ tipo: string; monto: number; fecha: string }> = [];
+  portafolio: Array<{ instrumento: string; monto: number; fecha: string; tipo: string }> = [];
   mostrarModal = false;
+  ultimoDeposito: any;
 
-  movimientos = [
-    { tipo: 'Depósito', monto: 2000, fecha: '03 abril 2025' },
-    { tipo: 'Retiro', monto: 500, fecha: '28 marzo 2025' },
-    { tipo: 'Inversion', monto: 150, fecha: '27 marzo 2025' }
-  ];
+  // Configuración de depósito
+  banco = 'Cargando...';
+  cuenta = 'Cargando...';
+  clabe = 'Cargando...';
 
-  portafolio = [
-    { instrumento: 'CETES 28D', monto: 3000, fecha: '10 abril 2025', tipo: 'CETES' },
-    { instrumento: 'BTC/USD', monto: 1500, fecha: '15 abril 2025', tipo: 'Cripto' },
-    { instrumento: 'NASDAQ ETF', monto: 2200, fecha: '20 abril 2025', tipo: 'ETF' }
-  ];
+  // Comprobante
+  archivoComprobante: File | null = null;
+
+  private headers: HttpHeaders;
+  private base = 'https://safe-capital-backend.onrender.com/api';
 
   constructor(
+    private userService: UserService,
     private alert: AlertService,
-    private userService: UserService
-  ) {}
+    private http: HttpClient
+  ) {
+    const token = localStorage.getItem('token') || '';
+    this.headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  }
 
-  ngOnInit() {
-    this.calcularResumen();
+  ngOnInit(): void {
     this.cargarPerfil();
     this.cargarSaldo();
+    this.cargarMovimientosYPortafolio();
+    this.cargarDatosBancarios();
   }
 
+  // Perfil
   cargarPerfil() {
     this.userService.obtenerPerfil().subscribe({
-      next: (data: any) => {
+      next: data => {
         this.nombre = data.nombre;
         this.apellidos = data.apellidos;
+        this.correo = data.correo;
         this.curp = data.curp;
         this.telefono = data.telefono;
-        this.correo = data.correo;
         this.fechaNacimiento = data.fechaNacimiento;
       },
-      error: () => {
-        this.alert.error('Error al cargar perfil');
-      }
+      error: () => this.alert.error('Error al cargar perfil')
     });
-  }
-
-  cargarSaldo() {
-    this.userService.obtenerSaldo().subscribe({
-      next: (saldo) => this.saldo = saldo,
-      error: () => this.alert.error('Error al cargar el saldo')
-    });
-  }
-
-  calcularResumen() {
-    const depositos = this.movimientos.filter(m => m.tipo === 'Depósito');
-    const retiros = this.movimientos.filter(m => m.tipo === 'Retiro');
-    const apuestas = this.movimientos.filter(m => m.tipo === 'Inversion');
-
-    this.ultimoDeposito = depositos[depositos.length - 1];
-    this.ultimoRetiro = retiros[retiros.length - 1];
-    this.totalApuestas = apuestas.length;
-  }
-
-  async solicitarRetiro() {
-    if (!this.montoRetiro || !this.clabe || this.clabe.length !== 18) {
-      this.alert.error('Por favor, llena todos los campos correctamente.');
-      return;
-    }
-
-    const confirmado = await this.alert.confirmacion('¿Deseas solicitar este retiro?');
-    if (!confirmado) return;
-
-    this.alert.success('Solicitud de retiro enviada correctamente.');
-    this.montoRetiro = 0;
-    this.clabe = '';
   }
 
   editarPerfil() {
@@ -117,14 +94,11 @@ export class PerfilComponent {
       this.alert.error('Completa todos los campos antes de guardar.');
       return;
     }
-
-    const payload = {
+    this.userService.actualizarPerfil({
       nombre: this.nombreEditado,
       apellidos: this.apellidosEditado,
       telefono: this.telefonoEditado
-    };
-
-    this.userService.actualizarPerfil(payload).subscribe({
+    }).subscribe({
       next: () => {
         this.nombre = this.nombreEditado;
         this.apellidos = this.apellidosEditado;
@@ -132,9 +106,7 @@ export class PerfilComponent {
         this.modoEdicion = false;
         this.alert.success('Perfil actualizado correctamente.');
       },
-      error: () => {
-        this.alert.error('Error al actualizar perfil.');
-      }
+      error: () => this.alert.error('Error al actualizar perfil.')
     });
   }
 
@@ -142,11 +114,73 @@ export class PerfilComponent {
     this.modoEdicion = false;
   }
 
-  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      this.archivoComprobante = file;
+  // Saldo y movimientos
+  cargarSaldo() {
+    this.userService.obtenerSaldo().subscribe({
+      next: s => this.saldo = s,
+      error: () => this.alert.error('Error al cargar el saldo')
+    });
+  }
+
+  cargarMovimientosYPortafolio() {
+    // Simula datos; reemplaza con llamadas reales si las tienes
+    this.movimientos = [
+      { tipo: 'Depósito', monto: 2000, fecha: '03 abril 2025' },
+      { tipo: 'Retiro', monto: 500, fecha: '28 marzo 2025' },
+      { tipo: 'Inversion', monto: 150, fecha: '27 marzo 2025' }
+    ];
+    this.portafolio = [
+      { instrumento: 'CETES 28D', monto: 3000, fecha: '10 abril 2025', tipo: 'CETES' },
+      { instrumento: 'BTC/USD', monto: 1500, fecha: '15 abril 2025', tipo: 'Cripto' },
+      { instrumento: 'NASDAQ ETF', monto: 2200, fecha: '20 abril 2025', tipo: 'ETF' }
+    ];
+    const depositos = this.movimientos.filter(m => m.tipo === 'Depósito');
+    this.ultimoDeposito = depositos.length ? depositos[depositos.length - 1] : null;
+  }
+
+  // Modal movimientos
+  abrirModal() {
+    this.mostrarModal = true;
+  }
+  cerrarModal() {
+    this.mostrarModal = false;
+  }
+
+  getIconoMovimiento(tipo: string): string {
+    switch (tipo) {
+      case 'Depósito':  return 'fas fa-arrow-down text-success';
+      case 'Retiro':    return 'fas fa-arrow-up text-danger';
+      case 'Inversion': return 'fas fa-coins text-warning';
+      default:          return 'fas fa-exchange-alt';
     }
+  }
+
+  // Datos bancarios
+  cargarDatosBancarios() {
+    this.http.get(`${this.base}/config/banco`, {
+      headers: this.headers, responseType: 'text'
+    }).subscribe(v => this.banco = v, () => this.banco = 'Error al cargar banco');
+
+    this.http.get(`${this.base}/config/cuenta`, {
+      headers: this.headers, responseType: 'text'
+    }).subscribe(v => this.cuenta = v, () => this.cuenta = 'Error al cargar cuenta');
+
+    this.http.get(`${this.base}/config/clabe`, {
+      headers: this.headers, responseType: 'text'
+    }).subscribe(v => this.clabe = v, () => this.clabe = 'Error al cargar CLABE');
+  }
+
+  get nombreCompleto(): string {
+    return this.nombre && this.apellidos ? `${this.nombre} ${this.apellidos}` : 'Usuario';
+  }
+
+  get referencia(): string {
+    return localStorage.getItem('id') || 'N/A';
+  }
+
+  // Subir comprobante
+  onFileChange(event: any) {
+    this.archivoComprobante = event.target.files[0] || null;
   }
 
   subirComprobante() {
@@ -154,64 +188,28 @@ export class PerfilComponent {
       this.alert.error('Selecciona un archivo antes de enviar.');
       return;
     }
-
-    const token = localStorage.getItem('token');
-    const formData = new FormData();
-    formData.append('archivo', this.archivoComprobante);
-
-    fetch('https://safe-capital-backend.onrender.com/api/depositos/subir', {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData
-    }).then(() => {
-      this.alert.success('Comprobante enviado correctamente.');
-    }).catch(() => {
-      this.alert.error('Error al enviar comprobante.');
-    });
+    const form = new FormData();
+    form.append('archivo', this.archivoComprobante);
+    this.http.post(`${this.base}/depositos/subir`, form, { headers: this.headers })
+      .subscribe(() => this.alert.success('Comprobante enviado correctamente.'),
+                 () => this.alert.error('Error al enviar comprobante.'));
   }
 
+  // Navegación
   irAFondos() {
     console.log('Ir a agregar fondos');
   }
-
-  irAHistorial() {
-    console.log('Ir al historial');
-  }
-
   irATrading() {
-    console.log('Ir al módulo de trading');
+    console.log('Ir a Trading');
   }
-
-  getIconoMovimiento(tipo: string): string {
-    switch (tipo) {
-      case 'Depósito': return 'fas fa-arrow-down text-success';
-      case 'Retiro': return 'fas fa-arrow-up text-danger';
-      case 'Inversion': return 'fas fa-coins text-warning';
-      default: return 'fas fa-exchange-alt';
-    }
-  }
-
-  abrirModal() {
-    this.mostrarModal = true;
-  }
-
-  cerrarModal() {
-    this.mostrarModal = false;
-  }
-
   irADashboard() {
-    const rol = localStorage.getItem('rol');
-    switch (rol) {
-      case 'ROLE_USER':
-        window.location.href = '/dashboard/user'; break;
-      case 'ROLE_MODERATOR':
-        window.location.href = '/dashboard/moderator'; break;
-      case 'ROLE_ADMIN':
-        window.location.href = '/dashboard/admin'; break;
-      case 'ROLE_SUPER_ADMIN':
-        window.location.href = '/dashboard/super-admin'; break;
-      default:
-        window.location.href = '/dashboard/user';
-    }
+    const rol = localStorage.getItem('rol') || 'ROLE_USER';
+    const rutas: Record<string, string> = {
+      ROLE_USER: '/dashboard/user',
+      ROLE_MODERATOR: '/dashboard/moderator',
+      ROLE_ADMIN: '/dashboard/admin',
+      ROLE_SUPER_ADMIN: '/dashboard/super-admin'
+    };
+    window.location.href = rutas[rol];
   }
 }

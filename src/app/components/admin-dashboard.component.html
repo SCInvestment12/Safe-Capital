@@ -22,38 +22,50 @@
         <td>{{ c.fechaSubida | date:'short' }}</td>
         <td>{{ c.estado }}</td>
         <td>
-          <button class="btn-aprobar" (click)="acreditarSaldo(c.id, c.usuario.correoElectronico)">Aprobar</button>
-          <button class="btn-rechazar" (click)="rechazar(c.id)">Rechazar</button>
+          <button class="btn-aprobar" (click)="acreditarSaldo(c.id, c.usuario.correoElectronico)">
+            Aprobar
+          </button>
+          <button class="btn-rechazar" (click)="rechazar(c.id)">
+            Rechazar
+          </button>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <!-- CETES -->
-  <h2 class="mt-4">Configurar Tasa de CETES</h2>
+  <!-- CETES: TASA -->
+  <h2 class="mt-4">Configurar Tasa de CETES (%)</h2>
   <div class="tasa-cetes-config">
-    <label>Tasa de CETES (%):</label>
     <input type="number" [(ngModel)]="tasaCetes" class="form-control" />
-    <button class="btn-actualizar" (click)="actualizarTasaCetes()">Actualizar Tasa</button>
+    <button class="btn-actualizar" (click)="actualizarTasaCetes()">
+      Actualizar Tasa
+    </button>
+  </div>
+
+  <!-- CETES: FECHA DE SUBASTA -->
+  <h2 class="mt-4">Configurar Fecha de Subasta CETES</h2>
+  <div class="tasa-cetes-config">
+    <input type="datetime-local" [(ngModel)]="fechaSubastaNueva" class="form-control" />
+    <small>Actual: {{ fechaSubasta }}</small>
+    <button class="btn-actualizar" (click)="actualizarFechaSubasta()">
+      Actualizar Fecha
+    </button>
   </div>
 
   <!-- CONFIGURACIÓN BANCARIA -->
   <h2 class="mt-4">Configuración Bancaria</h2>
-
   <div class="tasa-cetes-config">
     <label>Banco:</label>
     <input type="text" [(ngModel)]="bancoNueva" class="form-control" />
     <button class="btn-actualizar" (click)="actualizarBanco()">Guardar Banco</button>
   </div>
-
   <div class="tasa-cetes-config">
-    <label>Número de cuenta:</label>
+    <label>Cuenta:</label>
     <input type="text" [(ngModel)]="cuentaNueva" class="form-control" />
     <button class="btn-actualizar" (click)="actualizarCuenta()">Guardar Cuenta</button>
   </div>
-
   <div class="tasa-cetes-config">
-    <label>CLABE Interbancaria:</label>
+    <label>CLABE:</label>
     <input type="text" [(ngModel)]="clabeNueva" class="form-control" />
     <button class="btn-actualizar" (click)="actualizarClabe()">Guardar CLABE</button>
   </div>

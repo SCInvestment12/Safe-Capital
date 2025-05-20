@@ -1,15 +1,17 @@
+// src/app/deposito-modal/deposito-modal.component.ts
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-deposito-modal',
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    HttpClientModule
   ],
   templateUrl: './deposito-modal.component.html',
   styleUrls: ['./deposito-modal.component.css']
@@ -21,7 +23,6 @@ export class DepositoModalComponent implements OnInit {
   monto: number | null = null;
   pasoComprobante = false;
 
-  // Datos bancarios dinámicos
   banco = 'Cargando...';
   cuenta = 'Cargando...';
   clabe = 'Cargando...';
@@ -29,31 +30,18 @@ export class DepositoModalComponent implements OnInit {
   constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit(): void {
-    // Carga Banco
-    this.http.get('http://localhost:8096/api/config/banco', { responseType: 'text' })
-      .subscribe({
-        next: v => this.banco = v,
-        error: () => this.banco = 'Error al cargar banco'
-      });
-
-    // Carga Cuenta
-    this.http.get('http://localhost:8096/api/config/cuenta', { responseType: 'text' })
-      .subscribe({
-        next: v => this.cuenta = v,
-        error: () => this.cuenta = 'Error al cargar cuenta'
-      });
-
-    // Carga CLABE
-    this.http.get('http://localhost:8096/api/config/clabe', { responseType: 'text' })
-      .subscribe({
-        next: v => this.clabe = v,
-        error: () => this.clabe = 'Error al cargar CLABE'
-      });
+    const base = 'https://safe-capital-backend.onrender.com/api/config';
+    this.http.get(`${base}/banco`,  { responseType: 'text' })
+      .subscribe({ next: v => this.banco = v,  error: () => this.banco = 'Error al cargar banco' });
+    this.http.get(`${base}/cuenta`, { responseType: 'text' })
+      .subscribe({ next: v => this.cuenta = v, error: () => this.cuenta = 'Error al cargar cuenta' });
+    this.http.get(`${base}/clabe`,  { responseType: 'text' })
+      .subscribe({ next: v => this.clabe = v,  error: () => this.clabe = 'Error al cargar CLABE' });
   }
 
   get nombreCompleto(): string {
-    const n = localStorage.getItem('nombre') || '';
-    const a = localStorage.getItem('apellidos') || '';
+    const n = localStorage.getItem('nombre')   || '';
+    const a = localStorage.getItem('apellidos')|| '';
     return n && a ? `${n} ${a}` : 'Usuario';
   }
 

@@ -1,5 +1,4 @@
-<!-- PERFIL COMPONENT HTML COMPLETO CON PORTAFOLIO -->
-
+<!-- src/app/modules/profile/perfil.component.html -->
 <div class="perfil-wrapper">
   <div class="perfil-card animate__animated animate__fadeInUp">
 
@@ -26,47 +25,42 @@
           <li><strong>Teléfono:</strong> {{ telefono }}</li>
           <li><strong>Fecha de Nacimiento:</strong> {{ fechaNacimiento }}</li>
         </ul>
-        <button class="btn-editar" (click)="editarPerfil()"><i class="fas fa-edit me-2"></i>Editar Perfil</button>
+        <button class="btn-editar" (click)="editarPerfil()">
+          <i class="fas fa-edit me-2"></i>Editar Perfil
+        </button>
       </div>
       <form *ngIf="modoEdicion" (ngSubmit)="guardarPerfil()" class="form-editar-perfil">
         <div class="mb-3">
           <label>Nombre</label>
-          <input type="text" [(ngModel)]="nombre" name="nombre" class="form-control" required />
+          <input type="text" [(ngModel)]="nombreEditado" name="nombre" class="form-control" required />
         </div>
         <div class="mb-3">
           <label>Apellidos</label>
-          <input type="text" [(ngModel)]="apellidos" name="apellidos" class="form-control" required />
-        </div>
-        <div class="mb-3">
-          <label>Correo</label>
-          <input type="email" [(ngModel)]="correo" name="correo" class="form-control" disabled />
-        </div>
-        <div class="mb-3">
-          <label>CURP</label>
-          <input type="text" [(ngModel)]="curp" name="curp" class="form-control" disabled />
+          <input type="text" [(ngModel)]="apellidosEditado" name="apellidos" class="form-control" required />
         </div>
         <div class="mb-3">
           <label>Teléfono</label>
-          <input type="text" [(ngModel)]="telefono" name="telefono" class="form-control" required />
-        </div>
-        <div class="mb-3">
-          <label>Fecha de Nacimiento</label>
-          <input type="text" [(ngModel)]="fechaNacimiento" name="fechaNacimiento" class="form-control" disabled />
+          <input type="text" [(ngModel)]="telefonoEditado" name="telefono" class="form-control" required />
         </div>
         <div class="d-flex gap-3">
-          <button type="submit" class="btn btn-success"><i class="fas fa-save me-2"></i>Guardar</button>
-          <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()"><i class="fas fa-times me-2"></i>Cancelar</button>
+          <button type="submit" class="btn btn-success">
+            <i class="fas fa-save me-2"></i>Guardar
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cancelarEdicion()">
+            <i class="fas fa-times me-2"></i>Cancelar
+          </button>
         </div>
       </form>
     </div>
 
-    <!-- SALDO + PORTAFOLIO + HISTORIAL -->
+    <!-- SALDO + PORTAFOLIO + DATOS DE DEPÓSITO -->
     <div class="card-fila">
 
+      <!-- TARJETA DE SALDO Y PORTAFOLIO -->
       <div class="tarjeta-saldo animate__animated animate__fadeInUp animate__delay-1s">
         <h5>Saldo disponible</h5>
         <p class="saldo-cantidad">{{ saldo | currency:'MXN':'symbol' }}</p>
-        <small class="text-light">Actualizado el 24 April 2025, 03:45:41</small>
+        <small class="text-light">Actualizado: {{ ultimoDeposito?.fecha || ('-' ) }}</small>
         <button class="btn-verde" (click)="abrirModal()">Ver movimientos</button>
 
         <!-- PORTAFOLIO -->
@@ -96,13 +90,15 @@
         </div>
       </div>
 
+      <!-- TARJETA DE DATOS DE DEPÓSITO -->
       <div class="tarjeta-deposito">
         <h5>Mis Datos De Depósito</h5>
         <ul>
-          <li><strong>Banco:</strong> BBVA</li>
-          <li><strong>Cuenta:</strong> 0123 4567 8910 1112</li>
-          <li><strong>CLABE:</strong> 012345678901234567</li>
-          <li><strong>Beneficiario:</strong> Safe Capital Investment</li>
+          <li><strong>Banco:</strong> {{ banco }}</li>
+          <li><strong>Cuenta:</strong> {{ cuenta }}</li>
+          <li><strong>CLABE:</strong> {{ clabe }}</li>
+          <li><strong>Beneficiario:</strong> {{ nombreCompleto }}</li>
+          <li><strong>Referencia:</strong> {{ referencia }}</li>
         </ul>
         <small>Envía tu comprobante al área de soporte para acreditar tu saldo.</small>
       </div>
@@ -113,16 +109,23 @@
       <h5 class="mb-3"><i class="fas fa-upload me-2"></i>Subir comprobante de depósito</h5>
       <form (ngSubmit)="subirComprobante()" class="form-comprobante">
         <input type="file" class="form-control mb-3" (change)="onFileChange($event)" required />
-        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane me-2"></i>Enviar comprobante</button>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-paper-plane me-2"></i>Enviar comprobante
+        </button>
       </form>
     </div>
 
     <!-- MOVIMIENTOS RECIENTES -->
-    <div class="movimientos-box">
+    <div class="movimientos-box mb-5">
       <h5 class="mb-3"><i class="fas fa-history me-2"></i>Movimientos recientes</h5>
       <div class="movimientos-recientes-grid">
-        <div class="movimiento-card" *ngFor="let movimiento of movimientos"
-             [ngClass]="{ 'deposito': movimiento.tipo === 'Depósito', 'retiro': movimiento.tipo === 'Retiro', 'inversion': movimiento.tipo === 'Inversion' }">
+        <div
+          class="movimiento-card"
+          *ngFor="let movimiento of movimientos"
+          [ngClass]="{ 'deposito': movimiento.tipo === 'Depósito',
+                       'retiro': movimiento.tipo === 'Retiro',
+                       'inversion': movimiento.tipo === 'Inversion' }"
+        >
           <div class="icono-mov">
             <i [ngClass]="getIconoMovimiento(movimiento.tipo)"></i>
           </div>
@@ -135,18 +138,16 @@
       </div>
     </div>
 
-
-
     <!-- ACCIONES RÁPIDAS -->
     <div class="acciones-rapidas mt-4">
       <div class="accion-card" (click)="irAFondos()">
         <i class="fas fa-wallet"></i><span>Agregar Fondos</span>
       </div>
-     
       <div class="accion-card" (click)="irATrading()">
         <i class="fas fa-chart-line"></i><span>Ir a Trading</span>
       </div>
     </div>
+
   </div>
 </div>
 
@@ -172,7 +173,7 @@
               <i [ngClass]="getIconoMovimiento(movimiento.tipo)" class="me-2"></i>
               {{ movimiento.tipo }}
             </td>
-            <td [ngClass]="{'positivo': movimiento.tipo === 'Depósito', 'negativo': movimiento.tipo === 'Retiro'}">
+            <td [ngClass]="{'positivo': movimiento.tipo === 'Depósito','negativo': movimiento.tipo === 'Retiro'}">
               {{ movimiento.monto | currency:'MXN' }}
             </td>
             <td>{{ movimiento.fecha }}</td>
