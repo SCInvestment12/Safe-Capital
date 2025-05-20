@@ -1,3 +1,4 @@
+<!-- src/app/components/cetes-compra.component.html -->
 <div class="contenedor-cetes glass-card">
   <h2 class="titulo">CETES</h2>
 
@@ -18,8 +19,7 @@
     <h4 class="subtitulo">Compra de instrumento</h4>
     <p><strong>Plazo:</strong> {{ plazoSeleccionado.plazo }}</p>
     <p><strong>Tasa Indicativa:</strong> {{ plazoSeleccionado.tasa }}</p>
-    <p><strong>Fecha de subasta:</strong> 28/04/2025</p>
-    <p><strong>Serie:</strong> 250529</p>
+    <p><strong>Fecha de subasta:</strong> {{ fechaSubasta }}</p>
 
     <label for="monto">Monto de la compra:</label>
     <input id="monto" type="number" placeholder="Ej. 10000" />
@@ -42,11 +42,21 @@
     <p>Su transacción se registró exitosamente.</p>
     <ul>
       <li><strong>Instrumento:</strong> CETES</li>
-      <li><strong>Fecha de compra:</strong> 28/04/2025</li>
-      <li><strong>Plazo de inversión:</strong> {{ plazoSeleccionado.plazo }}</li>
+      <li><strong>Fecha de compra:</strong> {{ fechaSubasta | date:'dd/MM/yyyy' }}</li>
+      <li><strong>Plazo de inversión:</strong> {{ plazoSeleccionado?.plazo }}</li>
       <li><strong>Reinversión automática:</strong> NO</li>
       <li><strong>Forma de pago:</strong> Fondos en cuenta</li>
     </ul>
     <button class="btn-cancelar" (click)="reiniciar()">Inicio</button>
+  </div>
+
+  <!-- --- CONTROLES ADMIN: editar fecha de subasta --- -->
+  <div *ngIf="plazoSeleccionado===null" class="mt-4">
+    <h4 class="subtitulo">(Admin) Actualizar Fecha de Subasta</h4>
+    <input type="datetime-local" [(ngModel)]="fechaSubastaNueva" class="form-control"/>
+    <small>Actual: {{ fechaSubasta }}</small><br/>
+    <button class="btn-actualizar mt-2" (click)="actualizarFechaSubasta()">
+      Guardar Fecha de Subasta
+    </button>
   </div>
 </div>

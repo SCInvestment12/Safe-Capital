@@ -31,6 +31,10 @@ export class AdminDashboardComponent implements OnInit {
   clabe = '';
   clabeNueva = '';
 
+  // Acreditar saldo manual
+  userEmailParaSaldo = '';
+  montoParaSaldo: number | null = null;
+
   private headers: HttpHeaders;
   private base = 'https://safe-capital-backend.onrender.com/api';
 
@@ -86,7 +90,7 @@ export class AdminDashboardComponent implements OnInit {
     this.http.get<number>(
       `${this.base}/config/cetes/tasa`,
       { headers: this.headers }
-    ).subscribe(t => this.tasaCetes = t);
+    ).subscribe(t => this.tasaCetes = t, () => alert('Error al obtener tasa CETES'));
   }
 
   actualizarTasaCetes() {
@@ -106,8 +110,8 @@ export class AdminDashboardComponent implements OnInit {
       { headers: this.headers, responseType: 'text' as 'json' }
     ).subscribe(f => {
       this.fechaSubasta = f;
-      this.fechaSubastaNueva = f;
-    });
+      this.fechaSubastaNueva = f.substring(0,16);
+    }, () => alert('Error al obtener fecha de subasta'));
   }
 
   actualizarFechaSubasta() {
@@ -123,23 +127,20 @@ export class AdminDashboardComponent implements OnInit {
 
   // --- Configuración bancaria ---
   obtenerConfiguracionBancaria() {
-    // Banco
     this.http.get(`${this.base}/config/banco`, {
       headers: this.headers,
       responseType: 'text'
-    }).subscribe(v => { this.banco = v; this.bancoNueva = v; });
+    }).subscribe(v => { this.banco = v; this.bancoNueva = v; }, () => alert('Error al obtener banco'));
 
-    // Cuenta
     this.http.get(`${this.base}/config/cuenta`, {
       headers: this.headers,
       responseType: 'text'
-    }).subscribe(v => { this.cuenta = v; this.cuentaNueva = v; });
+    }).subscribe(v => { this.cuenta = v; this.cuentaNueva = v; }, () => alert('Error al obtener cuenta'));
 
-    // CLABE
     this.http.get(`${this.base}/config/clabe`, {
       headers: this.headers,
       responseType: 'text'
-    }).subscribe(v => { this.clabe = v; this.clabeNueva = v; });
+    }).subscribe(v => { this.clabe = v; this.clabeNueva = v; }, () => alert('Error al obtener CLABE'));
   }
 
   actualizarBanco() {
@@ -172,6 +173,26 @@ export class AdminDashboardComponent implements OnInit {
     ).subscribe({
       next: () => { this.clabe = this.clabeNueva; alert('CLABE actualizada'); },
       error: () => alert('Error al actualizar la CLABE')
+    });
+  }
+
+  // --- Acreditar Saldo Manual ---
+  asignarSaldoManual() {
+    if (!this.userEmailParaSaldo || !this.montoParaSaldo || this.montoParaSaldo <= 0) {
+      alert('Por favor ingresa un correo válido y un monto mayor a cero.');
+      return;
+    }
+    this.http.post(
+      `${this.base}/usuarios/saldo/acreditar`,
+      { correoElectronico: this.userEmailParaSaldo, monto: this.montoParaSaldo },
+      { headers: this.headers }
+    ).subscribe({
+      next: () => {
+        alert(`Se acreditó $${this.montoParaSaldo} a ${this.userEmailParaSaldo}`);
+        this.userEmailParaSaldo = '';
+        this.montoParaSaldo = null;
+      },
+      error: () => alert('Error al acreditar saldo manualmente')
     });
   }
 }

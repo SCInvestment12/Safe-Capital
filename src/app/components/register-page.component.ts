@@ -19,14 +19,14 @@ export class RegisterPageComponent {
   curp: string = '';
   email: string = '';
   telefono: string = '';
-  fechaNacimiento: string = '';
+  
   password: string = '';
   confirmar: string = '';
 
   constructor(private router: Router, private authService: AuthService) {}
 
   registrarse() {
-    if (!this.nombre || !this.apellidos || !this.username || !this.curp || !this.email || !this.telefono || !this.fechaNacimiento || !this.password || !this.confirmar) {
+    if (!this.nombre || !this.apellidos || !this.username || !this.curp || !this.email || !this.telefono  || !this.password || !this.confirmar) {
       alert('Todos los campos son obligatorios');
       return;
     }
@@ -40,7 +40,6 @@ export class RegisterPageComponent {
       nombre: this.nombre,
       apellidos: this.apellidos,
       curp: this.curp,
-      fechaNacimiento: this.fechaNacimiento,
       telefono: this.telefono,
       correoElectronico: this.email,
       contrasena: this.password // ✅ nombre correcto

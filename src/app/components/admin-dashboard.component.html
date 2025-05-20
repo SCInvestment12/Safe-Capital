@@ -37,9 +37,7 @@
   <h2 class="mt-4">Configurar Tasa de CETES (%)</h2>
   <div class="tasa-cetes-config">
     <input type="number" [(ngModel)]="tasaCetes" class="form-control" />
-    <button class="btn-actualizar" (click)="actualizarTasaCetes()">
-      Actualizar Tasa
-    </button>
+    <button class="btn-actualizar" (click)="actualizarTasaCetes()">Actualizar Tasa</button>
   </div>
 
   <!-- CETES: FECHA DE SUBASTA -->
@@ -47,9 +45,7 @@
   <div class="tasa-cetes-config">
     <input type="datetime-local" [(ngModel)]="fechaSubastaNueva" class="form-control" />
     <small>Actual: {{ fechaSubasta }}</small>
-    <button class="btn-actualizar" (click)="actualizarFechaSubasta()">
-      Actualizar Fecha
-    </button>
+    <button class="btn-actualizar" (click)="actualizarFechaSubasta()">Actualizar Fecha</button>
   </div>
 
   <!-- CONFIGURACIÓN BANCARIA -->
@@ -64,10 +60,31 @@
     <input type="text" [(ngModel)]="cuentaNueva" class="form-control" />
     <button class="btn-actualizar" (click)="actualizarCuenta()">Guardar Cuenta</button>
   </div>
-  <div class="tasa-cetes-config">
+  <div class="tasa-cetes-config mb-4">
     <label>CLABE:</label>
     <input type="text" [(ngModel)]="clabeNueva" class="form-control" />
     <button class="btn-actualizar" (click)="actualizarClabe()">Guardar CLABE</button>
   </div>
+
+  <!-- ACREDITAR SALDO MANUAL -->
+  <h2 class="mt-4">Acreditar Saldo a Usuario</h2>
+  <div class="tasa-cetes-config mb-2">
+    <label>Correo del Usuario:</label>
+    <input type="email"
+           [(ngModel)]="userEmailParaSaldo"
+           class="form-control"
+           placeholder="usuario@ejemplo.com" />
+  </div>
+  <div class="tasa-cetes-config mb-3">
+    <label>Monto a acreditar (MXN):</label>
+    <input type="number"
+           [(ngModel)]="montoParaSaldo"
+           class="form-control"
+           min="1"
+           placeholder="Ej. 1500" />
+  </div>
+  <button class="btn-actualizar mb-5" (click)="asignarSaldoManual()">
+    Acreditar Saldo
+  </button>
 
 </div>
