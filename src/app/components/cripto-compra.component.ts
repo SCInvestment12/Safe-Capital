@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
+import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
+import { AlertService } from '../services/alert.service';
+import { ApuestaService } from '../services/apuesta.service'; // 👈 agregado
 
 @Component({
   selector: 'app-cripto-compra',
@@ -40,9 +43,14 @@ export class CriptoCompraComponent {
     { nombre: 'Filecoin', simbolo: 'FIL' }
   ];
 
+  constructor(
+    private dashboardService: DashboardService,
+    private alertService: AlertService,
+    private apuestaService: ApuestaService // 👈 agregado
+  ) {}
+
   mostrarBotonGrafica(): boolean {
-    const index = this.criptos.findIndex(c => c.simbolo === this.criptoSeleccionada);
-    return index > -1 && (index < 5 || true);
+    return this.criptos.some(c => c.simbolo === this.criptoSeleccionada);
   }
 
   verGrafica() {
@@ -51,9 +59,37 @@ export class CriptoCompraComponent {
   }
 
   confirmarInversion() {
-    if (!this.criptoSeleccionada || !this.monto || !this.duracion) return;
+    if (!this.criptoSeleccionada || !this.monto || !this.duracion) {
+      this.alertService.error('Completa todos los campos.');
+      return;
+    }
+
     this.confirmacion = true;
     this.mostrarGrafica = false;
+
+    const req: RetirarSaldoRequest = { monto: this.monto };
+    this.dashboardService.withdraw(req).subscribe({
+      next: () => {
+        this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
+
+        const apuesta = {
+          simbolo: this.criptoSeleccionada,
+          tipo: 'cripto',
+          direccion: 'up' as 'up',
+          monto: this.monto,
+          plazo: parseInt(this.duracion)
+        };
+
+        this.apuestaService.crearApuesta(apuesta).subscribe({
+          next: () => this.alertService.success('✅ Inversión registrada.'),
+          error: () => this.alertService.error('⚠️ Error al registrar la inversión.')
+        });
+      },
+      error: err => {
+        console.error('Error al retirar saldo:', err);
+        this.alertService.error('No se pudo descontar el saldo.');
+      }
+    });
   }
 
   reiniciar() {

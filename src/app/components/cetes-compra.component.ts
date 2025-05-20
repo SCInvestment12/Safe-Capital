@@ -1,8 +1,10 @@
-// src/app/components/cetes-compra.component.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
+import { AlertService } from '../services/alert.service';
+import { InversionService, CrearInversionRequest } from '../services/inversion.service';
 
 interface PlazoCetes {
   plazo: string;
@@ -12,65 +14,116 @@ interface PlazoCetes {
 @Component({
   selector: 'app-cetes-compra',
   standalone: true,
-  imports: [ CommonModule, HttpClientModule, FormsModule ],
+  imports: [CommonModule, HttpClientModule, FormsModule],
   templateUrl: './cetes-compra.component.html',
   styleUrls: ['./cetes-compra.component.css']
 })
 export class CetesCompraComponent implements OnInit {
-  // 1) Array estático de plazos. Tendrá la tasa sustituida dinámicamente.
   plazos: PlazoCetes[] = [
-    { plazo: '1 mes',   tasa: '—%' },
+    { plazo: '1 mes', tasa: '—%' },
     { plazo: '3 meses', tasa: '—%' },
     { plazo: '6 meses', tasa: '—%' },
-    { plazo: '12 meses',tasa: '—%' },
-    { plazo: '2 años',  tasa: '—%' }
+    { plazo: '12 meses', tasa: '—%' },
+    { plazo: '2 años', tasa: '—%' }
   ];
   plazoSeleccionado: PlazoCetes | null = null;
   confirmar = false;
+  monto: number | null = null;
 
   fechaSubasta = '';
   fechaSubastaNueva = '';
   private headers: HttpHeaders;
-  private base   = 'https://safe-capital-backend.onrender.com/api';
+  private base = 'https://safe-capital-backend.onrender.com/api';
 
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private dashboardService: DashboardService,
+    private alertService: AlertService,
+    private inversionService: InversionService
+  ) {
     const token = localStorage.getItem('token') || '';
     this.headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
   ngOnInit(): void {
-    this.cargarTasaCetes();        // carga y asigna tasa a todos los plazos
-    this.obtenerFechaSubasta();     // lee la fecha de subasta
+    this.cargarTasaCetes();
+    this.obtenerFechaSubasta();
   }
 
-  /** Lee la tasa única de CETES y la aplica a cada plazo */
   private cargarTasaCetes() {
-    this.http.get<number>(
-      `${this.base}/config/cetes/tasa`,
-      { headers: this.headers }
-    ).subscribe({
-      next: tasa => {
-        const pct = tasa.toFixed(2) + '%';
-        this.plazos = this.plazos.map(p => ({ ...p, tasa: pct }));
+    this.http.get<number>(`${this.base}/config/cetes/tasa`, { headers: this.headers })
+      .subscribe({
+        next: tasa => {
+          const pct = tasa.toFixed(2) + '%';
+          this.plazos = this.plazos.map(p => ({ ...p, tasa: pct }));
+        },
+        error: () => {
+          console.error('No se pudo cargar la tasa de CETES');
+        }
+      });
+  }
+
+  seleccionar(p: PlazoCetes) {
+    this.plazoSeleccionado = p;
+    this.confirmar = false;
+    this.monto = null;
+  }
+
+  continuarCompra() {
+    if (!this.monto || this.monto <= 0) {
+      this.alertService.error('Ingresa un monto válido.');
+      return;
+    }
+
+    const req: RetirarSaldoRequest = { monto: this.monto };
+    this.dashboardService.withdraw(req).subscribe({
+      next: () => {
+        this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
+        this.confirmar = true;
+
+        // 🟩 Registrar inversión
+        const id = +(localStorage.getItem('id') || '0');
+        const simbolo = 'CETES';
+        const tipo = 'cetes';
+        const plazoDias = this.obtenerDiasDesdePlazo(this.plazoSeleccionado?.plazo || '');
+
+        const inversionReq: CrearInversionRequest = {
+          idUsuario: id,
+          tipo,
+          simbolo,
+          monto: this.monto!,
+          plazoDias
+        };
+
+        this.inversionService.crearInversion(inversionReq).subscribe({
+          next: () => console.log('✅ Inversión registrada correctamente'),
+          error: () => console.error('❌ Error al registrar inversión')
+        });
       },
-      error: () => {
-        console.error('No se pudo cargar la tasa de CETES');
+      error: err => {
+        console.error('Error al retirar saldo:', err);
+        this.alertService.error('No se pudo descontar el saldo.');
       }
     });
   }
 
-  /** Selección, confirmación y reinicio (igual que antes) */
-  seleccionar(p: PlazoCetes) {
-    this.plazoSeleccionado = p;
-    this.confirmar = false;
+  private obtenerDiasDesdePlazo(plazo: string): number {
+    switch (plazo) {
+      case '1 mes': return 30;
+      case '3 meses': return 90;
+      case '6 meses': return 180;
+      case '12 meses': return 365;
+      case '2 años': return 730;
+      default: return 30;
+    }
   }
-  continuarCompra() { this.confirmar = true; }
+
   reiniciar() {
     this.plazoSeleccionado = null;
+    this.monto = null;
     this.confirmar = false;
   }
 
-  /** Fecha de subasta (igual que antes) */
   private obtenerFechaSubasta() {
     this.http.get<string>(
       `${this.base}/config/cetes/subasta`,
@@ -78,11 +131,12 @@ export class CetesCompraComponent implements OnInit {
     ).subscribe({
       next: f => {
         this.fechaSubasta = f;
-        this.fechaSubastaNueva = f.substring(0,16); // prepara datetime-local
+        this.fechaSubastaNueva = f.substring(0, 16);
       },
       error: () => console.error('Error al obtener fecha de subasta CETES')
     });
   }
+
   actualizarFechaSubasta() {
     this.http.put(
       `${this.base}/config/cetes/subasta?fechaIso=${encodeURIComponent(this.fechaSubastaNueva)}`,

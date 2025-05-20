@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
 import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
 import { AlertService } from '../services/alert.service';
+import { ApuestaService } from '../services/apuesta.service'; // 👈 nuevo import
 
 @Component({
   selector: 'app-acciones-compra',
@@ -35,7 +36,8 @@ export class AccionesCompraComponent {
 
   constructor(
     private dashboardService: DashboardService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private apuestaService: ApuestaService // 👈 nuevo servicio
   ) {}
 
   seleccionarAccion(accion: any): void {
@@ -56,13 +58,35 @@ export class AccionesCompraComponent {
     }
     this.confirmacion = true;
 
-    // 1) Descontar saldo del usuario
     const req: RetirarSaldoRequest = { monto: this.monto };
     this.dashboardService.withdraw(req).subscribe({
       next: () => {
         this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
-        // 2) Mostrar la flecha de apuesta en la gráfica
         this.chartWrapper.lanzarApuesta('up');
+
+        // 👇 Registrar apuesta
+       const apuesta: {
+  simbolo: string;
+  tipo: string;
+  direccion: 'up' | 'down';
+  monto: number;
+  plazo: number;
+} = {
+          simbolo: this.accionSeleccionada.simbolo,
+          tipo: 'acciones',
+          direccion: 'up',
+          monto: this.monto!,
+          plazo: this.plazo!
+        };
+
+        this.apuestaService.crearApuesta(apuesta).subscribe({
+          next: () => {
+            this.alertService.success('✅ Apuesta registrada correctamente.');
+          },
+          error: () => {
+            this.alertService.error('⚠️ Apuesta no pudo ser registrada.');
+          }
+        });
       },
       error: err => {
         console.error('Error al retirar saldo:', err);

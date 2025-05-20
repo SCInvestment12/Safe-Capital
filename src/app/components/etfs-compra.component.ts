@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
+import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
+import { AlertService } from '../services/alert.service';
+import { ApuestaService } from '../services/apuesta.service'; // 👈 añadido
 
 @Component({
   selector: 'app-etfs-compra',
@@ -29,6 +32,12 @@ export class EtfsCompraComponent {
   mostrarGrafica: boolean = false;
   mostrarGraficaParaTodos = true;
 
+  constructor(
+    private dashboardService: DashboardService,
+    private alertService: AlertService,
+    private apuestaService: ApuestaService // 👈 añadido
+  ) {}
+
   seleccionarEtf(etf: any) {
     this.etfSeleccionado = etf;
     this.monto = null;
@@ -43,9 +52,37 @@ export class EtfsCompraComponent {
   }
 
   confirmarInversion() {
-    if (this.monto && this.plazo) {
-      this.confirmacion = true;
+    if (!this.monto || !this.plazo) {
+      this.alertService.error('Ingresa monto y plazo válidos.');
+      return;
     }
+
+    this.confirmacion = true;
+
+    const req: RetirarSaldoRequest = { monto: this.monto };
+    this.dashboardService.withdraw(req).subscribe({
+      next: () => {
+        this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
+
+        // Registrar como apuesta
+        const apuesta = {
+          simbolo: this.etfSeleccionado.simbolo,
+          tipo: 'etfs',
+          direccion: 'up' as 'up',
+          monto: this.monto!,
+          plazo: this.plazo!
+        };
+
+        this.apuestaService.crearApuesta(apuesta).subscribe({
+          next: () => this.alertService.success('✅ Inversión registrada correctamente.'),
+          error: () => this.alertService.error('⚠️ Error al registrar la inversión.')
+        });
+      },
+      error: err => {
+        console.error('Error al retirar saldo:', err);
+        this.alertService.error('No se pudo descontar el saldo.');
+      }
+    });
   }
 
   cancelar() {
