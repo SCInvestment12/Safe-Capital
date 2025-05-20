@@ -1,6 +1,5 @@
-// src/app/services/dashboard.service.ts
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 // DTOs front-end
@@ -19,38 +18,55 @@ export interface Transaction {
   timestamp: string;
 }
 
+// Request para retirar saldo
+export interface RetirarSaldoRequest {
+  monto: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
   // Ajusta esta URL si tu API corre en otro host/puerto
-  private baseUrl = 'https://safe-capital-backend.onrender.com/api/account';
+  private baseUrl = 'https://safe-capital-backend.onrender.com/api/usuarios';
 
   constructor(private http: HttpClient) {}
 
-  //  Obtener saldo
-  getBalance(userId: number): Observable<number> {
-    return this.http.get<number>(`${this.baseUrl}/${userId}/balance`);
+  // Cabeceras con JWT
+  private authHeaders() {
+    const token = localStorage.getItem('token') || '';
+    return { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) };
   }
 
-  //  Hacer depósito
+  //  Obtener saldo
+  getBalance(): Observable<number> {
+    return this.http.get<number>(
+      `${this.baseUrl}/saldo`,
+      this.authHeaders()
+    );
+  }
+
+  //  Hacer depósito (sin cambios)
   deposit(userId: number, dto: AccountOperation): Observable<Transaction> {
     return this.http.post<Transaction>(
       `${this.baseUrl}/${userId}/deposit`,
-      dto
+      dto,
+      this.authHeaders()
     );
   }
 
-  //  Hacer retiro
-  withdraw(userId: number, dto: AccountOperation): Observable<Transaction> {
-    return this.http.post<Transaction>(
-      `${this.baseUrl}/${userId}/withdraw`,
-      dto
+  //  Hacer retiro de inversión
+  withdraw(dto: RetirarSaldoRequest): Observable<string> {
+    return this.http.post<string>(
+      `${this.baseUrl}/saldo/retirar`,
+      dto,
+      this.authHeaders()
     );
   }
 
-  //  Traer historial
+  //  Traer historial (sin cambios)
   getTransactions(userId: number): Observable<Transaction[]> {
     return this.http.get<Transaction[]>(
-      `${this.baseUrl}/${userId}/transactions`
+      `${this.baseUrl}/${userId}/transactions`,
+      this.authHeaders()
     );
   }
 }

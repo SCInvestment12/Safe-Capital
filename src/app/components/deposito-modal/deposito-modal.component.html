@@ -1,23 +1,30 @@
+<!-- src/app/deposito-modal/deposito-modal.component.html -->
 <div class="modal-backdrop" (click)="cerrarModal()"></div>
 <div class="modal-content">
   <button class="cerrar" (click)="cerrarModal()">✖</button>
 
+  <!-- Título según paso -->
   <h2 *ngIf="!pasoComprobante">Selecciona método de depósito</h2>
   <h2 *ngIf="pasoComprobante">Comprobante de pago</h2>
 
-  <!-- Paso 1: elegir método y monto -->
+  <!-- === Paso 1: elegir método y monto === -->
   <ng-container *ngIf="!pasoComprobante">
     <div class="opciones">
       <button
         [class.activa]="metodoSeleccionado === 'SPEI'"
         (click)="seleccionarMetodo('SPEI')"
-      >💳 SPEI</button>
+      >
+        💳 SPEI
+      </button>
       <button
         [class.activa]="metodoSeleccionado === 'TARJETA'"
         (click)="seleccionarMetodo('TARJETA')"
-      >💳 Visa / Mastercard</button>
+      >
+        💳 Visa / Mastercard
+      </button>
     </div>
 
+    <!-- SPEI: ingresar monto -->
     <div *ngIf="metodoSeleccionado === 'SPEI'" class="metodo-spei">
       <label class="label-monto">Monto a depositar:</label>
       <input
@@ -27,12 +34,12 @@
         placeholder="$0.00"
         class="input-monto"
       />
-
       <button class="btn-confirmar" (click)="confirmarMonto()">
         ✔ Confirmar
       </button>
     </div>
 
+    <!-- Tarjeta: mensaje no disponible -->
     <div *ngIf="metodoSeleccionado === 'TARJETA'" class="metodo-tarjeta">
       <p class="mensaje-tarjeta">
         ❌ Este método aún no está disponible. Pronto habilitaremos pagos con tarjeta.
@@ -40,7 +47,7 @@
     </div>
   </ng-container>
 
-  <!-- Paso 2: mostrar comprobante -->
+  <!-- === Paso 2: mostrar comprobante === -->
   <div *ngIf="pasoComprobante" class="comprobante">
     <p class="texto-grande">Monto a depositar:</p>
     <p class="monto-grande">${{ monto }}</p>
@@ -54,8 +61,31 @@
       <li><strong>Referencia:</strong> {{ referencia }}</li>
     </ul>
 
-    <p class="leyenda-subir">
-      📎 Sube tu comprobante de depósito para que sea validado por el administrador.
-    </p>
-    <p class="leyenda-validacion">
-      🕒 Pasos para realizar tu pago: Ingresa a tu banca electrónica y presiona la opción
+    <!-- Leyendas finales -->
+    <div class="leyendas-finales">
+     
+      <p class="leyenda-validacion">
+       Pasos para realizar tu pago: 
+       <br>
+Ingresa a tu banca electrónica y presiona la opción de transferir, ingresa tu nombre y 
+número de cuenta especificada así mismo en concepto Ingresa nuevamente tu 
+nombre completo.  
+<br> <br> 
+Nota importante:
+<br> 
+ Pague su ingreso por la cantidad exacta a los datos bancarios 
+generados en el siguiente recuadro. En caso de que la información no coincida entre 
+los datos especificados, su ingreso no será acreditado correctamente en su cuenta. 
+<br> <br> 
+Después de haber realizado y notificado su depósito, este se verá reflejado en su 
+saldo disponible al concluir el proceso de validación en un lapso 60 min. 
+      </p>
+    </div>
+
+   <!-- Botón único -->
+    <button class="btn-notificar" (click)="notificarDeposito()">
+      Notificar Depósito
+    </button>
+  </div>
+</div>
+

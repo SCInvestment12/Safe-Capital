@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
+import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-acciones-compra',
@@ -11,6 +13,8 @@ import { ChartWrapperComponent } from './chart-wrapper.component';
   styleUrls: ['./acciones-compra.component.css']
 })
 export class AccionesCompraComponent {
+  @ViewChild(ChartWrapperComponent) chartWrapper!: ChartWrapperComponent;
+
   acciones = [
     { nombre: 'Apple Inc.', simbolo: 'AAPL', descripcion: 'Líder en tecnología y productos electrónicos.' },
     { nombre: 'Tesla Inc.', simbolo: 'TSLA', descripcion: 'Innovación en autos eléctricos y energía.' },
@@ -29,32 +33,49 @@ export class AccionesCompraComponent {
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
 
-  seleccionarAccion(accion: any) {
+  constructor(
+    private dashboardService: DashboardService,
+    private alertService: AlertService
+  ) {}
+
+  seleccionarAccion(accion: any): void {
+    this.resetear();
     this.accionSeleccionada = accion;
-    this.monto = null;
-    this.plazo = null;
-    this.confirmacion = false;
-    this.mostrarGrafica = false;
   }
 
-  verGraficaDesdeLista(accion: any) {
+  verGraficaDesdeLista(accion: any): void {
+    this.resetear();
     this.accionSeleccionada = accion;
     this.mostrarGrafica = true;
-    this.confirmacion = false;
   }
 
-  confirmarInversion() {
-    if (this.monto && this.plazo) {
-      this.confirmacion = true;
-      this.mostrarGrafica = false;
+  confirmarInversion(): void {
+    if (!this.monto || !this.plazo) {
+      this.alertService.error('Ingresa monto y plazo válidos.');
+      return;
     }
+    this.confirmacion = true;
+
+    // 1) Descontar saldo del usuario
+    const req: RetirarSaldoRequest = { monto: this.monto };
+    this.dashboardService.withdraw(req).subscribe({
+      next: () => {
+        this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
+        // 2) Mostrar la flecha de apuesta en la gráfica
+        this.chartWrapper.lanzarApuesta('up');
+      },
+      error: err => {
+        console.error('Error al retirar saldo:', err);
+        this.alertService.error('No se pudo descontar el saldo.');
+      }
+    });
   }
 
-  cancelar() {
+  cancelar(): void {
     this.resetear();
   }
 
-  private resetear() {
+  private resetear(): void {
     this.accionSeleccionada = null;
     this.monto = null;
     this.plazo = null;
