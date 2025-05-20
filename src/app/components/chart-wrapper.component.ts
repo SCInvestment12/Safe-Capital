@@ -1,10 +1,20 @@
-import { Component, Inject, Input, PLATFORM_ID, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+// src/app/components/chart-wrapper.component.ts
+import {
+  Component,
+  Inject,
+  Input,
+  PLATFORM_ID,
+  ViewChild,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { TradingChartComponent } from './trading-chart.component';
 
 @Component({
   selector: 'app-chart-wrapper',
   standalone: true,
+  imports: [CommonModule, TradingChartComponent],
   template: `
     <ng-container *ngIf="isBrowser && tipo !== 'cetes' && simbolo">
       <app-trading-chart
@@ -13,30 +23,37 @@ import { TradingChartComponent } from './trading-chart.component';
         [simbolo]="simboloFormateado">
       </app-trading-chart>
     </ng-container>
-  `,
-  imports: [CommonModule, TradingChartComponent]
+  `
 })
 export class ChartWrapperComponent implements OnChanges {
-  @Input() tipo: string = '';
-  @Input() simbolo: string = '';
+  @Input() tipo = '';
+  @Input() simbolo = '';
 
-  simboloFormateado: string = '';
-
+  simboloFormateado = '';
   isBrowser: boolean;
-  @ViewChild('chart', { static: false }) chartComponent: any;
+
+  @ViewChild('chart', { static: false })
+  chartComponent?: TradingChartComponent;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {
-    this.isBrowser = isPlatformBrowser(platformId);
+    this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.simboloFormateado =
-      this.tipo === 'forex' ? this.simbolo.replace('/', '') : this.simbolo;
+    // Esquivamos la restricción con un cast a any
+    const cs = changes as any;
+    const cambioSimbolo = cs.simbolo as SimpleChanges[string];
+    const cambioTipo    = cs.tipo    as SimpleChanges[string];
+
+    if (cambioSimbolo || cambioTipo) {
+      this.simboloFormateado =
+        this.tipo === 'forex'
+          ? this.simbolo.replace('/', '')
+          : this.simbolo;
+    }
   }
 
   lanzarApuesta(direccion: 'up' | 'down') {
-    if (this.chartComponent?.mostrarApuesta) {
-      this.chartComponent.mostrarApuesta(direccion);
-    }
+    this.chartComponent?.mostrarApuesta(direccion);
   }
 }

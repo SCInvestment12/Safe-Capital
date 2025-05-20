@@ -1,21 +1,19 @@
-<div class="grafica-wrapper">
-  <div class="precio-actual">
-    <span>Precio actual:</span>
-    <strong class="valor">${{ precioActual }}</strong>
-  </div>
-
+<!-- src/app/components/trading-chart.component.html -->
+<div id="chart">
   <apx-chart
-  [series]="chartOptions.series"
-  [chart]="chartOptions.chart"
-  [xaxis]="chartOptions.xaxis"
-  [yaxis]="chartOptions.yaxis"
-  [dataLabels]="chartOptions.dataLabels"
-  [stroke]="chartOptions.stroke"
-  [title]="chartOptions.title"
-  [tooltip]="chartOptions.tooltip"
-  [markers]="chartOptions.markers"
-  [annotations]="chartOptions.annotations"
-  >
-</apx-chart>
+    [series]="chartOptions.series"
+    [chart]="chartOptions.chart"
+    [xaxis]="chartOptions.xaxis"
+    [yaxis]="chartOptions.yaxis"
+    [dataLabels]="chartOptions.dataLabels"
+    [stroke]="chartOptions.stroke"
+    [title]="chartOptions.title"
+    [tooltip]="chartOptions.tooltip"
+    [markers]="chartOptions.markers"
+    [annotations]="chartOptions.annotations"
+  ></apx-chart>
 
+  <div class="precio-actual mt-2 text-light">
+    Precio actual: {{ precioActual | currency:'USD':'symbol' }}
+  </div>
 </div>

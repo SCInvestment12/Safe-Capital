@@ -1,20 +1,41 @@
-import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
+// src/app/components/trading-chart.component.ts
+import {
+  Component,
+  Input,
+  OnInit,
+  OnDestroy,
+  OnChanges,
+  SimpleChanges
+} from '@angular/core';
 import {
   NgApexchartsModule,
   ApexAxisChartSeries,
   ApexChart,
   ApexXAxis,
+  ApexYAxis,
   ApexDataLabels,
   ApexStroke,
   ApexTitleSubtitle,
   ApexTooltip,
   ApexMarkers,
-  ApexAnnotations,
-  ApexYAxis
+  ApexAnnotations
 } from 'ng-apexcharts';
 import { CommonModule } from '@angular/common';
 import { interval, Subscription } from 'rxjs';
 import { TradingService, TradingBarDTO } from '../services/trading.service';
+
+export type ChartOptions = {
+  series: ApexAxisChartSeries;
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  yaxis: ApexYAxis;
+  dataLabels: ApexDataLabels;
+  stroke: ApexStroke;
+  title: ApexTitleSubtitle;
+  tooltip: ApexTooltip;
+  markers: ApexMarkers;
+  annotations: ApexAnnotations;
+};
 
 @Component({
   selector: 'app-trading-chart',
@@ -24,23 +45,11 @@ import { TradingService, TradingBarDTO } from '../services/trading.service';
   styleUrls: ['./trading-chart.component.css']
 })
 export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
-  @Input() tipo: string = 'acciones';
-  @Input() simbolo: string = 'TSLA';
+  @Input() tipo = 'acciones';
+  @Input() simbolo = 'TSLA';
 
-  chartOptions!: {
-    series: ApexAxisChartSeries;
-    chart: ApexChart;
-    xaxis: ApexXAxis;
-    yaxis: ApexYAxis;
-    dataLabels: ApexDataLabels;
-    stroke: ApexStroke;
-    title: ApexTitleSubtitle;
-    tooltip: ApexTooltip;
-    markers: ApexMarkers;
-    annotations: ApexAnnotations;
-  };
-
-  precioActual: number | null = null;
+  public chartOptions!: ChartOptions;
+  public precioActual: number | null = null;
   private subscription!: Subscription;
 
   constructor(private tradingService: TradingService) {}
@@ -52,15 +61,13 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['simbolo'] || changes['tipo']) {
+      this.subscription?.unsubscribe();
       this.initChart();
       this.startPolling();
     }
   }
 
   private initChart(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();
-    }
     this.chartOptions = {
       series: [{ name: 'Valor', data: [] }],
       chart: {
@@ -77,8 +84,18 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         foreColor: '#ffffff'
       },
       xaxis: {
-        categories: [],
-        labels: { style: { colors: '#ffffff' } }
+        type: 'datetime',
+        labels: {
+          style: { colors: '#ffffff' },
+          formatter: (value: any, timestamp?: number): string => {
+            const ms = typeof timestamp === 'number' ? timestamp : Number(value);
+            return new Date(ms).toLocaleTimeString('es-MX', {
+              timeZone: 'America/Mexico_City',
+              hour: '2-digit',
+              minute: '2-digit'
+            });
+          }
+        }
       },
       yaxis: {
         labels: { style: { colors: '#ffffff' } }
@@ -92,8 +109,20 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
       tooltip: {
         enabled: true,
         theme: 'dark',
-        x: { show: true, format: 'HH:mm:ss' },
-        y: { formatter: (value: number) => `$${value.toFixed(2)}` }
+        x: {
+          formatter: (value: any, opts?: any): string => {
+            const ms = opts?.timestamp ?? Number(value);
+            return new Date(ms).toLocaleString('es-MX', {
+              timeZone: 'America/Mexico_City',
+              hour: '2-digit',
+              minute: '2-digit',
+              second: '2-digit'
+            });
+          }
+        },
+        y: {
+          formatter: (val: number): string => `$${val.toFixed(2)}`
+        }
       },
       markers: {
         size: 5,
@@ -101,13 +130,14 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         strokeColors: '#fff',
         strokeWidth: 2
       },
-      annotations: { points: [] }
+      annotations: {
+        points: []
+      }
     };
   }
 
   private startPolling(): void {
     this.subscription = interval(5000).subscribe(() => this.fetchData());
-    // fetch immediately
     this.fetchData();
   }
 
@@ -117,39 +147,38 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe((barras: TradingBarDTO[]) => {
         if (!barras.length) return;
 
-        // Ordenar por timestamp
+        // Orden por fecha
         barras.sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
 
-        const datos = barras.map(bar => bar.close);
-        const categorias = barras.map(bar =>
-          new Date(Date.parse(bar.timestamp)).toLocaleTimeString('es-MX', {
-            timeZone: 'America/Mexico_City'
-          })
-        );
+        // Mapeo a [ms, close]
+        const puntos: [number, number][] = barras.map(bar => {
+          const ms = new Date(bar.timestamp).getTime();
+          return [ms, bar.close];
+        });
 
-        this.precioActual = datos[datos.length - 1];
+        this.precioActual = puntos[puntos.length - 1][1];
 
         this.chartOptions = {
           ...this.chartOptions,
-          series: [{ name: 'Valor', data: datos }],
-          xaxis: { ...this.chartOptions.xaxis, categories: categorias }
+          series: [{ name: 'Valor', data: puntos }]
         };
       });
   }
 
-  mostrarApuesta(direccion: 'up' | 'down'): void {
-    const idx = this.chartOptions.series[0].data.length - 1;
-    const valor = this.chartOptions.series[0].data[idx] as number;
+  public mostrarApuesta(direccion: 'up' | 'down'): void {
+    this.chartOptions.annotations.points =
+      this.chartOptions.annotations.points || [];
+
+    const seriesData = this.chartOptions.series[0].data as [number, number][];
+    const idx = seriesData.length - 1;
+    const [x, y] = seriesData[idx];
     const flecha = direccion === 'up' ? '↑' : '↓';
     const color = direccion === 'up' ? '#28a745' : '#dc3545';
 
-    this.chartOptions.annotations.points!.push({
-      x: this.chartOptions.xaxis.categories[idx],
-      y: valor,
-      label: {
-        text: flecha,
-        style: { color: '#fff', background: color }
-      }
+    this.chartOptions.annotations.points.push({
+      x,
+      y,
+      label: { text: flecha, style: { color: '#fff', background: color } }
     });
   }
 
