@@ -5,10 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
 import { AlertService } from '../services/alert.service';
 import { InversionService, CrearInversionRequest } from '../services/inversion.service';
+import { SaldoService } from '../services/saldo.service'; // ✅ agregado
 
 interface PlazoCetes {
   plazo: string;
-  tasa: string; // porcentaje con “%”
+  tasa: string;
 }
 
 @Component({
@@ -39,7 +40,8 @@ export class CetesCompraComponent implements OnInit {
     private http: HttpClient,
     private dashboardService: DashboardService,
     private alertService: AlertService,
-    private inversionService: InversionService
+    private inversionService: InversionService,
+    private saldoService: SaldoService // ✅ agregado
   ) {
     const token = localStorage.getItem('token') || '';
     this.headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -51,16 +53,13 @@ export class CetesCompraComponent implements OnInit {
   }
 
   private cargarTasaCetes() {
-    this.http.get<number>(`${this.base}/config/cetes/tasa`, { headers: this.headers })
-      .subscribe({
-        next: tasa => {
-          const pct = tasa.toFixed(2) + '%';
-          this.plazos = this.plazos.map(p => ({ ...p, tasa: pct }));
-        },
-        error: () => {
-          console.error('No se pudo cargar la tasa de CETES');
-        }
-      });
+    this.http.get<number>(`${this.base}/config/cetes/tasa`, { headers: this.headers }).subscribe({
+      next: tasa => {
+        const pct = tasa.toFixed(2) + '%';
+        this.plazos = this.plazos.map(p => ({ ...p, tasa: pct }));
+      },
+      error: () => console.error('No se pudo cargar la tasa de CETES')
+    });
   }
 
   seleccionar(p: PlazoCetes) {
@@ -79,9 +78,9 @@ export class CetesCompraComponent implements OnInit {
     this.dashboardService.withdraw(req).subscribe({
       next: () => {
         this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
+        this.saldoService.cargarSaldo(); // ✅ actualización del navbar
         this.confirmar = true;
 
-        // 🟩 Registrar inversión
         const id = +(localStorage.getItem('id') || '0');
         const simbolo = 'CETES';
         const tipo = 'cetes';
@@ -125,10 +124,10 @@ export class CetesCompraComponent implements OnInit {
   }
 
   private obtenerFechaSubasta() {
-    this.http.get<string>(
-      `${this.base}/config/cetes/subasta`,
-      { headers: this.headers, responseType: 'text' as 'json' }
-    ).subscribe({
+    this.http.get<string>(`${this.base}/config/cetes/subasta`, {
+      headers: this.headers,
+      responseType: 'text' as 'json'
+    }).subscribe({
       next: f => {
         this.fechaSubasta = f;
         this.fechaSubastaNueva = f.substring(0, 16);

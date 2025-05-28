@@ -1,29 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { RouterModule, Router } from '@angular/router';
 import { DepositoModalComponent } from '../components/deposito-modal/deposito-modal.component';
 import { RetiroModalComponent } from '../components/retiro-modal/retiro-modal.component';
+import { SaldoService } from '../services/saldo.service'; // ✅ importado
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-    imports: [CommonModule, RouterModule, DepositoModalComponent, RetiroModalComponent],
-
+  imports: [CommonModule, RouterModule, DepositoModalComponent, RetiroModalComponent],
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   mostrarModalDeposito = false;
   mostrarModalRetiro = false;
+  saldoFormateado: string = '$0.00';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private saldoService: SaldoService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.estaLogueado()) {
+      this.saldoService.cargarSaldo();
+      this.saldoService.obtenerSaldo().subscribe(saldo => {
+        this.saldoFormateado = saldo.toLocaleString('es-MX', {
+          style: 'currency',
+          currency: 'MXN'
+        });
+        localStorage.setItem('saldo', saldo.toString()); // Opcional si deseas persistir localmente
+      });
+    }
+  }
 
-  /**
-   * Muestra el botón de regresar solo en la página de registro
-   */
   get isRegisterPage(): boolean {
     return this.router.url === '/register';
   }
@@ -33,13 +41,7 @@ export class NavbarComponent {
   }
 
   obtenerSaldo(): string {
-    const saldo = localStorage.getItem('saldo');
-    return saldo
-      ? parseFloat(saldo).toLocaleString('es-MX', {
-          style: 'currency',
-          currency: 'MXN'
-        })
-      : '$0.00';
+    return this.saldoFormateado;
   }
 
   logout() {

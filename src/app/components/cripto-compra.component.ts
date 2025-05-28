@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
 import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
 import { AlertService } from '../services/alert.service';
-import { ApuestaService } from '../services/apuesta.service'; // 👈 agregado
+import { ApuestaService } from '../services/apuesta.service';
+import { SaldoService } from '../services/saldo.service'; // ✅ agregado
 
 @Component({
   selector: 'app-cripto-compra',
@@ -46,7 +47,8 @@ export class CriptoCompraComponent {
   constructor(
     private dashboardService: DashboardService,
     private alertService: AlertService,
-    private apuestaService: ApuestaService // 👈 agregado
+    private apuestaService: ApuestaService,
+    private saldoService: SaldoService // ✅ agregado
   ) {}
 
   mostrarBotonGrafica(): boolean {
@@ -71,6 +73,7 @@ export class CriptoCompraComponent {
     this.dashboardService.withdraw(req).subscribe({
       next: () => {
         this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
+        this.saldoService.cargarSaldo(); // ✅ actualizar saldo en navbar
 
         const apuesta = {
           simbolo: this.criptoSeleccionada,

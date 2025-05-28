@@ -17,7 +17,7 @@
   <!-- Gráfica -->
 <div *ngIf="mostrarGrafica && accionSeleccionada?.simbolo && !confirmacion" class="grafica-accion">
   <div class="grafica-box">
-    <app-chart-wrapper [tipo]="'acciones'" [simbolo]="accionSeleccionada.simbolo"></app-chart-wrapper>
+   <app-chart-wrapper [tipo]="'acciones'" [simbolo]="accionSeleccionada?.simbolo"></app-chart-wrapper>
   </div>
 </div>
 
@@ -47,7 +47,7 @@
     <h2>✅ Confirmación de compra</h2>
     <p>Tu inversión se registró exitosamente.</p>
     <ul>
-      <li><strong>Acción:</strong> {{ accionSeleccionada.nombre }}</li>
+      <li><strong>Acción:</strong> {{ accionSeleccionada?.nombre }}</li>
       <li><strong>Monto:</strong> ${{ monto }}</li>
       <li><strong>Plazo:</strong> {{ plazo }} días</li>
       <li><strong>Forma de pago:</strong> Fondos en cuenta</li>

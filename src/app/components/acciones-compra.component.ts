@@ -4,7 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
 import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
 import { AlertService } from '../services/alert.service';
-import { ApuestaService } from '../services/apuesta.service'; // 👈 nuevo import
+import { ApuestaService } from '../services/apuesta.service';
+import { SaldoService } from '../services/saldo.service'; // ✅ agregado
 
 @Component({
   selector: 'app-acciones-compra',
@@ -37,7 +38,8 @@ export class AccionesCompraComponent {
   constructor(
     private dashboardService: DashboardService,
     private alertService: AlertService,
-    private apuestaService: ApuestaService // 👈 nuevo servicio
+    private apuestaService: ApuestaService,
+    private saldoService: SaldoService // ✅ agregado
   ) {}
 
   seleccionarAccion(accion: any): void {
@@ -62,19 +64,19 @@ export class AccionesCompraComponent {
     this.dashboardService.withdraw(req).subscribe({
       next: () => {
         this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
+        this.saldoService.cargarSaldo(); // ✅ actualiza saldo en navbar
         this.chartWrapper.lanzarApuesta('up');
 
-        // 👇 Registrar apuesta
-       const apuesta: {
-  simbolo: string;
-  tipo: string;
-  direccion: 'up' | 'down';
-  monto: number;
-  plazo: number;
-} = {
+        const apuesta: {
+          simbolo: string;
+          tipo: string;
+          direccion: 'up' | 'down';
+          monto: number;
+          plazo: number;
+        } = {
           simbolo: this.accionSeleccionada.simbolo,
           tipo: 'acciones',
-          direccion: 'up',
+          direccion: 'up' as 'up', // ✅ tipado correcto
           monto: this.monto!,
           plazo: this.plazo!
         };

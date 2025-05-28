@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
 import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
 import { AlertService } from '../services/alert.service';
-import { ApuestaService } from '../services/apuesta.service'; // 👈 añadido
+import { ApuestaService } from '../services/apuesta.service';
+import { SaldoService } from '../services/saldo.service'; // 👈 agregado
 
 @Component({
   selector: 'app-etfs-compra',
@@ -14,6 +15,8 @@ import { ApuestaService } from '../services/apuesta.service'; // 👈 añadido
   styleUrls: ['./etfs-compra.component.css']
 })
 export class EtfsCompraComponent {
+  @ViewChild(ChartWrapperComponent) chartWrapper!: ChartWrapperComponent;
+
   etfs = [
     { nombre: 'iShares S&P 500', simbolo: 'SPY', descripcion: 'Replica el índice S&P 500 de empresas estadounidenses.' },
     { nombre: 'Vanguard Total Stock Market', simbolo: 'VTI', descripcion: 'ETF diversificado del mercado accionario de EE.UU.' },
@@ -35,18 +38,17 @@ export class EtfsCompraComponent {
   constructor(
     private dashboardService: DashboardService,
     private alertService: AlertService,
-    private apuestaService: ApuestaService // 👈 añadido
+    private apuestaService: ApuestaService,
+    private saldoService: SaldoService // 👈 agregado
   ) {}
 
   seleccionarEtf(etf: any) {
+    this.cancelar();
     this.etfSeleccionado = etf;
-    this.monto = null;
-    this.plazo = null;
-    this.confirmacion = false;
-    this.mostrarGrafica = false;
   }
 
   verGrafica(etf: any) {
+    this.cancelar();
     this.etfSeleccionado = etf;
     this.mostrarGrafica = true;
   }
@@ -63,8 +65,9 @@ export class EtfsCompraComponent {
     this.dashboardService.withdraw(req).subscribe({
       next: () => {
         this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
+        this.saldoService.cargarSaldo(); // 👈 actualiza saldo del navbar
+        this.chartWrapper.lanzarApuesta('up'); // 👈 lanza animación
 
-        // Registrar como apuesta
         const apuesta = {
           simbolo: this.etfSeleccionado.simbolo,
           tipo: 'etfs',

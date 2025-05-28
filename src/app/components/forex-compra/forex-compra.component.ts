@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from '../chart-wrapper.component';
 import { DashboardService, RetirarSaldoRequest } from '../../services/dashboard.service';
 import { AlertService } from '../../services/alert.service';
-import { ApuestaService } from '../../services/apuesta.service'; // 👈 agregado
+import { ApuestaService } from '../../services/apuesta.service';
+import { SaldoService } from '../../services/saldo.service'; // 👈 agregado
 
 @Component({
   selector: 'app-forex-compra',
@@ -14,6 +15,8 @@ import { ApuestaService } from '../../services/apuesta.service'; // 👈 agregad
   styleUrls: ['./forex-compra.component.css']
 })
 export class ForexCompraComponent {
+  @ViewChild(ChartWrapperComponent) chartWrapper!: ChartWrapperComponent;
+
   paresDivisas = [
     { nombre: 'Euro / Dólar', simbolo: 'EURUSD' },
     { nombre: 'Libra / Dólar', simbolo: 'GBPUSD' },
@@ -33,21 +36,19 @@ export class ForexCompraComponent {
   constructor(
     private dashboardService: DashboardService,
     private alertService: AlertService,
-    private apuestaService: ApuestaService // 👈 agregado
+    private apuestaService: ApuestaService,
+    private saldoService: SaldoService // 👈 agregado
   ) {}
 
   seleccionarPar(par: any) {
+    this.resetear();
     this.parSeleccionado = par;
-    this.monto = null;
-    this.plazo = null;
-    this.confirmacion = false;
-    this.mostrarGrafica = false;
   }
 
   verGraficaDesdeLista(par: any) {
+    this.resetear();
     this.parSeleccionado = par;
     this.mostrarGrafica = true;
-    this.confirmacion = false;
   }
 
   confirmarInversion() {
@@ -63,15 +64,16 @@ export class ForexCompraComponent {
     this.dashboardService.withdraw(req).subscribe({
       next: () => {
         this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
+        this.saldoService.cargarSaldo(); // 👈 recarga dinámica del saldo
+        this.chartWrapper.lanzarApuesta('up');
 
         const apuesta = {
-  simbolo: this.parSeleccionado.simbolo,
-  tipo: 'forex',
-  direccion: 'up' as 'up',
-  monto: this.monto!,
-  plazo: this.plazo!
-};
-
+          simbolo: this.parSeleccionado.simbolo,
+          tipo: 'forex',
+          direccion: 'up' as 'up',
+          monto: this.monto!,
+          plazo: this.plazo!
+        };
 
         this.apuestaService.crearApuesta(apuesta).subscribe({
           next: () => this.alertService.success('✅ Inversión registrada.'),

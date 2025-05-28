@@ -11,7 +11,7 @@
 
     <!-- Gráfica -->
     <div *ngIf="mostrarGrafica && parSeleccionado?.simbolo && !confirmacion" class="grafica-par">
-      <app-chart-wrapper [tipo]="'forex'" [simbolo]="parSeleccionado.simbolo"></app-chart-wrapper>
+      <app-chart-wrapper [tipo]="'forex'" [simbolo]="parSeleccionado?.simbolo"></app-chart-wrapper>
     </div>
 
     <!-- Formulario de inversión -->
@@ -31,7 +31,7 @@
       <h2>✅ Confirmación de compra</h2>
       <p>Tu inversión se registró exitosamente.</p>
       <ul>
-        <li><strong>Par de Divisas:</strong> {{ parSeleccionado.nombre }}</li>
+        <li><strong>Par de Divisas:</strong> {{ parSeleccionado?.nombre }}</li>
         <li><strong>Monto:</strong> ${{ monto }}</li>
         <li><strong>Forma de pago:</strong> Fondos en cuenta</li>
       </ul>
