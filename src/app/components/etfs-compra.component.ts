@@ -5,7 +5,7 @@ import { ChartWrapperComponent } from './chart-wrapper.component';
 import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
 import { AlertService } from '../services/alert.service';
 import { ApuestaService } from '../services/apuesta.service';
-import { SaldoService } from '../services/saldo.service'; // 👈 agregado
+import { SaldoService } from '../services/saldo.service';
 
 @Component({
   selector: 'app-etfs-compra',
@@ -39,7 +39,7 @@ export class EtfsCompraComponent {
     private dashboardService: DashboardService,
     private alertService: AlertService,
     private apuestaService: ApuestaService,
-    private saldoService: SaldoService // 👈 agregado
+    private saldoService: SaldoService
   ) {}
 
   seleccionarEtf(etf: any) {
@@ -60,14 +60,11 @@ export class EtfsCompraComponent {
     }
 
     this.confirmacion = true;
+    this.mostrarGrafica = false;
 
     const req: RetirarSaldoRequest = { monto: this.monto };
     this.dashboardService.withdraw(req).subscribe({
       next: () => {
-        this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
-        this.saldoService.cargarSaldo(); // 👈 actualiza saldo del navbar
-        this.chartWrapper.lanzarApuesta('up'); // 👈 lanza animación
-
         const apuesta = {
           simbolo: this.etfSeleccionado.simbolo,
           tipo: 'etfs',
@@ -77,8 +74,14 @@ export class EtfsCompraComponent {
         };
 
         this.apuestaService.crearApuesta(apuesta).subscribe({
-          next: () => this.alertService.success('✅ Inversión registrada correctamente.'),
-          error: () => this.alertService.error('⚠️ Error al registrar la inversión.')
+          next: () => {
+            this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
+            this.chartWrapper.lanzarApuesta('up');
+            this.saldoService.cargarSaldo();
+          },
+          error: () => {
+            this.alertService.error('⚠️ Error al registrar la inversión.');
+          }
         });
       },
       error: err => {

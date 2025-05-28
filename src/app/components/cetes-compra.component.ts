@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
 import { AlertService } from '../services/alert.service';
 import { InversionService, CrearInversionRequest } from '../services/inversion.service';
-import { SaldoService } from '../services/saldo.service'; // ✅ agregado
+import { SaldoService } from '../services/saldo.service';
 
 interface PlazoCetes {
   plazo: string;
@@ -41,7 +41,7 @@ export class CetesCompraComponent implements OnInit {
     private dashboardService: DashboardService,
     private alertService: AlertService,
     private inversionService: InversionService,
-    private saldoService: SaldoService // ✅ agregado
+    private saldoService: SaldoService
   ) {
     const token = localStorage.getItem('token') || '';
     this.headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -77,10 +77,6 @@ export class CetesCompraComponent implements OnInit {
     const req: RetirarSaldoRequest = { monto: this.monto };
     this.dashboardService.withdraw(req).subscribe({
       next: () => {
-        this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
-        this.saldoService.cargarSaldo(); // ✅ actualización del navbar
-        this.confirmar = true;
-
         const id = +(localStorage.getItem('id') || '0');
         const simbolo = 'CETES';
         const tipo = 'cetes';
@@ -95,8 +91,14 @@ export class CetesCompraComponent implements OnInit {
         };
 
         this.inversionService.crearInversion(inversionReq).subscribe({
-          next: () => console.log('✅ Inversión registrada correctamente'),
-          error: () => console.error('❌ Error al registrar inversión')
+          next: () => {
+            this.alertService.success(`✅ Inversión en CETES registrada por $${this.monto}`);
+            this.saldoService.cargarSaldo();
+            this.confirmar = true;
+          },
+          error: () => {
+            this.alertService.error('❌ Error al registrar la inversión.');
+          }
         });
       },
       error: err => {
