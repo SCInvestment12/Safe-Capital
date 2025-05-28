@@ -130,9 +130,7 @@ export class PerfilComponent implements OnInit {
       { tipo: 'Inversion', monto: 150, fecha: '27 marzo 2025' }
     ];
     this.portafolio = [
-      { instrumento: 'CETES 28D', monto: 3000, fecha: '10 abril 2025', tipo: 'CETES' },
-      { instrumento: 'BTC/USD', monto: 1500, fecha: '15 abril 2025', tipo: 'Cripto' },
-      { instrumento: 'NASDAQ ETF', monto: 2200, fecha: '20 abril 2025', tipo: 'ETF' }
+      
     ];
     const depositos = this.movimientos.filter(m => m.tipo === 'Depósito');
     this.ultimoDeposito = depositos.length ? depositos[depositos.length - 1] : null;
