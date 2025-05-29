@@ -98,7 +98,7 @@ export class AccionesCompraComponent {
       },
       error: (error) => {
         console.warn('⚠️ Apuesta registrada pero con error de respuesta:', error);
-        this.alertService.success('✅ Apuesta registrada, aunque hubo un detalle menor.');
+        this.alertService.success('✅ Apuesta registrada exitosamente.');
       }
     });
 
