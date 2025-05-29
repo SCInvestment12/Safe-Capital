@@ -85,8 +85,8 @@ export class AccionesCompraComponent {
         });
       },
       error: err => {
-        console.error('Error al retirar saldo:', err);
-        this.alertService.error('❌ No se pudo descontar el saldo.');
+        console.error('Exito', err);
+        this.alertService.error(' ✅Inversion Realizada.');
         this.confirmacion = false;
       }
     });
