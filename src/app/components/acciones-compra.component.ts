@@ -60,39 +60,33 @@ export class AccionesCompraComponent {
     }
 
     const req: RetirarSaldoRequest = { monto: this.monto };
+
     this.dashboardService.withdraw(req).subscribe({
       next: () => {
-        this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
         this.saldoService.cargarSaldo();
         this.confirmacion = true;
         this.chartWrapper.lanzarApuesta('up');
 
-        const apuesta: {
-          simbolo: string;
-          tipo: string;
-          direccion: 'up' | 'down';
-          monto: number;
-          plazo: number;
-        } = {
+        const apuesta = {
           simbolo: this.accionSeleccionada.simbolo,
           tipo: 'acciones',
-          direccion: 'up',
+          direccion: 'up' as const,
           monto: this.monto!,
           plazo: this.plazo!
         };
 
         this.apuestaService.crearApuesta(apuesta).subscribe({
           next: () => {
-            this.alertService.success('✅ Apuesta registrada correctamente.');
+            this.alertService.success(`✅ Se descontaron $${this.monto} y se registró la apuesta correctamente.`);
           },
           error: () => {
-            this.alertService.error('⚠️ Apuesta no pudo ser registrada.');
+            this.alertService.warn(`⚠️ Se descontaron $${this.monto}, pero no se pudo registrar la apuesta.`);
           }
         });
       },
       error: err => {
         console.error('Error al retirar saldo:', err);
-        this.alertService.error('No se pudo descontar el saldo.');
+        this.alertService.error('❌ No se pudo descontar el saldo.');
         this.confirmacion = false;
       }
     });

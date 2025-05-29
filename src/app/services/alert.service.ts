@@ -54,5 +54,14 @@ export class AlertService {
       confirmButtonColor: '#dc3545'
     });
   }
+  warn(message: string): void {
+  Swal.fire({
+    icon: 'warning',
+    title: 'Advertencia',
+    text: message,
+    confirmButtonText: 'Aceptar'
+  });
+}
+
   
 }
