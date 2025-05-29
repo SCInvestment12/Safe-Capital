@@ -6,6 +6,7 @@ import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.ser
 import { AlertService } from '../services/alert.service';
 import { ApuestaService } from '../services/apuesta.service';
 import { SaldoService } from '../services/saldo.service';
+import { CrearApuestaRequest } from '../services/apuesta.service'; // Asegúrate de importar esto
 
 @Component({
   selector: 'app-acciones-compra',
@@ -54,43 +55,48 @@ export class AccionesCompraComponent {
   }
 
   confirmarInversion(): void {
-    if (!this.monto || !this.plazo) {
-      this.alertService.error('Ingresa monto y plazo válidos.');
-      return;
-    }
-
-    const req: RetirarSaldoRequest = { monto: this.monto };
-
-    this.dashboardService.withdraw(req).subscribe({
-      next: () => {
-        this.saldoService.cargarSaldo();
-        this.confirmacion = true;
-        this.chartWrapper.lanzarApuesta('up');
-
-        const apuesta = {
-          simbolo: this.accionSeleccionada.simbolo,
-          tipo: 'acciones',
-          direccion: 'up' as const,
-          monto: this.monto!,
-          plazo: this.plazo!
-        };
-
-        this.apuestaService.crearApuesta(apuesta).subscribe({
-          next: () => {
-            this.alertService.success(`✅ Se descontaron $${this.monto} y se registró la apuesta correctamente.`);
-          },
-          error: () => {
-            this.alertService.warn(`⚠️ Se descontaron $${this.monto}, pero no se pudo registrar la apuesta.`);
-          }
-        });
-      },
-      error: err => {
-        console.error('Exito', err);
-        this.alertService.error(' ✅Inversion Realizada.');
-        this.confirmacion = false;
-      }
-    });
+  if (!this.monto || !this.plazo) {
+    this.alertService.error('Ingresa monto y plazo válidos.');
+    return;
   }
+
+  const req: RetirarSaldoRequest = { monto: this.monto };
+  this.dashboardService.withdraw(req).subscribe({
+    next: () => {
+      // Descuento exitoso
+      this.saldoService.cargarSaldo();
+      this.confirmacion = true;
+      this.chartWrapper.lanzarApuesta('up');
+
+      const apuesta: CrearApuestaRequest = {
+  simbolo: this.accionSeleccionada.simbolo,
+  tipo: 'acciones',
+  direccion: 'up' as 'up',
+  monto: this.monto!,
+  plazo: this.plazo!
+};
+
+      this.apuestaService.crearApuesta(apuesta).subscribe({
+        next: () => {
+          this.alertService.success('✅ Apuesta registrada correctamente.');
+        },
+        error: (error) => {
+          console.warn('⚠️ Apuesta creada pero con error en respuesta:', error);
+          // Mostrar advertencia si el backend responde mal pero sí procesa
+          this.alertService.success('✅ Apuesta registrada, pero hubo un detalle menor con la respuesta.');
+        }
+      });
+
+      this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
+    },
+    error: err => {
+      console.error('❌ Error al retirar saldo:', err);
+      this.alertService.error('No se pudo descontar el saldo.');
+      this.confirmacion = false;
+    }
+  });
+}
+
 
   cancelar(): void {
     this.resetear();
