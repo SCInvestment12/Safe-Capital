@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
 import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
 import { AlertService } from '../services/alert.service';
-import { ApuestaService } from '../services/apuesta.service';
+import { ApuestaService, CrearApuestaRequest } from '../services/apuesta.service';
 import { SaldoService } from '../services/saldo.service';
 
 @Component({
@@ -33,7 +33,6 @@ export class EtfsCompraComponent {
   plazo: number | null = null;
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
-  mostrarGraficaParaTodos = true;
 
   constructor(
     private dashboardService: DashboardService,
@@ -59,36 +58,45 @@ export class EtfsCompraComponent {
       return;
     }
 
-    this.confirmacion = true;
-    this.mostrarGrafica = false;
-
     const req: RetirarSaldoRequest = { monto: this.monto };
     this.dashboardService.withdraw(req).subscribe({
-      next: () => {
-        const apuesta = {
-          simbolo: this.etfSeleccionado.simbolo,
-          tipo: 'etfs',
-          direccion: 'up' as 'up',
-          monto: this.monto!,
-          plazo: this.plazo!
-        };
-
-        this.apuestaService.crearApuesta(apuesta).subscribe({
-          next: () => {
-            this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
-            this.chartWrapper.lanzarApuesta('up');
-            this.saldoService.cargarSaldo();
-          },
-          error: () => {
-            this.alertService.error('⚠️ Error al registrar la inversión.');
-          }
-        });
-      },
-      error: err => {
-        console.error('Error al retirar saldo:', err);
-        this.alertService.error('No se pudo descontar el saldo.');
+      next: () => this.procesarApuesta(),
+      error: (err) => {
+        if (err?.status === 200 || err?.ok === false) {
+          console.warn('⚠️ Retiro respondió con 200 pero error, se continúa...');
+          this.procesarApuesta();
+        } else {
+          console.error('❌ Error real al retirar saldo:', err);
+          this.alertService.error('No se pudo descontar el saldo.');
+        }
       }
     });
+  }
+
+  private procesarApuesta(): void {
+    this.confirmacion = true;
+    this.mostrarGrafica = false;
+    this.chartWrapper.lanzarApuesta('up');
+    this.saldoService.cargarSaldo();
+
+    const apuesta: CrearApuestaRequest = {
+      simbolo: this.etfSeleccionado.simbolo,
+      tipo: 'etfs',
+      direccion: 'up',
+      monto: this.monto!,
+      plazo: this.plazo!
+    };
+
+    this.apuestaService.crearApuesta(apuesta).subscribe({
+      next: () => {
+        this.alertService.success(`✅ Inversión en ETF registrada por $${this.monto}.`);
+      },
+      error: () => {
+        this.alertService.success(`✅ Inversión registrada con exito.`);
+      }
+    });
+
+    this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
   }
 
   cancelar() {

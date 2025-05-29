@@ -7,7 +7,7 @@
       <li *ngFor="let etf of etfs; let i = index" (click)="seleccionarEtf(etf)">
         <strong>{{ etf.nombre }}</strong><br />
         <small>{{ etf.descripcion }}</small><br />
-        <button *ngIf="i < 5 || mostrarGraficaParaTodos" (click)="verGrafica(etf); $event.stopPropagation()">📈 Ver Gráfica</button>
+        <button *ngIf="i < 5 || mostrarGrafica" (click)="verGrafica(etf); $event.stopPropagation()">📈 Ver Gráfica</button>
       </li>
     </ul>
   </div>

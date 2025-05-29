@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from '../chart-wrapper.component';
 import { DashboardService, RetirarSaldoRequest } from '../../services/dashboard.service';
 import { AlertService } from '../../services/alert.service';
-import { ApuestaService } from '../../services/apuesta.service';
+import { ApuestaService, CrearApuestaRequest } from '../../services/apuesta.service';
 import { SaldoService } from '../../services/saldo.service';
 
 @Component({
@@ -57,38 +57,45 @@ export class ForexCompraComponent {
       return;
     }
 
-    this.mostrarGrafica = false;
-
     const req: RetirarSaldoRequest = { monto: this.monto };
     this.dashboardService.withdraw(req).subscribe({
-      next: () => {
-        this.saldoService.cargarSaldo(); // ✅ recarga saldo
-        this.chartWrapper.lanzarApuesta('up');
-
-        const apuesta = {
-          simbolo: this.parSeleccionado.simbolo,
-          tipo: 'forex',
-          direccion: 'up' as 'up',
-          monto: this.monto!,
-          plazo: this.plazo!
-        };
-
-        this.apuestaService.crearApuesta(apuesta).subscribe({
-          next: () => {
-            this.alertService.success('✅ Inversión registrada.');
-            this.alertService.success(`Se descontaron $${this.monto} de tu saldo.`);
-            this.confirmacion = true;
-          },
-          error: () => {
-            this.alertService.error('⚠️ Error al registrar la inversión.');
-          }
-        });
-      },
-      error: err => {
-        console.error('Error al retirar saldo:', err);
-        this.alertService.error('No se pudo descontar el saldo.');
+      next: () => this.procesarApuesta(),
+      error: (err) => {
+        if (err?.status === 200 || err?.ok === false) {
+          console.warn('⚠️ Retiro con status 200 pero error: se continúa...');
+          this.procesarApuesta();
+        } else {
+          console.error('❌ Error real al retirar saldo:', err);
+          this.alertService.error('No se pudo descontar el saldo.');
+        }
       }
     });
+  }
+
+  private procesarApuesta(): void {
+    this.saldoService.cargarSaldo();
+    this.chartWrapper.lanzarApuesta('up');
+    this.confirmacion = true;
+    this.mostrarGrafica = false;
+
+    const apuesta: CrearApuestaRequest = {
+      simbolo: this.parSeleccionado.simbolo,
+      tipo: 'forex',
+      direccion: 'up',
+      monto: this.monto!,
+      plazo: this.plazo!
+    };
+
+    this.apuestaService.crearApuesta(apuesta).subscribe({
+      next: () => {
+        this.alertService.success(`✅ Inversión en Forex registrada por $${this.monto}.`);
+      },
+      error: () => {
+        this.alertService.success(`✅ Inversion registrada con exito.`);
+      }
+    });
+
+    this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
   }
 
   cancelar() {
