@@ -326,3 +326,35 @@ button:disabled {
     padding: 6px;
   }
 }
+
+/* Estilos responsive para el gráfico */
+.grafica {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 10px;
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+  .grafica apx-chart {
+    width: 100% !important;
+    min-height: 300px !important;
+  }
+
+  .apexcharts-canvas {
+    width: 100% !important;
+  }
+
+  .apexcharts-tooltip {
+    font-size: 12px !important;
+  }
+
+  .apexcharts-title-text {
+    font-size: 16px !important;
+  }
+
+  .apexcharts-xaxis-label,
+  .apexcharts-yaxis-label {
+    font-size: 12px !important;
+  }
+}
