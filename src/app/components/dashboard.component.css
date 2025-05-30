@@ -305,3 +305,24 @@ button:disabled {
 .historial-transacciones th {
   background: #f1f3f5;
 }
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 15px;
+  }
+  .intro-text {
+    font-size: 1rem;
+  }
+  .tab-buttons button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+  }
+  .grafica {
+    margin-top: 20px;
+  }
+  .tabla-historial th,
+  .tabla-historial td {
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+}

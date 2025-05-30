@@ -1,7 +1,5 @@
-<app-navbar></app-navbar>
-
 <div class="dashboard">
-  <p>Mis Instrumentos de inversión con mayor seguridad y rentabilidad.</p>
+  <p class="intro-text">Mis Instrumentos de inversión con mayor seguridad y rentabilidad.</p>
 
   <!-- Tabs de tipo de activo -->
   <div class="top5-tabs">
@@ -32,7 +30,7 @@
                       (seleccionarInstrumento)="cambiarInstrumento($event)"></app-forex-compra>
   </div>
 
-  <!-- 👇 Mostrar la gráfica si se ha seleccionado un instrumento válido y no es CETES -->
+  <!-- Mostrar la gráfica si se ha seleccionado un instrumento distinto de CETES -->
   <div *ngIf="instrumentoSeleccionado && instrumentoSeleccionado.tipo !== 'cetes'" class="grafica animate__animated animate__fadeInUp">
     <app-chart-wrapper
       [tipo]="instrumentoSeleccionado.tipo"
