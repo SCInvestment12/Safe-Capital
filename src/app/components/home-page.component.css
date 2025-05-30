@@ -719,26 +719,30 @@ footer {
 
 /* MEDIA QUERIES PARA CELULARES */
 @media (max-width: 768px) {
-  .hero {
+   .hero {
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 20px;
+    justify-content: flex-start; /* antes era center */
+    padding-top: 10px; /* antes era 20px o más */
+    padding-bottom: 20px;
     text-align: center;
+    min-height: auto; /* evita forzar altura completa */
   }
 
   .hero h1 {
+    margin-top: 10px; /* reduce separación */
     font-size: 2rem;
   }
 
   .hero-subtitle {
     font-size: 1.2rem;
+    margin-top: 8px; /* menos espacio */
   }
 
   .btn-dashboard {
     font-size: 1rem;
     padding: 10px 20px;
-    margin-top: 15px;
+    margin-top: 10px; /* más arriba el botón */
   }
 
   .bono-banner {
