@@ -1,5 +1,4 @@
-<!-- src/app/components/trading-chart.component.html -->
-<div id="chart">
+<div id="chart" class="grafica-wrapper">
   <apx-chart
     [series]="chartOptions.series"
     [chart]="chartOptions.chart"
@@ -14,6 +13,7 @@
   ></apx-chart>
 
   <div class="precio-actual mt-2 text-light">
-    Precio actual: {{ precioActual | currency:'USD':'symbol' }}
+    Precio actual:
+    <span class="valor">{{ precioActual | currency:'USD':'symbol' }}</span>
   </div>
 </div>
