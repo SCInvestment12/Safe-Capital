@@ -169,3 +169,8 @@ button.cancelar:hover {
     font-size: 12px;
   }
 }
+
+.grafica-fullscreen > .contenedor-chart {
+  width: 100%;
+  max-width: 900px; /* o más si lo deseas */
+}
