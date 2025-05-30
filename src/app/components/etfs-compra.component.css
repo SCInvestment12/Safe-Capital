@@ -84,18 +84,6 @@ button.cancelar:hover {
   background-color: #e0e0e0;
 }
 
-.grafica-cripto,
-.grafica-etf,
-.grafica-accion {
-  background-color: rgba(0, 0, 0, 0.986); /* fondo negro semi-transparente */
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-}
 
-.grafica-box {
-  background-color: rgba(0, 0, 0, 0.85);
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-}
+
+
