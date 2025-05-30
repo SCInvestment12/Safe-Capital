@@ -61,6 +61,11 @@ export class NavbarComponent implements OnInit {
     this.mostrarModalDeposito = false;
     this.mostrarModalRetiro = false;
   }
+  menuAbierto = false;
+
+toggleMenu(): void {
+  this.menuAbierto = !this.menuAbierto;
+}
 
   get rol(): string {
     return localStorage.getItem('rol') || '';
