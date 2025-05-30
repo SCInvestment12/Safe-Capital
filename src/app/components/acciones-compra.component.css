@@ -136,24 +136,37 @@ button.cancelar:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
 }
 
-/* Gráfica: diseño flexible para escritorio y móvil */
 .full-width-chart {
   width: 100%;
-  max-width: 1100px;           /* Limita el ancho máximo en escritorio */
-  margin: 0 auto;              /* Centrado */
-  background: black;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
+  max-width: 100%; /* Usar todo el espacio del contenedor */
+  padding: 0;
+  background: transparent;
+  display: flex;
+  justify-content: center;
 }
 
-/* Para pantallas pequeñas (móviles) */
+.full-width-chart .grafica-wrapper {
+  width: 100%;
+  max-width: 1100px;
+  padding: 20px;
+  background: black;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 255, 170, 0.25);
+}
+
+/* Responsive para móvil */
 @media (max-width: 768px) {
   .full-width-chart {
-    width: 100vw;
     margin-left: calc(-50vw + 50%);
+    width: 100vw;
+    padding: 0;
+  }
+
+  .full-width-chart .grafica-wrapper {
+    width: 100vw;
     border-radius: 0;
     padding: 10px 0;
   }
 }
+
 
