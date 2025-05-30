@@ -726,7 +726,7 @@ footer {
     padding-top: 10px; /* antes era 20px o más */
     padding-bottom: 20px;
     text-align: center;
-    min-height: auto; /* evita forzar altura completa */
+    min-height: auto !important;
   }
 
   .hero h1 {
