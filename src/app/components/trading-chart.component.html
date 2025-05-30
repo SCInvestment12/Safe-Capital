@@ -1,19 +1,19 @@
-<div id="chart" class="grafica-wrapper">
-  <apx-chart
-    [series]="chartOptions.series"
-    [chart]="chartOptions.chart"
-    [xaxis]="chartOptions.xaxis"
-    [yaxis]="chartOptions.yaxis"
-    [dataLabels]="chartOptions.dataLabels"
-    [stroke]="chartOptions.stroke"
-    [title]="chartOptions.title"
-    [tooltip]="chartOptions.tooltip"
-    [markers]="chartOptions.markers"
-    [annotations]="chartOptions.annotations"
-  ></apx-chart>
-
-  <div class="precio-actual mt-2 text-light">
-    Precio actual:
-    <span class="valor">{{ precioActual | currency:'USD':'symbol' }}</span>
+<div class="grafica-scroll-wrapper">
+  <div class="grafica-wrapper">
+    <apx-chart
+      [series]="chartOptions.series"
+      [chart]="chartOptions.chart"
+      [xaxis]="chartOptions.xaxis"
+      [yaxis]="chartOptions.yaxis"
+      [dataLabels]="chartOptions.dataLabels"
+      [stroke]="chartOptions.stroke"
+      [title]="chartOptions.title"
+      [tooltip]="chartOptions.tooltip"
+      [markers]="chartOptions.markers"
+      [annotations]="chartOptions.annotations"
+    ></apx-chart>
+    <div class="precio-actual">
+      Precio actual: {{ precioActual | currency:'USD':'symbol' }}
+    </div>
   </div>
 </div>
