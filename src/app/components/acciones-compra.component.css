@@ -11,7 +11,7 @@
 }
 
 .acciones-container {
-  max-width: 9000px;
+  max-width: 1300px;
   margin: auto;
   margin-top: 20px;
 }
@@ -126,6 +126,7 @@ button.cancelar:hover {
   cursor: pointer;
 }
 
+/* Estilos para la gráfica */
 .grafica-cripto,
 .grafica-etf,
 .grafica-accion {
@@ -135,62 +136,19 @@ button.cancelar:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
 }
 
-.grafica-box {
-  background-color: rgba(0, 0, 0, 0);
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-}
+/* Aquí el truco para que se vea bien en móvil y en escritorio */
 .full-width-chart {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
   background: black;
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-}
-
-/* Hace que el gráfico se estire horizontalmente y se vea bien en todas resoluciones */
-.grafica-fullscreen {
-  position: relative;
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
   padding: 0;
-  background: black;
+  margin: 0 auto;
+  border-radius: 12px;
 }
 
-.contenedor-chart {
-  width: 100%;
-  max-width: 1200px;
-  margin: auto;
-  padding: 10px;
-  box-sizing: border-box;
-}
-
-/* En móviles, que sí ocupe el ancho completo y se "despegue" del padding */
-/* Solo en móviles, que se estire visualmente a los lados */
 @media (max-width: 768px) {
   .full-width-chart {
     width: 100vw;
     margin-left: calc(-50vw + 50%);
     border-radius: 0;
-  }
-
-
-  .contenedor-chart {
-    padding: 0 10px;
-  }
-
-  .card h3 {
-    font-size: 14px;
-  }
-
-  .card p {
-    font-size: 12px;
-  }
-
-  .titulo {
-    font-size: 20px;
   }
 }
