@@ -86,4 +86,11 @@ button.cancelar:hover {
 
 
 
+.grafica-etf,
+.grafica-box {
+  background-color: transparent;
+  padding: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
 
