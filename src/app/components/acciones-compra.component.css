@@ -142,11 +142,12 @@ button.cancelar:hover {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
 }
 .full-width-chart {
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   background: black;
   padding: 10px 0;
-  border-radius: 0;
+  border-radius: 12px;
 }
 /* Hace que el gráfico se estire horizontalmente y se vea bien en todas resoluciones */
 .grafica-fullscreen {
@@ -165,11 +166,14 @@ button.cancelar:hover {
   box-sizing: border-box;
 }
 
-/* Mejora para móviles */
+/* En móviles, que sí ocupe el ancho completo y se "despegue" del padding */
 @media (max-width: 768px) {
-  .grafica-fullscreen {
-    padding: 0;
+  .full-width-chart {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    border-radius: 0;
   }
+
 
   .contenedor-chart {
     padding: 0 10px;
