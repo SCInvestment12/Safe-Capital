@@ -87,14 +87,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         type: 'datetime',
         labels: {
           style: { colors: '#ffffff' },
-          formatter: (value: any, timestamp?: number): string => {
-            const ms = typeof timestamp === 'number' ? timestamp : Number(value);
-            return new Date(ms).toLocaleTimeString('es-MX', {
-              timeZone: 'America/Mexico_City',
-              hour: '2-digit',
-              minute: '2-digit'
-            });
-          }
+          datetimeUTC: false
         }
       },
       yaxis: {
@@ -110,15 +103,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         enabled: true,
         theme: 'dark',
         x: {
-          formatter: (value: any, opts?: any): string => {
-            const ms = opts?.timestamp ?? Number(value);
-            return new Date(ms).toLocaleString('es-MX', {
-              timeZone: 'America/Mexico_City',
-              hour: '2-digit',
-              minute: '2-digit',
-              second: '2-digit'
-            });
-          }
+          format: 'dd MMM yyyy HH:mm:ss'
         },
         y: {
           formatter: (val: number): string => `$${val.toFixed(2)}`
@@ -147,10 +132,8 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe((barras: TradingBarDTO[]) => {
         if (!barras.length) return;
 
-        // Orden por fecha
         barras.sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
 
-        // Mapeo a [ms, close]
         const puntos: [number, number][] = barras.map(bar => {
           const ms = new Date(bar.timestamp).getTime();
           return [ms, bar.close];
