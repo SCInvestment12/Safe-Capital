@@ -32,7 +32,7 @@
 
 .card {
   padding: 16px;
-  background: linear-gradient(135deg, #00a676, #006d5b); /* Verde degradado tipo fondo */
+  background: linear-gradient(135deg, #00a676, #006d5b);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   cursor: pointer;
@@ -126,50 +126,30 @@ button.cancelar:hover {
   cursor: pointer;
 }
 
-.grafica-cripto,
-.grafica-etf,
-.grafica-accion {
-  background-color: rgba(0, 0, 0, 0.986); /* fondo negro semi-transparente */
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
-}
+/* --- GRÁFICA --- */
 
-.grafica-box {
-  background-color: rgba(0, 0, 0, 0);
-  padding: 15px;
-  border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
-}
+/* Contenedor centrado y con fondo negro */
 .full-width-chart {
   width: 100%;
   max-width: 1200px;
-  margin: 0 auto;
+  margin: auto;
   background: black;
   padding: 10px;
   border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 0 20px rgba(0, 255, 170, 0.2);
 }
 
-/* Hace que el gráfico se estire horizontalmente y se vea bien en todas resoluciones */
+/* Contenedor exterior opcional */
 .grafica-fullscreen {
-  position: relative;
-  width: 100vw;
-  margin-left: calc(-50vw + 50%);
-  padding: 0;
-}
-
-
-.contenedor-chart {
   width: 100%;
-  max-width: 1200px;
-  margin: auto;
-  padding: 10px;
-  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  background: transparent; /* Eliminamos fondo innecesario */
 }
 
-/* En móviles, que sí ocupe el ancho completo y se "despegue" del padding */
-/* Solo en móviles, que se estire visualmente a los lados */
+/* Responsivo para móviles */
 @media (max-width: 768px) {
   .full-width-chart {
     width: 100vw;
@@ -177,9 +157,8 @@ button.cancelar:hover {
     border-radius: 0;
   }
 
-
-  .contenedor-chart {
-    padding: 0 10px;
+  .titulo {
+    font-size: 20px;
   }
 
   .card h3 {
@@ -188,9 +167,5 @@ button.cancelar:hover {
 
   .card p {
     font-size: 12px;
-  }
-
-  .titulo {
-    font-size: 20px;
   }
 }
