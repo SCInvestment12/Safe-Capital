@@ -6,41 +6,27 @@
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 255, 170, 0.2);
   width: 100%;
+  max-width: 100%;
   overflow: hidden;
   box-sizing: border-box;
-}
-
-/* Mover el control de ancho a pantallas grandes */
-@media (min-width: 1024px) {
-  .grafica-wrapper {
-    max-width: 800px;
-    margin: auto;
-  }
-
-  apx-chart {
-    height: 500px !important;
-  }
-}
-
-.precio-actual {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 18px;
-  color: #fff;
-}
-
-.precio-actual .valor {
-  color: #00ffc8;
-  font-size: 20px;
-  margin-left: 8px;
-  font-weight: bold;
 }
 
 /* ApexCharts responsivo */
 apx-chart {
   width: 100% !important;
   height: 400px !important;
+}
+
+/* Ajustes específicos para PC */
+@media (min-width: 1024px) {
+  .grafica-wrapper {
+    max-width: 900px;
+    margin: auto;
+  }
+
+  apx-chart {
+    height: 500px !important;
+  }
 }
 
 /* Responsivo para móviles */
@@ -60,4 +46,19 @@ apx-chart {
   apx-chart {
     height: 300px !important;
   }
+}
+
+.precio-actual {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 18px;
+  color: #fff;
+}
+
+.precio-actual .valor {
+  color: #00ffc8;
+  font-size: 20px;
+  margin-left: 8px;
+  font-weight: bold;
 }
