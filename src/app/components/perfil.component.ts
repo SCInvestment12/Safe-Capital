@@ -125,9 +125,7 @@ export class PerfilComponent implements OnInit {
   cargarMovimientosYPortafolio() {
     // Simula datos; reemplaza con llamadas reales si las tienes
     this.movimientos = [
-      { tipo: 'Depósito', monto: 2000, fecha: '03 abril 2025' },
-      { tipo: 'Retiro', monto: 500, fecha: '28 marzo 2025' },
-      { tipo: 'Inversion', monto: 150, fecha: '27 marzo 2025' }
+     
     ];
     this.portafolio = [
       
