@@ -1,8 +1,18 @@
 .full-width-chart {
-  width: 100vw;
-  margin-left: -16px; /* o el padding lateral de tu contenedor */
-  margin-right: -16px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 0;
   background: black;
   border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0, 255, 170, 0.2);
+}
+
+/* Versión móvil ajustada */
+@media (max-width: 768px) {
+  .full-width-chart {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+    border-radius: 0;
+  }
 }
