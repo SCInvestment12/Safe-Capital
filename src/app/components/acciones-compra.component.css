@@ -157,8 +157,8 @@ button.cancelar:hover {
   width: 100vw;
   margin-left: calc(-50vw + 50%);
   padding: 0;
-  background: black;
 }
+
 
 .contenedor-chart {
   width: 100%;
