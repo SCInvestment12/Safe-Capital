@@ -29,7 +29,7 @@
 /* ApexCharts responsivo */
 apx-chart {
   width: 100% !important;
-  height: 360px !important;
+  height: 400px !important;
 }
 
 /* Responsivo para móviles */
@@ -48,5 +48,17 @@ apx-chart {
 
   apx-chart {
     height: 300px !important;
+  }
+}
+
+/* Estilo adicional para pantallas grandes (PC) */
+@media (min-width: 1024px) {
+  .grafica-wrapper {
+    max-width: 600px;
+    margin: auto;
+  }
+
+  apx-chart {
+    height: 500px !important;
   }
 }
