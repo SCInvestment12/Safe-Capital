@@ -1,1 +1,9 @@
-<p>chart-wrapper works!</p>
+<ng-container *ngIf="isBrowser && tipo !== 'cetes' && simbolo">
+  <div class="full-width-chart">
+    <app-trading-chart
+      #chart
+      [tipo]="tipo"
+      [simbolo]="simboloFormateado">
+    </app-trading-chart>
+  </div>
+</ng-container>

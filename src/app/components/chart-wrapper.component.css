@@ -1,18 +1,28 @@
 .full-width-chart {
   width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0;
   background: black;
+  padding: 10px;
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0, 255, 170, 0.2);
+  display: flex;
+  justify-content: center;
 }
 
-/* Versión móvil ajustada */
+.full-width-chart apx-chart {
+  width: 100%;
+  max-width: 1200px;
+}
+
+/* Responsivo para móviles */
 @media (max-width: 768px) {
   .full-width-chart {
     width: 100vw;
     margin-left: calc(-50vw + 50%);
     border-radius: 0;
+    padding: 0;
+  }
+
+  .full-width-chart apx-chart {
+    height: 300px !important;
   }
 }
