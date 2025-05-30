@@ -714,3 +714,72 @@ footer {
   font-weight: bold;
   text-shadow: 2px 2px 4px #000;
 }
+
+/* Agrega esto al final del home-page.component.css */
+
+/* MEDIA QUERIES PARA CELULARES */
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .btn-dashboard {
+    font-size: 1rem;
+    padding: 10px 20px;
+    margin-top: 15px;
+  }
+
+  .bono-banner {
+    position: static;
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .bono-text {
+    font-size: 1.3rem;
+    line-height: 1.4;
+  }
+
+  .bienvenida-box {
+    padding: 20px;
+  }
+
+  .beneficios-grid, .futuros-wrapper, .testimonios-grid, .guia-wrapper, .contacto-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .small-benefit, .futuro-tarjeta, .guia-tarjeta, .testimonio-card, .contacto-item {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .cta-section h2 {
+    font-size: 1.6rem;
+  }
+
+  .cta-section p {
+    font-size: 1rem;
+  }
+
+  .social-icons i {
+    font-size: 2.5rem;
+    margin: 10px;
+  }
+
+  .hero-subtitle br {
+    display: none;
+  }
+}
