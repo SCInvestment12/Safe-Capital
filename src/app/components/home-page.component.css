@@ -747,7 +747,7 @@ footer {
 
   .bono-banner {
     position: static;
-    margin-top: 80px; /* ← puedes ajustar a 100 si quieres más separación */
+    margin-top: 100px; /* ← puedes ajustar a 100 si quieres más separación */
     margin-bottom: 40px;
     text-align: center;
   }
