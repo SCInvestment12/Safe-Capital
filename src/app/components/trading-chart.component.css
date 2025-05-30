@@ -1,3 +1,9 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+/* Contenedor de la gráfica */
 .grafica-wrapper {
   position: relative;
   padding-top: 30px;
@@ -9,19 +15,35 @@
   max-width: 100%;
   overflow: hidden;
   box-sizing: border-box;
+  margin: auto;
 }
 
-/* ApexCharts responsivo */
+/* Precio actual */
+.precio-actual {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 18px;
+  color: #fff;
+}
+
+.precio-actual .valor {
+  color: #00ffc8;
+  font-size: 20px;
+  margin-left: 8px;
+  font-weight: bold;
+}
+
+/* Gráfico responsivo */
 apx-chart {
   width: 100% !important;
   height: 400px !important;
 }
 
-/* Ajustes específicos para PC */
+/* Ajustes para PC */
 @media (min-width: 1024px) {
   .grafica-wrapper {
     max-width: 900px;
-    margin: auto;
   }
 
   apx-chart {
@@ -29,7 +51,7 @@ apx-chart {
   }
 }
 
-/* Responsivo para móviles */
+/* Ajustes para móvil */
 @media (max-width: 768px) {
   .grafica-wrapper {
     padding: 10px;
@@ -46,19 +68,4 @@ apx-chart {
   apx-chart {
     height: 300px !important;
   }
-}
-
-.precio-actual {
-  position: absolute;
-  top: 10px;
-  right: 20px;
-  font-size: 18px;
-  color: #fff;
-}
-
-.precio-actual .valor {
-  color: #00ffc8;
-  font-size: 20px;
-  margin-left: 8px;
-  font-weight: bold;
 }
