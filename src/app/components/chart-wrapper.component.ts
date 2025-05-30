@@ -17,13 +17,16 @@ import { TradingChartComponent } from './trading-chart.component';
   imports: [CommonModule, TradingChartComponent],
   template: `
     <ng-container *ngIf="isBrowser && tipo !== 'cetes' && simbolo">
-      <app-trading-chart
-        #chart
-        [tipo]="tipo"
-        [simbolo]="simboloFormateado">
-      </app-trading-chart>
+      <div class="full-width-chart">
+        <app-trading-chart
+          #chart
+          [tipo]="tipo"
+          [simbolo]="simboloFormateado">
+        </app-trading-chart>
+      </div>
     </ng-container>
-  `
+  `,
+  styleUrls: ['./chart-wrapper.component.css']
 })
 export class ChartWrapperComponent implements OnChanges {
   @Input() tipo = '';
@@ -40,7 +43,6 @@ export class ChartWrapperComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // Esquivamos la restricción con un cast a any
     const cs = changes as any;
     const cambioSimbolo = cs.simbolo as SimpleChanges[string];
     const cambioTipo    = cs.tipo    as SimpleChanges[string];
