@@ -15,11 +15,10 @@
   </div>
 
   <!-- Gráfica -->
-<div *ngIf="mostrarGrafica && accionSeleccionada?.simbolo && !confirmacion" class="grafica-accion">
-  <div class="grafica-box">
-   <app-chart-wrapper [tipo]="'acciones'" [simbolo]="accionSeleccionada?.simbolo"></app-chart-wrapper>
-  </div>
+<div class="grafica-accion full-width-chart">
+  <app-chart-wrapper [tipo]="'acciones'" [simbolo]="accionSeleccionada?.simbolo"></app-chart-wrapper>
 </div>
+
 
 
   <!-- Formulario de inversión -->
