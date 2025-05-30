@@ -136,19 +136,24 @@ button.cancelar:hover {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
 }
 
-/* Aquí el truco para que se vea bien en móvil y en escritorio */
+/* Gráfica: diseño flexible para escritorio y móvil */
 .full-width-chart {
   width: 100%;
+  max-width: 1100px;           /* Limita el ancho máximo en escritorio */
+  margin: 0 auto;              /* Centrado */
   background: black;
-  padding: 0;
-  margin: 0 auto;
+  padding: 20px;
   border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 255, 170, 0.3);
 }
 
+/* Para pantallas pequeñas (móviles) */
 @media (max-width: 768px) {
   .full-width-chart {
     width: 100vw;
     margin-left: calc(-50vw + 50%);
     border-radius: 0;
+    padding: 10px 0;
   }
 }
+
