@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SaldoService } from '../../services/saldo.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-retiro-modal',
@@ -19,8 +20,8 @@ export class RetiroModalComponent implements OnInit {
   titular: string = '';
   confirmado = false;
   rechazado = false;
-  timeoutId: any = null;
   retiroEnProceso = false;
+  timeoutId: any = null;
   saldoOriginal: number = 0;
 
   bancos: string[] = [
@@ -46,31 +47,34 @@ export class RetiroModalComponent implements OnInit {
       this.monto >= 1000 &&
       this.titular.trim().length > 3 &&
       this.banco.trim() !== '' &&
-      this.cuenta.trim().length >= 10 &&
-      !this.retiroEnProceso
+      this.cuenta.trim().length >= 10
     );
   }
 
-  solicitarRetiro() {
+  async solicitarRetiro() {
     this.confirmado = true;
     this.retiroEnProceso = true;
 
-    // ✅ Solo restar saldo una vez
-    this.saldoService.obtenerSaldo().subscribe(saldoActual => {
+    try {
+      const saldoActual = await firstValueFrom(this.saldoService.obtenerSaldo());
+
       if (this.saldoOriginal === 0) {
         this.saldoOriginal = saldoActual;
         const nuevoSaldo = saldoActual - this.monto;
         this.saldoService.actualizarSaldo(nuevoSaldo);
       }
 
-      // 🕒 Después de 60 minutos, restaurar el saldo
       this.timeoutId = setTimeout(() => {
         this.saldoService.actualizarSaldo(this.saldoOriginal);
         this.confirmado = false;
         this.rechazado = true;
         this.retiroEnProceso = false;
         this.saldoOriginal = 0;
-      }, 60 * 60 * 1000);
-    });
+      }, 60 * 60 * 1000); // ⏳ 1 hora
+    } catch (err) {
+      alert('Error al obtener el saldo');
+      this.confirmado = false;
+      this.retiroEnProceso = false;
+    }
   }
 }
