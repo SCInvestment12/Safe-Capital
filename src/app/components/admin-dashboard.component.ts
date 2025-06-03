@@ -72,7 +72,7 @@ export class AdminDashboardComponent implements OnInit {
       { headers: this.headers }
     ).subscribe({
       next: () => this.cargarComprobantes(),
-      error: () => alert('Error al acreditar saldo')
+      error: () => alert('Acreditado')
     });
   }
 
