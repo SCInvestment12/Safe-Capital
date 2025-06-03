@@ -193,11 +193,17 @@ export class PerfilComponent implements OnInit {
 
   // Navegación
   irAFondos() {
-    console.log('Ir a agregar fondos');
-  }
-  irATrading() {
-    console.log('Ir a Trading');
-  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  setTimeout(() => {
+    const comprobanteBox = document.querySelector('.comprobante-box');
+    comprobanteBox?.scrollIntoView({ behavior: 'smooth' });
+  }, 300);
+}
+
+irATrading() {
+  this.irADashboard(); // reutiliza la función existente
+}
+
   irADashboard() {
     const rol = localStorage.getItem('rol') || 'ROLE_USER';
     const rutas: Record<string, string> = {
