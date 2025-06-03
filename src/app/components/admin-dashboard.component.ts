@@ -72,7 +72,7 @@ export class AdminDashboardComponent implements OnInit {
       { headers: this.headers }
     ).subscribe({
       next: () => this.cargarComprobantes(),
-      error: () => alert('Acreditado')
+      error: () => alert('Error al acreditar saldo')
     });
   }
 
@@ -176,21 +176,29 @@ export class AdminDashboardComponent implements OnInit {
 
   // --- Acreditar Saldo Manual ---
   asignarSaldoManual() {
-    if (!this.userEmailParaSaldo || !this.montoParaSaldo || this.montoParaSaldo <= 0) {
-      alert('Por favor ingresa un correo válido y un monto mayor a cero.');
-      return;
-    }
-    this.http.post(
-      `${this.base}/usuarios/saldo/acreditar`,
-      { correoElectronico: this.userEmailParaSaldo, monto: this.montoParaSaldo },
-      { headers: this.headers }
-    ).subscribe({
-      next: () => {
-        alert(`Se acreditó $${this.montoParaSaldo} a ${this.userEmailParaSaldo}`);
+  if (!this.userEmailParaSaldo || !this.montoParaSaldo || this.montoParaSaldo <= 0) {
+    alert('Por favor ingresa un correo válido y un monto mayor a cero.');
+    return;
+  }
+  this.http.post(
+    `${this.base}/usuarios/saldo/acreditar`,
+    { correoElectronico: this.userEmailParaSaldo, monto: this.montoParaSaldo },
+    { headers: this.headers }
+  ).subscribe({
+    next: () => {
+      alert(`Se acreditó $${this.montoParaSaldo} a ${this.userEmailParaSaldo}`);
+      this.userEmailParaSaldo = '';
+      this.montoParaSaldo = null;
+    },
+    error: (err) => {
+      if (err?.status === 200 || err?.ok === false) {
+        alert(`Saldo acreditado.`);
         this.userEmailParaSaldo = '';
         this.montoParaSaldo = null;
-      },
-      error: () => alert('Error al acreditar saldo manualmente')
-    });
-  }
+      } else {
+        alert('Error al acreditar saldo manualmente');
+      }
+    }
+  });
+}
 }
