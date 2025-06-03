@@ -1,8 +1,6 @@
-// retiro-modal.component.ts corregido con lógica de retiro simulado de 1 hora
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
-import { DashboardService } from '../../services/dashboard.service';
 import { SaldoService } from '../../services/saldo.service';
 
 @Component({
@@ -25,15 +23,11 @@ export class RetiroModalComponent implements OnInit {
 
   bancos: string[] = [
     'AFIRME', 'AZTECA', 'BANAMEX', 'BANCO DEL BAJÍO', 'BANCO DEL BIENESTAR',
-    'BANCOPPEL', 'BANREGIO', 'BANORTE', 'BBVA', 'HEY BANCO', 'HSBC',
-    'INBURSA', 'KLAR', 'MERCADO PAGO', 'NU MEXICO', 'SANTANDER',
-    'SPIN BY OXXO', 'STP', 'OTROS BANCOS'
+    'BANCOPPEL', 'BANREGIO', 'BANORTE', 'BBVA', 'HEY BANCO', 'HSBC', 'INBURSA',
+    'KLAR', 'MERCADO PAGO', 'NU MEXICO', 'SANTANDER', 'SPIN BY OXXO', 'STP', 'OTROS BANCOS'
   ];
 
-  constructor(
-    private dashboardService: DashboardService,
-    private saldoService: SaldoService
-  ) {}
+  constructor(private saldoService: SaldoService) {}
 
   ngOnInit() {
     const nombre = localStorage.getItem('nombre') || '';
@@ -50,50 +44,25 @@ export class RetiroModalComponent implements OnInit {
       this.monto >= 1000 &&
       this.titular.trim().length > 3 &&
       this.banco.trim() !== '' &&
-      this.cuenta.trim().length === 10
+      this.cuenta.trim().length >= 10
     );
   }
 
   solicitarRetiro() {
-    if (!this.formularioValido()) return;
+    this.confirmado = true;
+    this.rechazado = false;
 
-    const montoRetirar = this.monto;
+    // ✅ Restar el saldo actual (simulado)
+    this.saldoService.obtenerSaldo().subscribe(saldoActual => {
+      const nuevoSaldo = saldoActual - this.monto;
+      this.saldoService.actualizarSaldo(nuevoSaldo);
 
-    // Disminuir saldo inmediatamente
-    this.dashboardService.withdraw({ monto: montoRetirar }).subscribe({
-      next: () => {
-        this.saldoService.cargarSaldo();
-        this.confirmado = true;
-        this.rechazado = false;
-
-        // Programar devolución después de 1 hora
-        this.timeoutId = setTimeout(() => {
-          this.simularDevolucion(montoRetirar);
-        }, 60 * 60 * 1000);
-      },
-      error: () => {
-        alert('Error al procesar el retiro');
-      }
+      // 🕒 Después de 60 minutos, restaurar el saldo
+      this.timeoutId = setTimeout(() => {
+        this.saldoService.actualizarSaldo(saldoActual); // restaurar el saldo
+        this.confirmado = false;
+        this.rechazado = true;
+      }, 60 * 60 * 1000);
     });
-  }
-
-  private simularDevolucion(monto: number) {
-    const userId = parseInt(localStorage.getItem('id') || '0', 10);
-    if (userId && monto > 0) {
-      this.dashboardService.deposit(userId, {
-        amount: monto,
-        method: 'RETIRO REVERTIDO',
-        termDays: 0
-      }).subscribe({
-        next: () => {
-          this.saldoService.cargarSaldo();
-          this.confirmado = false;
-          this.rechazado = true; // Mostramos rechazo tras 1 hora como cierre del flujo visual
-        },
-        error: () => {
-          alert('Error al devolver saldo');
-        }
-      });
-    }
   }
 }
