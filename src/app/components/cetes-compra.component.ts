@@ -48,18 +48,24 @@ export class CetesCompraComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarTasaCetes();
+    this.cargarTasasPorPlazo();
     this.obtenerFechaSubasta();
   }
 
-  private cargarTasaCetes() {
-    this.http.get<number>(`${this.base}/config/cetes/tasa`, { headers: this.headers }).subscribe({
-      next: tasa => {
-        const pct = tasa.toFixed(2) + '%';
-        this.plazos = this.plazos.map(p => ({ ...p, tasa: pct }));
-      },
-      error: () => console.error('No se pudo cargar la tasa de CETES')
-    });
+  private cargarTasasPorPlazo() {
+    this.http.get<{ [key: string]: number }>(`${this.base}/config/cetes/tasas`, { headers: this.headers })
+      .subscribe({
+        next: data => {
+          this.plazos = [
+            { plazo: '1 mes', tasa: (data['30'] ?? 0).toFixed(2) + '%' },
+            { plazo: '3 meses', tasa: (data['90'] ?? 0).toFixed(2) + '%' },
+            { plazo: '6 meses', tasa: (data['180'] ?? 0).toFixed(2) + '%' },
+            { plazo: '12 meses', tasa: (data['365'] ?? 0).toFixed(2) + '%' },
+            { plazo: '2 años', tasa: (data['730'] ?? 0).toFixed(2) + '%' }
+          ];
+        },
+        error: () => console.error('❌ No se pudieron cargar las tasas de CETES por plazo')
+      });
   }
 
   seleccionar(p: PlazoCetes) {
@@ -112,7 +118,7 @@ export class CetesCompraComponent implements OnInit {
         this.confirmar = true;
       },
       error: () => {
-        this.alertService.success(`✅ Inversión en CETES registrada con exito.`);
+        this.alertService.success(`✅ Inversión en CETES registrada con éxito.`);
       }
     });
 
