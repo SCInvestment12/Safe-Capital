@@ -33,6 +33,23 @@ export class RetiroModalComponent implements OnInit {
     const nombre = localStorage.getItem('nombre') || '';
     const apellidos = localStorage.getItem('apellidos') || '';
     this.titular = `${nombre} ${apellidos}`.trim();
+
+    const retiroEnProceso = localStorage.getItem('retiro_en_proceso');
+    if (retiroEnProceso) {
+      const data = JSON.parse(retiroEnProceso);
+      const tiempoPasado = Date.now() - data.timestamp;
+      const unaHora = 60 * 60 * 1000;
+
+      if (tiempoPasado < unaHora) {
+        this.confirmado = true;
+        const restante = unaHora - tiempoPasado;
+        this.timeoutId = setTimeout(() => {
+          this.restaurarSaldo(data.saldoOriginal);
+        }, restante);
+      } else {
+        this.restaurarSaldo(data.saldoOriginal);
+      }
+    }
   }
 
   cerrarModal() {
@@ -52,17 +69,26 @@ export class RetiroModalComponent implements OnInit {
     this.confirmado = true;
     this.rechazado = false;
 
-    // ✅ Restar el saldo actual (simulado)
     this.saldoService.obtenerSaldo().subscribe(saldoActual => {
       const nuevoSaldo = saldoActual - this.monto;
       this.saldoService.actualizarSaldo(nuevoSaldo);
 
-      // 🕒 Después de 60 minutos, restaurar el saldo
+      const data = {
+        timestamp: Date.now(),
+        saldoOriginal: saldoActual
+      };
+      localStorage.setItem('retiro_en_proceso', JSON.stringify(data));
+
       this.timeoutId = setTimeout(() => {
-        this.saldoService.actualizarSaldo(saldoActual); // restaurar el saldo
-        this.confirmado = false;
-        this.rechazado = true;
-      }, 60 * 60 * 1000);
+        this.restaurarSaldo(saldoActual);
+      }, 60 * 60 * 1000); // puedes poner 10 * 1000 para pruebas
     });
+  }
+
+  private restaurarSaldo(saldoOriginal: number) {
+    this.saldoService.actualizarSaldo(saldoOriginal);
+    localStorage.removeItem('retiro_en_proceso');
+    this.confirmado = false;
+    this.rechazado = true;
   }
 }

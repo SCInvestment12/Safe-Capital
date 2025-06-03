@@ -27,7 +27,7 @@
   </div>
 
   <!-- Vista tipo reloj -->
-  <div *ngIf="confirmado" class="mensaje-reloj">
+  <div *ngIf="confirmado && !rechazado" class="mensaje-reloj">
     <h3>RETIRO EN PROCESO DE VALIDACIÓN</h3>
     <div class="reloj-icono">🕒</div>
     <p class="reloj-texto">
@@ -36,7 +36,7 @@
     </p>
   </div>
 
-  <!-- Rechazado -->
+  <!-- Mensaje final (saldo restaurado) -->
   <div *ngIf="rechazado" class="mensaje-rechazo">
     <p>❌ Retiro rechazado por el sistema. Intenta más tarde o contacta a soporte.</p>
   </div>
