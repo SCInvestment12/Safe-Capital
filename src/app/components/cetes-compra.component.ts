@@ -30,6 +30,7 @@ export class CetesCompraComponent implements OnInit {
   plazoSeleccionado: PlazoCetes | null = null;
   confirmar = false;
   monto: number | null = null;
+  reinversion: boolean = false;
 
   fechaSubasta = '';
   fechaSubastaNueva = '';
@@ -72,6 +73,11 @@ export class CetesCompraComponent implements OnInit {
     this.plazoSeleccionado = p;
     this.confirmar = false;
     this.monto = null;
+    this.reinversion = false;
+  }
+
+  setReinversion(valor: boolean) {
+    this.reinversion = valor;
   }
 
   continuarCompra() {
@@ -140,6 +146,7 @@ export class CetesCompraComponent implements OnInit {
     this.plazoSeleccionado = null;
     this.monto = null;
     this.confirmar = false;
+    this.reinversion = false;
   }
 
   private obtenerFechaSubasta() {
