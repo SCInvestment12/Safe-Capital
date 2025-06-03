@@ -58,6 +58,11 @@ export class EtfsCompraComponent {
       return;
     }
 
+    if (!this.estaEnHorarioPermitido()) {
+      this.alertService.error('⏰ Las inversiones en ETFs solo están permitidas de 08:00 a 16:00.');
+      return;
+    }
+
     const req: RetirarSaldoRequest = { monto: this.monto };
     this.dashboardService.withdraw(req).subscribe({
       next: () => this.procesarApuesta(),
@@ -71,6 +76,12 @@ export class EtfsCompraComponent {
         }
       }
     });
+  }
+
+  private estaEnHorarioPermitido(): boolean {
+    const ahora = new Date();
+    const hora = ahora.getHours();
+    return hora >= 8 && hora < 16;
   }
 
   private procesarApuesta(): void {

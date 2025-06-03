@@ -191,7 +191,7 @@ mostrarModalDeposito = false;
     }
     const form = new FormData();
     form.append('archivo', this.archivoComprobante);
-    this.http.post(`${this.base}/depositos/subir`, form, { headers: this.headers })
+this.http.post(`${this.base}/comprobantes/subir`, form, { headers: this.headers })
       .subscribe(() => this.alert.success('Comprobante enviado correctamente.'),
                  () => this.alert.error('Error al enviar comprobante.'));
   }

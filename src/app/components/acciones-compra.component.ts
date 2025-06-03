@@ -59,6 +59,12 @@ export class AccionesCompraComponent {
       return;
     }
 
+    const horaActual = new Date().getHours();
+    if (horaActual < 8 || horaActual >= 16) {
+      this.alertService.error('⏰ Solo puedes invertir en acciones entre 08:00 y 16:00 horas.');
+      return;
+    }
+
     const req: RetirarSaldoRequest = { monto: this.monto };
 
     this.dashboardService.withdraw(req).subscribe({
@@ -66,7 +72,6 @@ export class AccionesCompraComponent {
         this.procesarApuesta();
       },
       error: (err) => {
-        // ⚠️ Si el error es 200 pero cae como "error", se trata como éxito
         if (err?.status === 200 || err?.ok === false) {
           console.warn('⚠️ Respuesta extraña, pero con status 200: se continuará como éxito.');
           this.procesarApuesta();
