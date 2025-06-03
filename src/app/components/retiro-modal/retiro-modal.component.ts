@@ -20,6 +20,8 @@ export class RetiroModalComponent implements OnInit {
   confirmado = false;
   rechazado = false;
   timeoutId: any = null;
+  retiroEnProceso = false;
+  saldoOriginal: number = 0;
 
   bancos: string[] = [
     'AFIRME', 'AZTECA', 'BANAMEX', 'BANCO DEL BAJÍO', 'BANCO DEL BIENESTAR',
@@ -33,23 +35,6 @@ export class RetiroModalComponent implements OnInit {
     const nombre = localStorage.getItem('nombre') || '';
     const apellidos = localStorage.getItem('apellidos') || '';
     this.titular = `${nombre} ${apellidos}`.trim();
-
-    const retiroEnProceso = localStorage.getItem('retiro_en_proceso');
-    if (retiroEnProceso) {
-      const data = JSON.parse(retiroEnProceso);
-      const tiempoPasado = Date.now() - data.timestamp;
-      const unaHora = 60 * 60 * 1000;
-
-      if (tiempoPasado < unaHora) {
-        this.confirmado = true;
-        const restante = unaHora - tiempoPasado;
-        this.timeoutId = setTimeout(() => {
-          this.restaurarSaldo(data.saldoOriginal);
-        }, restante);
-      } else {
-        this.restaurarSaldo(data.saldoOriginal);
-      }
-    }
   }
 
   cerrarModal() {
@@ -61,34 +46,31 @@ export class RetiroModalComponent implements OnInit {
       this.monto >= 1000 &&
       this.titular.trim().length > 3 &&
       this.banco.trim() !== '' &&
-      this.cuenta.trim().length >= 10
+      this.cuenta.trim().length >= 10 &&
+      !this.retiroEnProceso
     );
   }
 
   solicitarRetiro() {
     this.confirmado = true;
-    this.rechazado = false;
+    this.retiroEnProceso = true;
 
+    // ✅ Solo restar saldo una vez
     this.saldoService.obtenerSaldo().subscribe(saldoActual => {
-      const nuevoSaldo = saldoActual - this.monto;
-      this.saldoService.actualizarSaldo(nuevoSaldo);
+      if (this.saldoOriginal === 0) {
+        this.saldoOriginal = saldoActual;
+        const nuevoSaldo = saldoActual - this.monto;
+        this.saldoService.actualizarSaldo(nuevoSaldo);
+      }
 
-      const data = {
-        timestamp: Date.now(),
-        saldoOriginal: saldoActual
-      };
-      localStorage.setItem('retiro_en_proceso', JSON.stringify(data));
-
+      // 🕒 Después de 60 minutos, restaurar el saldo
       this.timeoutId = setTimeout(() => {
-        this.restaurarSaldo(saldoActual);
-      }, 60 * 60 * 1000); // puedes poner 10 * 1000 para pruebas
+        this.saldoService.actualizarSaldo(this.saldoOriginal);
+        this.confirmado = false;
+        this.rechazado = true;
+        this.retiroEnProceso = false;
+        this.saldoOriginal = 0;
+      }, 60 * 60 * 1000);
     });
-  }
-
-  private restaurarSaldo(saldoOriginal: number) {
-    this.saldoService.actualizarSaldo(saldoOriginal);
-    localStorage.removeItem('retiro_en_proceso');
-    this.confirmado = false;
-    this.rechazado = true;
   }
 }
