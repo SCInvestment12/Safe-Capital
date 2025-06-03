@@ -6,11 +6,7 @@ import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http'
 @Component({
   selector: 'app-admin-dashboard',
   standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    HttpClientModule
-  ],
+  imports: [CommonModule, FormsModule, HttpClientModule],
   templateUrl: './admin-dashboard.component.html',
   styleUrls: ['./admin-dashboard.component.css']
 })
@@ -18,8 +14,14 @@ export class AdminDashboardComponent implements OnInit {
   comprobantes: any[] = [];
   loading = false;
 
-  // CETES
-  tasaCetes = 0;
+  // CETES (nuevo formato por plazo)
+  tasasCetes: { [key: string]: number } = {
+    '30': 0,
+    '90': 0,
+    '180': 0,
+    '365': 0,
+    '730': 0
+  };
   fechaSubasta = '';
   fechaSubastaNueva = '';
 
@@ -45,7 +47,7 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarComprobantes();
-    this.obtenerTasaCetes();
+    this.obtenerTasasCetes();
     this.obtenerFechaSubasta();
     this.obtenerConfiguracionBancaria();
   }
@@ -86,22 +88,17 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   // --- CETES ---
-  obtenerTasaCetes() {
-    this.http.get<number>(
-      `${this.base}/config/cetes/tasa`,
-      { headers: this.headers }
-    ).subscribe(t => this.tasaCetes = t, () => alert('Error al obtener tasa CETES'));
+  obtenerTasasCetes() {
+    this.http.get<{ [key: string]: number }>(`${this.base}/config/cetes/tasas`, { headers: this.headers })
+      .subscribe(tasas => this.tasasCetes = tasas, () => alert('Error al obtener tasas CETES'));
   }
 
-  actualizarTasaCetes() {
-    this.http.put(
-      `${this.base}/config/cetes/tasa?tasa=${this.tasaCetes}`,
-      null,
-      { headers: this.headers }
-    ).subscribe({
-      next: () => alert('Tasa de CETES actualizada'),
-      error: () => alert('Error al actualizar la tasa de CETES')
-    });
+  actualizarTasasCetes() {
+    this.http.put(`${this.base}/config/cetes/tasas`, this.tasasCetes, { headers: this.headers })
+      .subscribe({
+        next: () => alert('Tasas de CETES actualizadas'),
+        error: () => alert('Error al actualizar las tasas de CETES')
+      });
   }
 
   obtenerFechaSubasta() {
@@ -110,7 +107,7 @@ export class AdminDashboardComponent implements OnInit {
       { headers: this.headers, responseType: 'text' as 'json' }
     ).subscribe(f => {
       this.fechaSubasta = f;
-      this.fechaSubastaNueva = f.substring(0,16);
+      this.fechaSubastaNueva = f.substring(0, 10); // solo fecha
     }, () => alert('Error al obtener fecha de subasta'));
   }
 

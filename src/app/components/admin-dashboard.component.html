@@ -22,28 +22,38 @@
         <td>{{ c.fechaSubida | date:'short' }}</td>
         <td>{{ c.estado }}</td>
         <td>
-          <button class="btn-aprobar" (click)="acreditarSaldo(c.id, c.usuario.correoElectronico)">
-            Aprobar
-          </button>
-          <button class="btn-rechazar" (click)="rechazar(c.id)">
-            Rechazar
-          </button>
+          <button class="btn-aprobar" (click)="acreditarSaldo(c.id, c.usuario.correoElectronico)">Aprobar</button>
+          <button class="btn-rechazar" (click)="rechazar(c.id)">Rechazar</button>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <!-- CETES: TASA -->
-  <h2 class="mt-4">Configurar Tasa de CETES (%)</h2>
+  <!-- CETES: TASA POR PLAZO -->
+  <h2 class="mt-4">Configurar Tasas de CETES (%) por Plazo</h2>
   <div class="tasa-cetes-config">
-    <input type="number" [(ngModel)]="tasaCetes" class="form-control" />
-    <button class="btn-actualizar" (click)="actualizarTasaCetes()">Actualizar Tasa</button>
+    <label>1 mes (30 días):</label>
+    <input type="number" [(ngModel)]="tasasCetes['30']" class="form-control" />
+
+    <label>3 meses (90 días):</label>
+    <input type="number" [(ngModel)]="tasasCetes['90']" class="form-control" />
+
+    <label>6 meses (180 días):</label>
+    <input type="number" [(ngModel)]="tasasCetes['180']" class="form-control" />
+
+    <label>12 meses (365 días):</label>
+    <input type="number" [(ngModel)]="tasasCetes['365']" class="form-control" />
+
+    <label>2 años (730 días):</label>
+    <input type="number" [(ngModel)]="tasasCetes['730']" class="form-control" />
+
+    <button class="btn-actualizar mt-2" (click)="actualizarTasasCetes()">Actualizar Tasas</button>
   </div>
 
   <!-- CETES: FECHA DE SUBASTA -->
   <h2 class="mt-4">Configurar Fecha de Subasta CETES</h2>
   <div class="tasa-cetes-config">
-    <input type="datetime-local" [(ngModel)]="fechaSubastaNueva" class="form-control" />
+    <input type="date" [(ngModel)]="fechaSubastaNueva" class="form-control" />
     <small>Actual: {{ fechaSubasta }}</small>
     <button class="btn-actualizar" (click)="actualizarFechaSubasta()">Actualizar Fecha</button>
   </div>
@@ -70,21 +80,12 @@
   <h2 class="mt-4">Acreditar Saldo a Usuario</h2>
   <div class="tasa-cetes-config mb-2">
     <label>Correo del Usuario:</label>
-    <input type="email"
-           [(ngModel)]="userEmailParaSaldo"
-           class="form-control"
-           placeholder="usuario@ejemplo.com" />
+    <input type="email" [(ngModel)]="userEmailParaSaldo" class="form-control" placeholder="usuario@ejemplo.com" />
   </div>
   <div class="tasa-cetes-config mb-3">
     <label>Monto a acreditar (MXN):</label>
-    <input type="number"
-           [(ngModel)]="montoParaSaldo"
-           class="form-control"
-           min="1"
-           placeholder="Ej. 1500" />
+    <input type="number" [(ngModel)]="montoParaSaldo" class="form-control" min="1" placeholder="Ej. 1500" />
   </div>
-  <button class="btn-actualizar mb-5" (click)="asignarSaldoManual()">
-    Acreditar Saldo
-  </button>
+  <button class="btn-actualizar mb-5" (click)="asignarSaldoManual()">Acreditar Saldo</button>
 
 </div>
