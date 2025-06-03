@@ -7,6 +7,8 @@ import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http'
 import { AlertService } from '../services/alert.service';
 import { UserService } from '../services/user.service';
 import { NavbarComponent } from './navbar.component';
+import { DepositoModalComponent } from '../components/deposito-modal/deposito-modal.component';
+
 @Component({
   selector: 'app-perfil',
   standalone: true,
@@ -16,7 +18,8 @@ import { NavbarComponent } from './navbar.component';
     CurrencyPipe,
     RouterModule,
     HttpClientModule,
-    NavbarComponent
+    NavbarComponent,
+    DepositoModalComponent
   ],
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.css']
@@ -40,6 +43,7 @@ export class PerfilComponent implements OnInit {
   portafolio: Array<{ instrumento: string; monto: number; fecha: string; tipo: string }> = [];
   mostrarModal = false;
   ultimoDeposito: any;
+mostrarModalDeposito = false;
 
   // Configuración de depósito
   banco = 'Cargando...';
@@ -194,12 +198,13 @@ export class PerfilComponent implements OnInit {
 
   // Navegación
   irAFondos() {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-  setTimeout(() => {
-    const comprobanteBox = document.querySelector('.comprobante-box');
-    comprobanteBox?.scrollIntoView({ behavior: 'smooth' });
-  }, 300);
+  this.mostrarModalDeposito = true;
 }
+
+cerrarModalDeposito() {
+  this.mostrarModalDeposito = false;
+}
+
 
 irATrading() {
   this.irADashboard(); // reutiliza la función existente

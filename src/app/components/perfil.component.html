@@ -1,4 +1,6 @@
 <!-- src/app/modules/profile/perfil.component.html -->
+<app-navbar></app-navbar>
+
 <div class="perfil-wrapper">
   <div class="perfil-card animate__animated animate__fadeInUp">
 
@@ -182,9 +184,13 @@
     </div>
   </div>
 </div>
+<app-deposito-modal
+  *ngIf="mostrarModalDeposito"
+  (cerrar)="cerrarModalDeposito()"
+></app-deposito-modal>
 
 <!-- FOOTER -->
 <footer class="footer-perfil mt-5">
   <p>© 2025 Safe Capital Investment. Todos los derechos reservados.</p>
 </footer>
-<app-navbar></app-navbar>
+
