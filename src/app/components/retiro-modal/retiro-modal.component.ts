@@ -20,7 +20,6 @@ export class RetiroModalComponent implements OnInit {
   titular: string = '';
   confirmado = false;
   rechazado = false;
-  retiroEnProceso = false;
   timeoutId: any = null;
   saldoOriginal: number = 0;
 
@@ -36,6 +35,8 @@ export class RetiroModalComponent implements OnInit {
     const nombre = localStorage.getItem('nombre') || '';
     const apellidos = localStorage.getItem('apellidos') || '';
     this.titular = `${nombre} ${apellidos}`.trim();
+
+    this.verificarEstadoRetiro();
   }
 
   cerrarModal() {
@@ -53,28 +54,66 @@ export class RetiroModalComponent implements OnInit {
 
   async solicitarRetiro() {
     this.confirmado = true;
-    this.retiroEnProceso = true;
+    this.rechazado = false;
 
     try {
       const saldoActual = await firstValueFrom(this.saldoService.obtenerSaldo());
+      this.saldoOriginal = saldoActual;
 
-      if (this.saldoOriginal === 0) {
-        this.saldoOriginal = saldoActual;
-        const nuevoSaldo = saldoActual - this.monto;
-        this.saldoService.actualizarSaldo(nuevoSaldo);
-      }
+      const nuevoSaldo = saldoActual - this.monto;
+      this.saldoService.actualizarSaldo(nuevoSaldo);
 
-      this.timeoutId = setTimeout(() => {
-        this.saldoService.actualizarSaldo(this.saldoOriginal);
-        this.confirmado = false;
-        this.rechazado = true;
-        this.retiroEnProceso = false;
-        this.saldoOriginal = 0;
-      }, 60 * 60 * 1000); // ⏳ 1 hora
-    } catch (err) {
-      alert('Error al obtener el saldo');
+      const inicio = new Date().getTime();
+
+      localStorage.setItem('retiro_activo', 'true');
+      localStorage.setItem('retiro_inicio', inicio.toString());
+      localStorage.setItem('retiro_monto', this.monto.toString());
+      localStorage.setItem('retiro_saldo_original', saldoActual.toString());
+
+      this.iniciarCuentaRegresiva(60 * 60 * 1000); // ⏳ 1 hora
+    } catch {
+      alert('Error al procesar el retiro');
       this.confirmado = false;
-      this.retiroEnProceso = false;
     }
+  }
+
+  verificarEstadoRetiro() {
+    const retiroActivo = localStorage.getItem('retiro_activo');
+    const inicioStr = localStorage.getItem('retiro_inicio');
+    const montoStr = localStorage.getItem('retiro_monto');
+    const saldoOriginalStr = localStorage.getItem('retiro_saldo_original');
+
+    if (retiroActivo === 'true' && inicioStr && montoStr && saldoOriginalStr) {
+      const ahora = new Date().getTime();
+      const inicio = parseInt(inicioStr);
+      const restante = (inicio + 60 * 60 * 1000) - ahora;
+
+      if (restante > 0) {
+        this.confirmado = true;
+        this.monto = parseFloat(montoStr);
+        this.saldoOriginal = parseFloat(saldoOriginalStr);
+        this.iniciarCuentaRegresiva(restante);
+      } else {
+        this.restaurarSaldo();
+      }
+    }
+  }
+
+  iniciarCuentaRegresiva(ms: number) {
+    this.timeoutId = setTimeout(() => {
+      this.restaurarSaldo();
+    }, ms);
+  }
+
+  restaurarSaldo() {
+    this.saldoService.actualizarSaldo(this.saldoOriginal);
+
+    this.confirmado = false;
+    this.rechazado = true;
+
+    localStorage.removeItem('retiro_activo');
+    localStorage.removeItem('retiro_inicio');
+    localStorage.removeItem('retiro_monto');
+    localStorage.removeItem('retiro_saldo_original');
   }
 }
