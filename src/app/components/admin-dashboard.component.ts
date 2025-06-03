@@ -102,14 +102,15 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   obtenerFechaSubasta() {
-    this.http.get<string>(
-      `${this.base}/config/cetes/subasta`,
-      { headers: this.headers, responseType: 'text' as 'json' }
-    ).subscribe(f => {
-      this.fechaSubasta = f;
-      this.fechaSubastaNueva = f.substring(0, 10); // solo fecha
-    }, () => alert('Error al obtener fecha de subasta'));
-  }
+  this.http.get<string>(
+    `${this.base}/config/cetes/subasta`,
+    { headers: this.headers, responseType: 'text' as 'json' }
+  ).subscribe(f => {
+    this.fechaSubasta = f;
+    this.fechaSubastaNueva = f && f !== 'NO DEFINIDA' ? f.substring(0, 10) : '';
+  }, () => alert('Error al obtener fecha de subasta'));
+}
+
 
   actualizarFechaSubasta() {
     this.http.put(
