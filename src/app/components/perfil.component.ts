@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 import { HttpClient, HttpClientModule, HttpHeaders } from '@angular/common/http';
 import { AlertService } from '../services/alert.service';
 import { UserService } from '../services/user.service';
-
+import { NavbarComponent } from './navbar.component';
 @Component({
   selector: 'app-perfil',
   standalone: true,
@@ -15,7 +15,8 @@ import { UserService } from '../services/user.service';
     FormsModule,
     CurrencyPipe,
     RouterModule,
-    HttpClientModule
+    HttpClientModule,
+    NavbarComponent
   ],
   templateUrl: './perfil.component.html',
   styleUrls: ['./perfil.component.css']
