@@ -9,14 +9,14 @@
     </div>
   </div>
 
-  <!-- Gráfica -->
-  <div *ngIf="mostrarGrafica && parSeleccionado && !confirmacion" class="grafica-par">
-    <app-chart-wrapper [tipo]="'forex'" [simbolo]="parSeleccionado.simbolo"></app-chart-wrapper>
-  </div>
-
-  <!-- Formulario -->
+  <!-- Gráfica + Formulario (unificados como en Cripto) -->
   <div *ngIf="parSeleccionado && !confirmacion" class="formulario">
     <h3>Invertir en {{ parSeleccionado.nombre }}</h3>
+
+    <!-- Gráfica -->
+    <div class="grafica-par">
+      <app-chart-wrapper [tipo]="'forex'" [simbolo]="parSeleccionado.simbolo"></app-chart-wrapper>
+    </div>
 
     <label>Monto (MXN):</label>
     <input type="number" [(ngModel)]="monto" placeholder="Ej. 1000" min="100" />
