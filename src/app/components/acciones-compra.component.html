@@ -17,7 +17,12 @@
   <!-- Gráfica -->
 <div class="grafica-accion grafica-fullscreen" *ngIf="accionSeleccionada">
   <div class="contenedor-chart">
-    <app-chart-wrapper [tipo]="'acciones'" [simbolo]="accionSeleccionada?.simbolo"></app-chart-wrapper>
+    <app-chart-wrapper
+  *ngIf="mostrarGrafica && accionSeleccionada"
+  [tipo]="'acciones'"
+  [simbolo]="accionSeleccionada!.simbolo">
+</app-chart-wrapper>
+
   </div>
 </div>
 

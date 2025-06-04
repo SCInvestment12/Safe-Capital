@@ -1,6 +1,7 @@
 <div class="etfs-container glass-card">
   <h2>Invertir en ETFs</h2>
 
+  <!-- Lista de selección -->
   <div *ngIf="!etfSeleccionado" class="etfs-lista">
     <p>Selecciona uno de los mejores ETFs:</p>
     <ul>
@@ -12,20 +13,20 @@
     </ul>
   </div>
 
-  <!-- Gráfica solo si está habilitada -->
-<div *ngIf="mostrarGrafica && etfSeleccionado && !confirmacion" class="grafica-etf">
-  <div class="grafica-box">
-    <app-chart-wrapper [tipo]="'etfs'" [simbolo]="etfSeleccionado.simbolo"></app-chart-wrapper>
+  <!-- Gráfica -->
+  <div *ngIf="mostrarGrafica && etfSeleccionado && !confirmacion" class="grafica-etf">
+    <div class="grafica-box">
+      <app-chart-wrapper [tipo]="'etfs'" [simbolo]="etfSeleccionado.simbolo"></app-chart-wrapper>
+    </div>
   </div>
-</div>
 
-
+  <!-- Formulario -->
   <div *ngIf="etfSeleccionado && !confirmacion" class="etf-formulario">
     <h3>{{ etfSeleccionado.nombre }}</h3>
     <p>{{ etfSeleccionado.descripcion }}</p>
 
     <label for="monto">Monto a invertir (MXN):</label>
-    <input type="number" [(ngModel)]="monto" id="monto" placeholder="Ej. 1000" />
+    <input type="number" [(ngModel)]="monto" id="monto" placeholder="Ej. 1000" min="100" />
 
     <label for="plazo">Plazo:</label>
     <select [(ngModel)]="plazo" id="plazo">
@@ -38,11 +39,12 @@
     <button class="cancelar" (click)="cancelar()">Cancelar</button>
   </div>
 
+  <!-- Confirmación -->
   <div *ngIf="confirmacion" class="confirmacion-cards">
     <h2>✅ Confirmación de compra</h2>
     <p>Tu inversión en ETF se registró exitosamente.</p>
     <ul>
-      <li><strong>ETF:</strong> {{ etfSeleccionado.nombre }}</li>
+      <li><strong>ETF:</strong> {{ etfSeleccionado?.nombre }}</li>
       <li><strong>Monto:</strong> ${{ monto }}</li>
       <li><strong>Plazo:</strong> {{ plazo }} días</li>
       <li><strong>Forma de pago:</strong> Fondos en cuenta</li>

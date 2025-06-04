@@ -83,29 +83,39 @@ export class CriptoCompraComponent {
     });
   }
 
-  private procesarApuesta(): void {
-    const apuesta: CrearApuestaRequest = {
-      simbolo: this.criptoSeleccionada,
-      tipo: 'cripto',
-      direccion: 'up',
-      monto: this.monto,
-      plazo: parseInt(this.duracion)
-    };
+ private procesarApuesta(): void {
+  const apuesta: CrearApuestaRequest = {
+    simbolo: this.criptoSeleccionada,
+    tipo: 'cripto',
+    direccion: 'up',
+    monto: this.monto,
+    plazo: parseInt(this.duracion)
+  };
 
-    this.apuestaService.crearApuesta(apuesta).subscribe({
-      next: () => {
-        this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
-        this.saldoService.cargarSaldo();
-        this.confirmacion = true;
-        this.mostrarGrafica = false;
-      },
-      error: () => {
-        this.alertService.success(`✅ Inversión registrada con exito.`);
-      }
-    });
+  this.apuestaService.crearApuesta(apuesta).subscribe({
+    next: () => {
+      this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
+      this.saldoService.cargarSaldo();
+      this.cargarMovimientos(); // <-- Agregado
+      this.confirmacion = true;
+      this.mostrarGrafica = false;
+    },
+    error: () => {
+      this.alertService.success(`✅ Inversión registrada con éxito.`);
+    }
+  });
 
-    this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
-  }
+  this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
+}
+
+private cargarMovimientos(): void {
+  const userId = +(localStorage.getItem('id') || '0');
+  this.dashboardService.getTransactions(userId).subscribe({
+    next: (res) => console.log('Movimientos actualizados:', res),
+    error: (err) => console.error('Error al cargar movimientos:', err)
+  });
+}
+
 
   reiniciar() {
     this.criptoSeleccionada = '';

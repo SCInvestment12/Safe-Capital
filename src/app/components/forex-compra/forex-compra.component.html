@@ -1,40 +1,41 @@
 <div class="forex-container glass-card">
-    <h2 class="titulo">Pares de Divisas (Forex)</h2>
+  <h2 class="titulo">Pares de Divisas (Forex)</h2>
 
-    <!-- Lista de pares de divisas -->
-    <div class="lista-pares" *ngIf="!parSeleccionado">
-      <div *ngFor="let par of paresDivisas" class="card" (click)="seleccionarPar(par)">
-        <h3>{{ par.nombre }}</h3>
-        <button (click)="verGraficaDesdeLista(par); $event.stopPropagation()">📈 Ver Gráfica</button>
-      </div>
-    </div>
-
-    <!-- Gráfica -->
-    <div *ngIf="mostrarGrafica && parSeleccionado?.simbolo && !confirmacion" class="grafica-par">
-      <app-chart-wrapper [tipo]="'forex'" [simbolo]="parSeleccionado?.simbolo"></app-chart-wrapper>
-    </div>
-
-    <!-- Formulario de inversión -->
-    <div *ngIf="parSeleccionado && !confirmacion" class="formulario">
-      <h3>Invertir en {{ parSeleccionado.nombre }}</h3>
-      <label>Monto (MXN):</label>
-      <input type="number" [(ngModel)]="monto" placeholder="Ej. 1000" min="100" />
-
-      <div class="acciones">
-        <button (click)="confirmarInversion()">Continuar</button>
-        <button (click)="cancelar()" class="cancelar">Cancelar</button>
-      </div>
-    </div>
-
-    <!-- Confirmación -->
-    <div *ngIf="confirmacion" class="confirmacion-cards">
-      <h2>✅ Confirmación de compra</h2>
-      <p>Tu inversión se registró exitosamente.</p>
-      <ul>
-        <li><strong>Par de Divisas:</strong> {{ parSeleccionado?.nombre }}</li>
-        <li><strong>Monto:</strong> ${{ monto }}</li>
-        <li><strong>Forma de pago:</strong> Fondos en cuenta</li>
-      </ul>
-      <button class="btn-cancelar" (click)="cancelar()">Inicio</button>
+  <!-- Lista de pares -->
+  <div class="lista-pares" *ngIf="!parSeleccionado">
+    <div *ngFor="let par of paresDivisas" class="card" (click)="seleccionarPar(par)">
+      <h3>{{ par.nombre }}</h3>
+      <button (click)="verGraficaDesdeLista(par); $event.stopPropagation()">📈 Ver Gráfica</button>
     </div>
   </div>
+
+  <!-- Gráfica -->
+  <div *ngIf="mostrarGrafica && parSeleccionado && !confirmacion" class="grafica-par">
+    <app-chart-wrapper [tipo]="'forex'" [simbolo]="parSeleccionado.simbolo"></app-chart-wrapper>
+  </div>
+
+  <!-- Formulario -->
+  <div *ngIf="parSeleccionado && !confirmacion" class="formulario">
+    <h3>Invertir en {{ parSeleccionado.nombre }}</h3>
+
+    <label>Monto (MXN):</label>
+    <input type="number" [(ngModel)]="monto" placeholder="Ej. 1000" min="100" />
+
+    <div class="acciones">
+      <button (click)="confirmarInversion()">Continuar</button>
+      <button class="cancelar" (click)="cancelar()">Cancelar</button>
+    </div>
+  </div>
+
+  <!-- Confirmación -->
+  <div *ngIf="confirmacion" class="confirmacion-cards">
+    <h2>✅ Confirmación de compra</h2>
+    <p>Tu inversión se registró exitosamente.</p>
+    <ul>
+<li><strong>Par de Divisas:</strong> {{ parSeleccionado?.nombre }}</li>
+      <li><strong>Monto:</strong> ${{ monto }}</li>
+      <li><strong>Forma de pago:</strong> Fondos en cuenta</li>
+    </ul>
+    <button class="btn-cancelar" (click)="cancelar()">Inicio</button>
+  </div>
+</div>

@@ -76,10 +76,6 @@ export class CetesCompraComponent implements OnInit {
     this.reinversion = false;
   }
 
-  setReinversion(valor: boolean) {
-    this.reinversion = valor;
-  }
-
   continuarCompra() {
     if (!this.monto || this.monto <= 0) {
       this.alertService.error('Ingresa un monto válido.');
@@ -88,15 +84,11 @@ export class CetesCompraComponent implements OnInit {
 
     const req: RetirarSaldoRequest = { monto: this.monto };
     this.dashboardService.withdraw(req).subscribe({
-      next: () => {
-        this.procesarInversion();
-      },
+      next: () => this.procesarInversion(),
       error: (err) => {
         if (err?.status === 200 || err?.ok === false) {
-          console.warn('⚠️ Retiro respondió raro pero con 200 OK. Continuando...');
           this.procesarInversion();
         } else {
-          console.error('❌ Error al retirar saldo:', err);
           this.alertService.error('No se pudo descontar el saldo.');
         }
       }
@@ -121,6 +113,7 @@ export class CetesCompraComponent implements OnInit {
       next: () => {
         this.alertService.success(`✅ Inversión en CETES registrada por $${this.monto}`);
         this.saldoService.cargarSaldo();
+        this.cargarMovimientos();
         this.confirmar = true;
       },
       error: () => {
@@ -140,6 +133,11 @@ export class CetesCompraComponent implements OnInit {
       case '2 años': return 730;
       default: return 30;
     }
+  }
+
+  private cargarMovimientos(): void {
+    const userId = +(localStorage.getItem('id') || '0');
+    this.dashboardService.getTransactions(userId).subscribe();
   }
 
   reiniciar() {

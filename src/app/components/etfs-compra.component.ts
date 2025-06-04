@@ -7,6 +7,12 @@ import { AlertService } from '../services/alert.service';
 import { ApuestaService, CrearApuestaRequest } from '../services/apuesta.service';
 import { SaldoService } from '../services/saldo.service';
 
+interface Etf {
+  nombre: string;
+  simbolo: string;
+  descripcion: string;
+}
+
 @Component({
   selector: 'app-etfs-compra',
   standalone: true,
@@ -17,18 +23,16 @@ import { SaldoService } from '../services/saldo.service';
 export class EtfsCompraComponent {
   @ViewChild(ChartWrapperComponent) chartWrapper!: ChartWrapperComponent;
 
-  etfs = [
+  etfs: Etf[] = [
     { nombre: 'iShares S&P 500', simbolo: 'SPY', descripcion: 'Replica el índice S&P 500 de empresas estadounidenses.' },
-    { nombre: 'Vanguard Total Stock Market', simbolo: 'VTI', descripcion: 'ETF diversificado del mercado accionario de EE.UU.' },
-    { nombre: 'SPDR Dow Jones Industrial', simbolo: 'DIA', descripcion: 'Basado en el índice Dow Jones Industrial Average.' },
-    { nombre: 'Invesco QQQ', simbolo: 'QQQ', descripcion: 'Sigue el índice Nasdaq-100 con enfoque tecnológico.' },
-    { nombre: 'iShares MSCI Emerging Markets', simbolo: 'EEM', descripcion: 'Exposición a mercados emergentes globales.' },
-    { nombre: 'Global X MSCI China', simbolo: 'CHIQ', descripcion: 'ETF especializado en mercado chino.' },
-    { nombre: 'ARK Innovation ETF', simbolo: 'ARKK', descripcion: 'ETF de innovación y tecnología disruptiva.' },
-    { nombre: 'Vanguard Real Estate ETF', simbolo: 'VNQ', descripcion: 'Inversiones diversificadas en bienes raíces.' }
+    { nombre: 'Vanguard Total Stock Market', simbolo: 'VTI', descripcion: 'Incluye la mayoría de las acciones del mercado estadounidense.' },
+    { nombre: 'iShares MSCI Emerging Markets', simbolo: 'EEM', descripcion: 'Rastrea mercados emergentes globales.' },
+    { nombre: 'Invesco QQQ Trust', simbolo: 'QQQ', descripcion: 'Representa las principales acciones tecnológicas del NASDAQ.' },
+    { nombre: 'SPDR Dow Jones Industrial Average', simbolo: 'DIA', descripcion: 'Replica el índice Dow Jones Industrial.' },
+    { nombre: 'Vanguard FTSE Developed Markets', simbolo: 'VEA', descripcion: 'Cubre mercados desarrollados fuera de EE.UU.' }
   ];
 
-  etfSeleccionado: any = null;
+  etfSeleccionado: Etf | null = null;
   monto: number | null = null;
   plazo: number | null = null;
   confirmacion: boolean = false;
@@ -41,25 +45,26 @@ export class EtfsCompraComponent {
     private saldoService: SaldoService
   ) {}
 
-  seleccionarEtf(etf: any) {
-    this.cancelar();
+  seleccionarEtf(etf: Etf): void {
+    this.resetear();
     this.etfSeleccionado = etf;
   }
 
-  verGrafica(etf: any) {
-    this.cancelar();
+  verGrafica(etf: Etf): void {
+    this.resetear();
     this.etfSeleccionado = etf;
     this.mostrarGrafica = true;
   }
 
-  confirmarInversion() {
-    if (!this.monto || !this.plazo) {
-      this.alertService.error('Ingresa monto y plazo válidos.');
+  confirmarInversion(): void {
+    if (!this.monto || !this.plazo || !this.etfSeleccionado) {
+      this.alertService.error('Ingresa todos los campos.');
       return;
     }
 
-    if (!this.estaEnHorarioPermitido()) {
-      this.alertService.error('⏰ Las inversiones en ETFs solo están permitidas de 08:00 a 16:00.');
+    const hora = new Date().getHours();
+    if (hora < 8 || hora >= 16) {
+      this.alertService.error('⏰ Solo puedes invertir en ETFs entre 08:00 y 16:00 hrs.');
       return;
     }
 
@@ -68,27 +73,16 @@ export class EtfsCompraComponent {
       next: () => this.procesarApuesta(),
       error: (err) => {
         if (err?.status === 200 || err?.ok === false) {
-          console.warn('⚠️ Retiro respondió con 200 pero error, se continúa...');
           this.procesarApuesta();
         } else {
-          console.error('❌ Error real al retirar saldo:', err);
           this.alertService.error('No se pudo descontar el saldo.');
         }
       }
     });
   }
 
-  private estaEnHorarioPermitido(): boolean {
-    const ahora = new Date();
-    const hora = ahora.getHours();
-    return hora >= 8 && hora < 16;
-  }
-
   private procesarApuesta(): void {
-    this.confirmacion = true;
-    this.mostrarGrafica = false;
-    this.chartWrapper.lanzarApuesta('up');
-    this.saldoService.cargarSaldo();
+    if (!this.etfSeleccionado) return;
 
     const apuesta: CrearApuestaRequest = {
       simbolo: this.etfSeleccionado.simbolo,
@@ -98,19 +92,23 @@ export class EtfsCompraComponent {
       plazo: this.plazo!
     };
 
-    this.apuestaService.crearApuesta(apuesta).subscribe({
-      next: () => {
-        this.alertService.success(`✅ Inversión en ETF registrada por $${this.monto}.`);
-      },
-      error: () => {
-        this.alertService.success(`✅ Inversión registrada con exito.`);
-      }
-    });
-
-    this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
+    this.apuestaService.crearApuesta(apuesta).subscribe();
+    this.chartWrapper?.lanzarApuesta('up');
+    this.confirmacion = true;
+    this.saldoService.cargarSaldo();
+    this.cargarMovimientos();
   }
 
-  cancelar() {
+  private cargarMovimientos(): void {
+    const userId = +(localStorage.getItem('id') || '0');
+    this.dashboardService.getTransactions(userId).subscribe();
+  }
+
+  cancelar(): void {
+    this.resetear();
+  }
+
+  private resetear(): void {
     this.etfSeleccionado = null;
     this.monto = null;
     this.plazo = null;

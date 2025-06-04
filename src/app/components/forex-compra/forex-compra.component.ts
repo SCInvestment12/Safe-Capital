@@ -7,6 +7,11 @@ import { AlertService } from '../../services/alert.service';
 import { ApuestaService, CrearApuestaRequest } from '../../services/apuesta.service';
 import { SaldoService } from '../../services/saldo.service';
 
+interface ParDivisa {
+  nombre: string;
+  simbolo: string;
+}
+
 @Component({
   selector: 'app-forex-compra',
   standalone: true,
@@ -17,19 +22,16 @@ import { SaldoService } from '../../services/saldo.service';
 export class ForexCompraComponent {
   @ViewChild(ChartWrapperComponent) chartWrapper!: ChartWrapperComponent;
 
-  paresDivisas = [
-    { nombre: 'Euro / Dólar', simbolo: 'EURUSD' },
-    { nombre: 'Libra / Dólar', simbolo: 'GBPUSD' },
-    { nombre: 'Dólar / Yen', simbolo: 'USDJPY' },
-    { nombre: 'Dólar / Franco Suizo', simbolo: 'USDCHF' },
-    { nombre: 'Dólar Australiano / Dólar', simbolo: 'AUDUSD' },
-    { nombre: 'Dólar Neozelandés / Dólar', simbolo: 'NZDUSD' },
-    { nombre: 'Dólar / Dólar Canadiense', simbolo: 'USDCAD' }
+  paresDivisas: ParDivisa[] = [
+    { nombre: 'Euro / Dólar Estadounidense', simbolo: 'EURUSD' },
+    { nombre: 'Libra Esterlina / Dólar Estadounidense', simbolo: 'GBPUSD' },
+    { nombre: 'Dólar Estadounidense / Yen Japonés', simbolo: 'USDJPY' },
+    { nombre: 'Dólar Canadiense / Franco Suizo', simbolo: 'CADCHF' },
+    { nombre: 'Dólar Australiano / Dólar Estadounidense', simbolo: 'AUDUSD' },
   ];
 
-  parSeleccionado: any = null;
+  parSeleccionado: ParDivisa | null = null;
   monto: number | null = null;
-  plazo: number | null = null;
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
 
@@ -40,20 +42,19 @@ export class ForexCompraComponent {
     private saldoService: SaldoService
   ) {}
 
-  seleccionarPar(par: any) {
+  seleccionarPar(par: ParDivisa): void {
     this.resetear();
     this.parSeleccionado = par;
   }
 
-  verGraficaDesdeLista(par: any) {
-    this.resetear();
+  verGraficaDesdeLista(par: ParDivisa): void {
     this.parSeleccionado = par;
     this.mostrarGrafica = true;
   }
 
-  confirmarInversion() {
-    if (!this.monto || !this.plazo) {
-      this.alertService.error('Ingresa monto y plazo válidos.');
+  confirmarInversion(): void {
+    if (!this.monto || !this.parSeleccionado) {
+      this.alertService.error('Completa los campos para invertir.');
       return;
     }
 
@@ -62,10 +63,8 @@ export class ForexCompraComponent {
       next: () => this.procesarApuesta(),
       error: (err) => {
         if (err?.status === 200 || err?.ok === false) {
-          console.warn('⚠️ Retiro con status 200 pero error: se continúa...');
           this.procesarApuesta();
         } else {
-          console.error('❌ Error real al retirar saldo:', err);
           this.alertService.error('No se pudo descontar el saldo.');
         }
       }
@@ -73,39 +72,35 @@ export class ForexCompraComponent {
   }
 
   private procesarApuesta(): void {
-    this.saldoService.cargarSaldo();
-    this.chartWrapper.lanzarApuesta('up');
-    this.confirmacion = true;
-    this.mostrarGrafica = false;
+    if (!this.parSeleccionado) return;
 
     const apuesta: CrearApuestaRequest = {
       simbolo: this.parSeleccionado.simbolo,
       tipo: 'forex',
       direccion: 'up',
       monto: this.monto!,
-      plazo: this.plazo!
+      plazo: 60 // fijo por ahora
     };
 
-    this.apuestaService.crearApuesta(apuesta).subscribe({
-      next: () => {
-        this.alertService.success(`✅ Inversión en Forex registrada por $${this.monto}.`);
-      },
-      error: () => {
-        this.alertService.success(`✅ Inversion registrada con exito.`);
-      }
-    });
-
-    this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
+    this.apuestaService.crearApuesta(apuesta).subscribe();
+    this.chartWrapper?.lanzarApuesta('up');
+    this.confirmacion = true;
+    this.saldoService.cargarSaldo();
+    this.cargarMovimientos();
   }
 
-  cancelar() {
+  private cargarMovimientos(): void {
+    const userId = +(localStorage.getItem('id') || '0');
+    this.dashboardService.getTransactions(userId).subscribe();
+  }
+
+  cancelar(): void {
     this.resetear();
   }
 
-  private resetear() {
+  private resetear(): void {
     this.parSeleccionado = null;
     this.monto = null;
-    this.plazo = null;
     this.confirmacion = false;
     this.mostrarGrafica = false;
   }
