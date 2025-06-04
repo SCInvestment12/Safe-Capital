@@ -90,6 +90,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
           formatter: (value: any, timestamp?: number): string => {
             const ms = typeof timestamp === 'number' ? timestamp : Number(value);
             return new Date(ms).toLocaleTimeString('es-MX', {
+              timeZone: 'America/Mexico_City',
               hour: '2-digit',
               minute: '2-digit',
               hour12: true
@@ -113,6 +114,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
           formatter: (value: any, opts?: any): string => {
             const ms = opts?.timestamp ?? Number(value);
             return new Date(ms).toLocaleString('es-MX', {
+              timeZone: 'America/Mexico_City',
               hour: '2-digit',
               minute: '2-digit',
               second: '2-digit',
