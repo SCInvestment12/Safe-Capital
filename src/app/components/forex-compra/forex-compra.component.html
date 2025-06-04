@@ -21,8 +21,17 @@
     <label>Monto (MXN):</label>
     <input type="number" [(ngModel)]="monto" placeholder="Ej. 1000" min="100" />
 
+    <label>Duración (días):</label>
+    <select [(ngModel)]="duracion">
+      <option value="7">7 días</option>
+      <option value="15">15 días</option>
+      <option value="30">30 días</option>
+      <option value="60">60 días</option>
+      <option value="90">90 días</option>
+    </select>
+
     <div class="acciones">
-      <button (click)="confirmarInversion()">Continuar</button>
+      <button (click)="confirmarInversion()">Confirmar</button>
       <button class="cancelar" (click)="cancelar()">Cancelar</button>
     </div>
   </div>
@@ -32,8 +41,9 @@
     <h2>✅ Confirmación de compra</h2>
     <p>Tu inversión se registró exitosamente.</p>
     <ul>
-<li><strong>Par de Divisas:</strong> {{ parSeleccionado?.nombre }}</li>
+      <li><strong>Par de Divisas:</strong> {{ parSeleccionado?.nombre }}</li>
       <li><strong>Monto:</strong> ${{ monto }}</li>
+      <li><strong>Duración:</strong> {{ duracion }} días</li>
       <li><strong>Forma de pago:</strong> Fondos en cuenta</li>
     </ul>
     <button class="btn-cancelar" (click)="cancelar()">Inicio</button>

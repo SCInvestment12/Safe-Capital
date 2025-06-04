@@ -27,11 +27,12 @@ export class ForexCompraComponent {
     { nombre: 'Libra Esterlina / Dólar Estadounidense', simbolo: 'GBPUSD' },
     { nombre: 'Dólar Estadounidense / Yen Japonés', simbolo: 'USDJPY' },
     { nombre: 'Dólar Canadiense / Franco Suizo', simbolo: 'CADCHF' },
-    { nombre: 'Dólar Australiano / Dólar Estadounidense', simbolo: 'AUDUSD' },
+    { nombre: 'Dólar Australiano / Dólar Estadounidense', simbolo: 'AUDUSD' }
   ];
 
   parSeleccionado: ParDivisa | null = null;
   monto: number | null = null;
+  duracion: string = '';
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
 
@@ -53,8 +54,8 @@ export class ForexCompraComponent {
   }
 
   confirmarInversion(): void {
-    if (!this.monto || !this.parSeleccionado) {
-      this.alertService.error('Completa los campos para invertir.');
+    if (!this.monto || !this.parSeleccionado || !this.duracion) {
+      this.alertService.error('Completa todos los campos para invertir.');
       return;
     }
 
@@ -79,7 +80,7 @@ export class ForexCompraComponent {
       tipo: 'forex',
       direccion: 'up',
       monto: this.monto!,
-      plazo: 60 // fijo por ahora
+      plazo: parseInt(this.duracion)
     };
 
     this.apuestaService.crearApuesta(apuesta).subscribe();
@@ -101,6 +102,7 @@ export class ForexCompraComponent {
   private resetear(): void {
     this.parSeleccionado = null;
     this.monto = null;
+    this.duracion = '';
     this.confirmacion = false;
     this.mostrarGrafica = false;
   }
