@@ -1,4 +1,3 @@
-// src/app/components/trading-chart.component.ts
 import {
   Component,
   Input,
@@ -171,7 +170,10 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
     this.chartOptions.annotations.points =
       this.chartOptions.annotations.points || [];
 
-    const seriesData = this.chartOptions.series[0].data as [number, number][];
+    const data = this.chartOptions.series[0]?.data;
+    if (!Array.isArray(data) || data.length === 0) return;
+
+    const seriesData = data as [number, number][];
     const idx = seriesData.length - 1;
     const [x, y] = seriesData[idx];
     const flecha = direccion === 'up' ? '↑' : '↓';
