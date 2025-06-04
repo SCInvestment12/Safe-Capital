@@ -193,12 +193,12 @@ subirComprobante() {
     return;
   }
 
-  const correo = this.correo; // El correo ya está cargado en el perfil
+  const correo = this.correo;
+  const token = localStorage.getItem('token') || '';
   const form = new FormData();
   form.append('archivo', this.archivoComprobante);
   form.append('correoElectronico', correo);
 
-  const token = localStorage.getItem('token') || '';
   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
 
   this.http.post(`${this.base}/comprobantes/subir`, form, { headers })
@@ -208,11 +208,12 @@ subirComprobante() {
         this.archivoComprobante = null;
       },
       error: (err) => {
-        console.error('Error al subir comprobante:', err);
+        console.error('❌ Error al subir comprobante:', err);
         this.alert.error('Error al enviar comprobante.');
       }
     });
 }
+
 
 
 
