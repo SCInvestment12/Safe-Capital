@@ -19,19 +19,30 @@ export const routes: Routes = [
   { path: 'register', component: RegisterPageComponent },
   { path: 'perfil', component: PerfilComponent },
 
-  // Redirección automática según rol
   {
     path: 'dashboard',
     component: DashboardRedirectComponent,
     canActivate: [DashboardRedirectGuard]
   },
 
-  // Dashboards específicos
-  { path: 'dashboard/user', component: DashboardComponent, canActivate: [RoleGuard], data: { role: 'ROLE_USER' } },
+  {
+    path: 'dashboard/user',
+    component: DashboardComponent,
+    canActivate: [RoleGuard],
+    data: { role: 'ROLE_USER' },
+    children: [
+      { path: 'acciones', component: DashboardComponent },
+      { path: 'etfs', component: DashboardComponent },
+      { path: 'cetes', component: DashboardComponent },
+      { path: 'cripto', component: DashboardComponent },
+      { path: 'forex', component: DashboardComponent },
+      { path: '', redirectTo: 'acciones', pathMatch: 'full' }
+    ]
+  },
+
   { path: 'dashboard/moderator', component: ModeratorDashboardComponent, canActivate: [RoleGuard], data: { role: 'ROLE_MODERATOR' } },
   { path: 'dashboard/admin', component: AdminDashboardComponent, canActivate: [RoleGuard], data: { role: 'ROLE_ADMIN' } },
   { path: 'dashboard/super-admin', component: AdminDashboardComponent, canActivate: [RoleGuard], data: { role: 'ROLE_SUPER_ADMIN' } },
 
-  // Ruta fallback
   { path: '**', component: NotFoundComponent }
 ];
