@@ -54,13 +54,14 @@ export class AdminDashboardComponent implements OnInit {
 
   // --- Comprobantes ---
   cargarComprobantes() {
-    this.loading = true;
-    this.http.get<any[]>(`${this.base}/comprobantes/pending`, { headers: this.headers })
-      .subscribe({
-        next: data => { this.comprobantes = data; this.loading = false; },
-        error: () => { alert('Error al cargar comprobantes'); this.loading = false; }
-      });
-  }
+  this.loading = true;
+  this.http.get<any[]>(`${this.base}/comprobantes/pendientes`, { headers: this.headers })
+    .subscribe({
+      next: data => { this.comprobantes = data; this.loading = false; },
+      error: () => { alert('Error al cargar comprobantes'); this.loading = false; }
+    });
+}
+
 
   acreditarSaldo(id: number, correo: string) {
     const montoStr = prompt('Ingresa el monto a acreditar:');
