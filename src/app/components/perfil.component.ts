@@ -184,17 +184,37 @@ mostrarModalDeposito = false;
     this.archivoComprobante = event.target.files[0] || null;
   }
 
-  subirComprobante() {
-    if (!this.archivoComprobante) {
-      this.alert.error('Selecciona un archivo antes de enviar.');
-      return;
-    }
-    const form = new FormData();
-    form.append('archivo', this.archivoComprobante);
-this.http.post(`${this.base}/comprobantes/subir`, form, { headers: this.headers })
-      .subscribe(() => this.alert.success('Comprobante enviado correctamente.'),
-                 () => this.alert.error('Error al enviar comprobante.'));
+  // Corrección completa para subir comprobante desde perfil.component.ts
+// Incluye headers adecuados y respuesta observable
+
+subirComprobante() {
+  if (!this.archivoComprobante) {
+    this.alert.error('Selecciona un archivo antes de enviar.');
+    return;
   }
+
+  const form = new FormData();
+  form.append('archivo', this.archivoComprobante);
+
+  const token = localStorage.getItem('token') || '';
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`
+    // No pongas 'Content-Type', Angular lo asigna automáticamente con boundary para FormData
+  });
+
+  this.http.post(`${this.base}/comprobantes/subir`, form, { headers })
+    .subscribe({
+      next: () => {
+        this.alert.success('Comprobante enviado correctamente.');
+        this.archivoComprobante = null; // limpiar
+      },
+      error: (err) => {
+        console.error('Error al subir comprobante:', err);
+        this.alert.error('Error al enviar comprobante.');
+      }
+    });
+}
+
 
   // Navegación
   irAFondos() {
