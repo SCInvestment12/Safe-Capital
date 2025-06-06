@@ -1,6 +1,5 @@
 <!-- src/app/modules/profile/perfil.component.html -->
 
-
 <div class="perfil-wrapper">
   <div class="perfil-card animate__animated animate__fadeInUp">
 
@@ -10,7 +9,7 @@
         <h2 class="titulo-perfil">Bienvenido de nuevo</h2>
         <p class="sub-perfil">Aquí puedes ver y administrar tu cuenta</p>
       </div>
-      <button class="btn-editar" style="white-space: nowrap;" (click)="irADashboard()">
+      <button class="btn-editar" (click)="irADashboard()">
         <i class="fas fa-arrow-left me-2"></i> Ir al Dashboard
       </button>
     </div>
@@ -61,7 +60,7 @@
       <div class="tarjeta-saldo animate__animated animate__fadeInUp animate__delay-1s">
         <h5>Saldo disponible</h5>
         <p class="saldo-cantidad">{{ saldo | currency:'MXN':'symbol' }}</p>
-        <small class="text-light">Actualizado: {{ ultimoDeposito?.fecha || ('-' ) }}</small>
+        <small class="text-light">Actualizado: {{ ultimoDeposito?.fecha || '-' }}</small>
         <button class="btn-verde" (click)="abrirModal()">Ver movimientos</button>
 
         <!-- PORTAFOLIO -->
@@ -114,6 +113,10 @@
           <i class="fas fa-paper-plane me-2"></i>Enviar comprobante
         </button>
       </form>
+      <div *ngIf="nombreComprobante" class="mt-2">
+        <strong>Último comprobante:</strong>
+        <a [href]="obtenerLinkComprobante()" target="_blank">{{ nombreComprobante }}</a>
+      </div>
     </div>
 
     <!-- MOVIMIENTOS RECIENTES -->
@@ -184,6 +187,7 @@
     </div>
   </div>
 </div>
+
 <app-deposito-modal
   *ngIf="mostrarModalDeposito"
   (cerrar)="cerrarModalDeposito()"
@@ -193,4 +197,3 @@
 <footer class="footer-perfil mt-5">
   <p>© 2025 Safe Capital Investment. Todos los derechos reservados.</p>
 </footer>
-

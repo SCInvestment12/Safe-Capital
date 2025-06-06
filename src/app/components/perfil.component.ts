@@ -42,8 +42,8 @@ export class PerfilComponent implements OnInit {
   movimientos: Array<{ tipo: string; monto: number; fecha: string }> = [];
   portafolio: Array<{ instrumento: string; monto: number; fecha: string; tipo: string }> = [];
   mostrarModal = false;
+  mostrarModalDeposito = false;
   ultimoDeposito: any;
-mostrarModalDeposito = false;
 
   // Configuración de depósito
   banco = 'Cargando...';
@@ -52,6 +52,7 @@ mostrarModalDeposito = false;
 
   // Comprobante
   archivoComprobante: File | null = null;
+  nombreComprobante: string = '';
 
   private headers: HttpHeaders;
   private base = 'https://safe-capital-backend.onrender.com/api';
@@ -128,13 +129,8 @@ mostrarModalDeposito = false;
   }
 
   cargarMovimientosYPortafolio() {
-    // Simula datos; reemplaza con llamadas reales si las tienes
-    this.movimientos = [
-     
-    ];
-    this.portafolio = [
-      
-    ];
+    this.movimientos = [];
+    this.portafolio = [];
     const depositos = this.movimientos.filter(m => m.tipo === 'Depósito');
     this.ultimoDeposito = depositos.length ? depositos[depositos.length - 1] : null;
   }
@@ -149,26 +145,23 @@ mostrarModalDeposito = false;
 
   getIconoMovimiento(tipo: string): string {
     switch (tipo) {
-      case 'Depósito':  return 'fas fa-arrow-down text-success';
-      case 'Retiro':    return 'fas fa-arrow-up text-danger';
+      case 'Depósito': return 'fas fa-arrow-down text-success';
+      case 'Retiro': return 'fas fa-arrow-up text-danger';
       case 'Inversion': return 'fas fa-coins text-warning';
-      default:          return 'fas fa-exchange-alt';
+      default: return 'fas fa-exchange-alt';
     }
   }
 
   // Datos bancarios
   cargarDatosBancarios() {
-    this.http.get(`${this.base}/config/banco`, {
-      headers: this.headers, responseType: 'text'
-    }).subscribe(v => this.banco = v, () => this.banco = 'Error al cargar banco');
+    this.http.get(`${this.base}/config/banco`, { headers: this.headers, responseType: 'text' })
+      .subscribe(v => this.banco = v, () => this.banco = 'Error al cargar banco');
 
-    this.http.get(`${this.base}/config/cuenta`, {
-      headers: this.headers, responseType: 'text'
-    }).subscribe(v => this.cuenta = v, () => this.cuenta = 'Error al cargar cuenta');
+    this.http.get(`${this.base}/config/cuenta`, { headers: this.headers, responseType: 'text' })
+      .subscribe(v => this.cuenta = v, () => this.cuenta = 'Error al cargar cuenta');
 
-    this.http.get(`${this.base}/config/clabe`, {
-      headers: this.headers, responseType: 'text'
-    }).subscribe(v => this.clabe = v, () => this.clabe = 'Error al cargar CLABE');
+    this.http.get(`${this.base}/config/clabe`, { headers: this.headers, responseType: 'text' })
+      .subscribe(v => this.clabe = v, () => this.clabe = 'Error al cargar CLABE');
   }
 
   get nombreCompleto(): string {
@@ -179,57 +172,54 @@ mostrarModalDeposito = false;
     return localStorage.getItem('id') || 'N/A';
   }
 
-  // Subir comprobante
   onFileChange(event: any) {
     this.archivoComprobante = event.target.files[0] || null;
   }
 
-  // Corrección completa para subir comprobante desde perfil.component.ts
-// Incluye headers adecuados y respuesta observable
+  subirComprobante() {
+    if (!this.archivoComprobante) {
+      this.alert.error('Selecciona un archivo antes de enviar.');
+      return;
+    }
 
-subirComprobante() {
-  if (!this.archivoComprobante) {
-    this.alert.error('Selecciona un archivo antes de enviar.');
-    return;
+    const correo = this.correo;
+    const token = localStorage.getItem('token') || '';
+    const form = new FormData();
+    form.append('archivo', this.archivoComprobante);
+    form.append('correoElectronico', correo);
+
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+
+    this.http.post(`${this.base}/comprobantes/subir`, form, { headers })
+      .subscribe({
+        next: () => {
+          this.alert.success('Comprobante enviado correctamente.');
+          this.nombreComprobante = this.archivoComprobante?.name || '';
+          this.archivoComprobante = null;
+        },
+        error: (err) => {
+          console.error('❌ Error al subir comprobante:', err);
+          this.alert.error('Error al enviar comprobante.');
+        }
+      });
   }
 
-  const correo = this.correo;
-  const token = localStorage.getItem('token') || '';
-  const form = new FormData();
-  form.append('archivo', this.archivoComprobante);
-  form.append('correoElectronico', correo);
-
-  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-
-  this.http.post(`${this.base}/comprobantes/subir`, form, { headers })
-    .subscribe({
-      next: () => {
-        this.alert.success('Comprobante enviado correctamente.');
-        this.archivoComprobante = null;
-      },
-      error: (err) => {
-        console.error('❌ Error al subir comprobante:', err);
-        this.alert.error('Error al enviar comprobante.');
-      }
-    });
-}
-
-
-
+  obtenerLinkComprobante(): string {
+    return `${this.base}/comprobantes/archivo/${localStorage.getItem('id')}/${this.nombreComprobante}`;
+  }
 
   // Navegación
   irAFondos() {
-  this.mostrarModalDeposito = true;
-}
+    this.mostrarModalDeposito = true;
+  }
 
-cerrarModalDeposito() {
-  this.mostrarModalDeposito = false;
-}
+  cerrarModalDeposito() {
+    this.mostrarModalDeposito = false;
+  }
 
-
-irATrading() {
-  this.irADashboard(); // reutiliza la función existente
-}
+  irATrading() {
+    this.irADashboard();
+  }
 
   irADashboard() {
     const rol = localStorage.getItem('rol') || 'ROLE_USER';
