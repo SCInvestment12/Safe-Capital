@@ -15,10 +15,7 @@
         <td>{{ c.id }}</td>
         <td>{{ c.usuario.correoElectronico }}</td>
         <td>
-          <a [href]="'https://safe-capital-backend.onrender.com/api/comprobantes/archivo/' + c.usuario.idUsuario + '/' + c.nombreArchivo" target="_blank">
-  Ver archivo
-</a>
-
+          <button (click)="verArchivo(c.usuario.idUsuario, c.nombreArchivo)">📎 Ver archivo</button>
         </td>
         <td>{{ c.fechaSubida | date:'short' }}</td>
         <td>{{ c.estado }}</td>
