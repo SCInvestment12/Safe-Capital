@@ -53,6 +53,7 @@ export class PerfilComponent implements OnInit {
   // Comprobante
   archivoComprobante: File | null = null;
   nombreComprobante: string = '';
+  montoComprobante: number = 0; // ✅ Agregado
 
   private headers: HttpHeaders;
   private base = 'https://safe-capital-backend.onrender.com/api';
@@ -181,14 +182,17 @@ export class PerfilComponent implements OnInit {
       this.alert.error('Selecciona un archivo antes de enviar.');
       return;
     }
+    if (!this.montoComprobante || this.montoComprobante <= 0) {
+      this.alert.error('Ingresa el monto del depósito.');
+      return;
+    }
 
-    const correo = this.correo;
-    const token = localStorage.getItem('token') || '';
     const form = new FormData();
     form.append('archivo', this.archivoComprobante);
-    form.append('correoElectronico', correo);
+    form.append('correoElectronico', this.correo);
+    form.append('monto', this.montoComprobante.toString()); // ✅ Nuevo campo
 
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token') || ''}`);
 
     this.http.post(`${this.base}/comprobantes/subir`, form, { headers })
       .subscribe({
@@ -196,6 +200,7 @@ export class PerfilComponent implements OnInit {
           this.alert.success('Comprobante enviado correctamente.');
           this.nombreComprobante = this.archivoComprobante?.name || '';
           this.archivoComprobante = null;
+          this.montoComprobante = 0;
         },
         error: (err) => {
           console.error('❌ Error al subir comprobante:', err);

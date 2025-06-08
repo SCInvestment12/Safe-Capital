@@ -104,20 +104,30 @@
       </div>
     </div>
 
-    <!-- SUBIR COMPROBANTE -->
-    <div class="comprobante-box mb-5">
-      <h5 class="mb-3"><i class="fas fa-upload me-2"></i>Subir comprobante de depósito</h5>
-      <form (ngSubmit)="subirComprobante()" class="form-comprobante">
-        <input type="file" class="form-control mb-3" (change)="onFileChange($event)" required />
-        <button type="submit" class="btn btn-primary">
-          <i class="fas fa-paper-plane me-2"></i>Enviar comprobante
-        </button>
-      </form>
-      <div *ngIf="nombreComprobante" class="mt-2">
-        <strong>Último comprobante:</strong>
-        <a [href]="obtenerLinkComprobante()" target="_blank">{{ nombreComprobante }}</a>
-      </div>
+   <!-- SUBIR COMPROBANTE -->
+<div class="comprobante-box mb-5">
+  <h5 class="mb-3"><i class="fas fa-upload me-2"></i>Subir comprobante de depósito</h5>
+  <form (ngSubmit)="subirComprobante()" class="form-comprobante">
+    <div class="mb-3">
+      <label for="archivo">Selecciona el archivo</label>
+      <input type="file" class="form-control" (change)="onFileChange($event)" required />
     </div>
+    <div class="mb-3">
+      <label for="montoComprobante">Monto del depósito</label>
+      <input type="number" class="form-control" [(ngModel)]="montoComprobante" name="montoComprobante" required />
+    </div>
+    <button type="submit" class="btn btn-primary">
+      <i class="fas fa-paper-plane me-2"></i>Enviar comprobante
+    </button>
+  </form>
+
+  <div *ngIf="nombreComprobante" class="mt-2">
+    <strong>Último comprobante:</strong>
+    <a [href]="obtenerLinkComprobante()" target="_blank">{{ nombreComprobante }}</a><br />
+    <strong>Monto declarado:</strong> {{ montoComprobante | currency:'MXN' }}
+  </div>
+</div>
+
 
     <!-- MOVIMIENTOS RECIENTES -->
     <div class="movimientos-box mb-5">
