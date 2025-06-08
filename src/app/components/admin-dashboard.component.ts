@@ -56,23 +56,24 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   verArchivo(idUsuario: number, nombreArchivo: string) {
-    const token = localStorage.getItem('token') || '';
-    const url = `${this.base}/comprobantes/archivo/${idUsuario}/${nombreArchivo}`;
+  const token = localStorage.getItem('token') || '';
+  const nombreCodificado = encodeURIComponent(nombreArchivo);
+  const url = `${this.base}/comprobantes/archivo/${idUsuario}/${nombreCodificado}`;
 
-    fetch(url, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    .then(res => {
-      if (!res.ok) throw new Error('No autorizado');
-      return res.blob();
-    })
-    .then(blob => {
-      const tipo = blob.type;
-      const urlBlob = URL.createObjectURL(blob);
-      window.open(urlBlob, '_blank');
-    })
-    .catch(() => alert('No se pudo abrir el archivo. Verifica permisos o token.'));
-  }
+  fetch(url, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('No autorizado');
+    return res.blob();
+  })
+  .then(blob => {
+    const urlBlob = URL.createObjectURL(blob);
+    window.open(urlBlob, '_blank');
+  })
+  .catch(() => alert('No se pudo abrir el archivo. Verifica permisos o token.'));
+}
+
 
   acreditarSaldo(id: number, correo: string) {
     const montoStr = prompt('Ingresa el monto a acreditar:');
