@@ -31,6 +31,7 @@ export class CetesCompraComponent implements OnInit {
   confirmar = false;
   monto: number | null = null;
   reinversion: boolean = false;
+  movimientos: any[] = [];
 
   fechaSubasta = '';
   fechaSubastaNueva = '';
@@ -79,6 +80,14 @@ export class CetesCompraComponent implements OnInit {
   continuarCompra() {
     if (!this.monto || this.monto <= 0) {
       this.alertService.error('Ingresa un monto válido.');
+      return;
+    }
+
+    const ahora = new Date();
+    const hora = ahora.getHours();
+    const dia = ahora.getDay();
+    if (dia === 0 || dia === 6 || hora < 8 || hora >= 16) {
+      this.alertService.error('⏰ Solo puedes invertir en CETES de Lunes a Viernes entre 08:00 y 16:00.');
       return;
     }
 
@@ -137,7 +146,10 @@ export class CetesCompraComponent implements OnInit {
 
   private cargarMovimientos(): void {
     const userId = +(localStorage.getItem('id') || '0');
-    this.dashboardService.getTransactions(userId).subscribe();
+    this.dashboardService.getTransactions(userId).subscribe({
+      next: (res) => this.movimientos = res,
+      error: () => console.error('Error al cargar movimientos')
+    });
   }
 
   reiniciar() {

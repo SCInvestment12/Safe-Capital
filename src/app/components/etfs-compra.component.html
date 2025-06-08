@@ -5,10 +5,9 @@
   <div *ngIf="!etfSeleccionado" class="etfs-lista">
     <p>Selecciona uno de los mejores ETFs:</p>
     <ul>
-      <li *ngFor="let etf of etfs; let i = index" (click)="seleccionarEtf(etf)">
-        <strong>{{ etf.nombre }}</strong><br />
-        <small>{{ etf.descripcion }}</small><br />
-        <button *ngIf="i < 5 || mostrarGrafica" (click)="verGrafica(etf); $event.stopPropagation()">📈 Ver Gráfica</button>
+      <li *ngFor="let etf of etfs" (click)="verGrafica(etf)">
+        <strong>{{ etf }}</strong><br />
+        <button (click)="verGrafica(etf); $event.stopPropagation()">📈 Ver Gráfica</button>
       </li>
     </ul>
   </div>
@@ -16,14 +15,13 @@
   <!-- Gráfica -->
   <div *ngIf="mostrarGrafica && etfSeleccionado && !confirmacion" class="grafica-etf">
     <div class="grafica-box">
-      <app-chart-wrapper [tipo]="'etfs'" [simbolo]="etfSeleccionado.simbolo"></app-chart-wrapper>
+      <app-chart-wrapper [tipo]="'etfs'" [simbolo]="etfSeleccionado"></app-chart-wrapper>
     </div>
   </div>
 
   <!-- Formulario -->
   <div *ngIf="etfSeleccionado && !confirmacion" class="etf-formulario">
-    <h3>{{ etfSeleccionado.nombre }}</h3>
-    <p>{{ etfSeleccionado.descripcion }}</p>
+    <h3>{{ etfSeleccionado }}</h3>
 
     <label for="monto">Monto a invertir (MXN):</label>
     <input type="number" [(ngModel)]="monto" id="monto" placeholder="Ej. 1000" min="100" />
@@ -44,7 +42,7 @@
     <h2>✅ Confirmación de compra</h2>
     <p>Tu inversión en ETF se registró exitosamente.</p>
     <ul>
-      <li><strong>ETF:</strong> {{ etfSeleccionado?.nombre }}</li>
+      <li><strong>ETF:</strong> {{ etfSeleccionado }}</li>
       <li><strong>Monto:</strong> ${{ monto }}</li>
       <li><strong>Plazo:</strong> {{ plazo }} días</li>
       <li><strong>Forma de pago:</strong> Fondos en cuenta</li>

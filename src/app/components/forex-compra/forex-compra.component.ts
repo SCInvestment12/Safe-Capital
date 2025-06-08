@@ -59,6 +59,14 @@ export class ForexCompraComponent {
       return;
     }
 
+    const ahora = new Date();
+    const hora = ahora.getHours();
+    const dia = ahora.getDay();
+    if (dia === 0 || dia === 6 || hora < 8 || hora >= 20) {
+      this.alertService.error('⏰ Solo puedes invertir en Forex de Lunes a Viernes entre 08:00 y 20:00.');
+      return;
+    }
+
     const req: RetirarSaldoRequest = { monto: this.monto };
     this.dashboardService.withdraw(req).subscribe({
       next: () => this.procesarApuesta(),

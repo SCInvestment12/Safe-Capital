@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
@@ -6,12 +6,6 @@ import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.ser
 import { AlertService } from '../services/alert.service';
 import { ApuestaService, CrearApuestaRequest } from '../services/apuesta.service';
 import { SaldoService } from '../services/saldo.service';
-
-interface Accion {
-  nombre: string;
-  simbolo: string;
-  descripcion: string;
-}
 
 @Component({
   selector: 'app-acciones-compra',
@@ -21,25 +15,16 @@ interface Accion {
   styleUrls: ['./acciones-compra.component.css']
 })
 export class AccionesCompraComponent {
-  @ViewChild(ChartWrapperComponent) chartWrapper!: ChartWrapperComponent;
-
-  acciones: Accion[] = [
-    { nombre: 'Apple Inc.', simbolo: 'AAPL', descripcion: 'Líder en tecnología y productos electrónicos.' },
-    { nombre: 'Tesla Inc.', simbolo: 'TSLA', descripcion: 'Innovación en autos eléctricos y energía.' },
-    { nombre: 'Amazon.com', simbolo: 'AMZN', descripcion: 'Gigante del comercio electrónico global.' },
-    { nombre: 'Microsoft Corp.', simbolo: 'MSFT', descripcion: 'Software, servicios y tecnología empresarial.' },
-    { nombre: 'Meta Platforms', simbolo: 'META', descripcion: 'Redes sociales y metaverso.' },
-    { nombre: 'Alphabet (Google)', simbolo: 'GOOGL', descripcion: 'Motor de búsqueda y servicios digitales.' },
-    { nombre: 'Netflix Inc.', simbolo: 'NFLX', descripcion: 'Entretenimiento por streaming.' },
-    { nombre: 'Nvidia Corp.', simbolo: 'NVDA', descripcion: 'Gráficos y chips para IA.' },
-    { nombre: 'Intel Corp.', simbolo: 'INTC', descripcion: 'Fabricante de procesadores global.' }
-  ];
-
-  accionSeleccionada: Accion | null = null;
-  monto: number | null = null;
-  plazo: number | null = null;
+  accionSeleccionada: string = '';
+  monto: number = 0;
+  plazo: string = '';
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
+
+  acciones = [
+    'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'BRK.B', 'JNJ', 'V',
+    'UNH', 'HD', 'PG', 'JPM', 'MA', 'XOM', 'BAC', 'DIS', 'VZ', 'ADBE'
+  ];
 
   constructor(
     private dashboardService: DashboardService,
@@ -48,31 +33,27 @@ export class AccionesCompraComponent {
     private saldoService: SaldoService
   ) {}
 
-  seleccionarAccion(accion: Accion): void {
-    this.resetear();
-    this.accionSeleccionada = accion;
-  }
-
-  verGraficaDesdeLista(accion: Accion): void {
-    this.resetear();
-    this.accionSeleccionada = accion;
+  verGraficaDesdeLista(simbolo: string) {
+    this.accionSeleccionada = simbolo;
     this.mostrarGrafica = true;
+    this.confirmacion = false;
   }
 
-  confirmarInversion(): void {
-    if (!this.monto || !this.plazo) {
-      this.alertService.error('Ingresa monto y plazo válidos.');
+  confirmarInversion() {
+    if (!this.accionSeleccionada || !this.monto || !this.plazo) {
+      this.alertService.error('Completa todos los campos.');
       return;
     }
 
-    const horaActual = new Date().getHours();
-    if (horaActual < 8 || horaActual >= 16) {
-      this.alertService.error('⏰ Solo puedes invertir en acciones entre 08:00 y 16:00 horas.');
+    const ahora = new Date();
+    const hora = ahora.getHours();
+    const dia = ahora.getDay();
+    if (dia === 0 || dia === 6 || hora < 8 || hora >= 16) {
+      this.alertService.error('⏰ Solo puedes invertir en Acciones de Lunes a Viernes entre 08:00 y 16:00.');
       return;
     }
 
     const req: RetirarSaldoRequest = { monto: this.monto };
-
     this.dashboardService.withdraw(req).subscribe({
       next: () => this.procesarApuesta(),
       error: (err) => {
@@ -86,22 +67,28 @@ export class AccionesCompraComponent {
   }
 
   private procesarApuesta(): void {
-    if (!this.accionSeleccionada) return;
-
-    this.saldoService.cargarSaldo();
-    this.cargarMovimientos();
-    this.confirmacion = true;
-    this.chartWrapper.lanzarApuesta('up');
-
     const apuesta: CrearApuestaRequest = {
-      simbolo: this.accionSeleccionada.simbolo,
+      simbolo: this.accionSeleccionada,
       tipo: 'acciones',
       direccion: 'up',
-      monto: this.monto!,
-      plazo: this.plazo!
+      monto: this.monto,
+      plazo: parseInt(this.plazo)
     };
 
-    this.apuestaService.crearApuesta(apuesta).subscribe();
+    this.apuestaService.crearApuesta(apuesta).subscribe({
+      next: () => {
+        this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
+        this.saldoService.cargarSaldo();
+        this.cargarMovimientos();
+        this.confirmacion = true;
+        this.mostrarGrafica = false;
+      },
+      error: () => {
+        this.alertService.success(`✅ Inversión registrada con éxito.`);
+      }
+    });
+
+    this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
   }
 
   private cargarMovimientos(): void {
@@ -109,14 +96,10 @@ export class AccionesCompraComponent {
     this.dashboardService.getTransactions(userId).subscribe();
   }
 
-  cancelar(): void {
-    this.resetear();
-  }
-
-  private resetear(): void {
-    this.accionSeleccionada = null;
-    this.monto = null;
-    this.plazo = null;
+  cancelar() {
+    this.accionSeleccionada = '';
+    this.monto = 0;
+    this.plazo = '';
     this.confirmacion = false;
     this.mostrarGrafica = false;
   }

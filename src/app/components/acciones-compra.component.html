@@ -3,11 +3,9 @@
 
   <!-- Lista de acciones -->
   <div class="lista-acciones" *ngIf="!accionSeleccionada">
-    <div *ngFor="let accion of acciones" class="card" (click)="seleccionarAccion(accion)">
-      <h3>{{ accion.nombre }}</h3>
-      <p>{{ accion.descripcion }}</p>
-
-      <!-- Botón gráfico para todas -->
+    <div *ngFor="let accion of acciones" class="card" (click)="verGraficaDesdeLista(accion)">
+      <h3>{{ accion }}</h3>
+      <p>Acción destacada</p>
       <button (click)="verGraficaDesdeLista(accion); $event.stopPropagation()">
         📈 Ver Gráfica
       </button>
@@ -15,31 +13,24 @@
   </div>
 
   <!-- Gráfica -->
-<div class="grafica-accion grafica-fullscreen" *ngIf="accionSeleccionada">
-  <div class="contenedor-chart">
-    <app-chart-wrapper
-  *ngIf="mostrarGrafica && accionSeleccionada"
-  [tipo]="'acciones'"
-  [simbolo]="accionSeleccionada!.simbolo">
-</app-chart-wrapper>
-
+  <div class="grafica-accion grafica-fullscreen" *ngIf="accionSeleccionada && mostrarGrafica && !confirmacion">
+    <div class="contenedor-chart">
+      <app-chart-wrapper [tipo]="'acciones'" [simbolo]="accionSeleccionada"></app-chart-wrapper>
+    </div>
   </div>
-</div>
-
-
 
   <!-- Formulario de inversión -->
   <div *ngIf="accionSeleccionada && !confirmacion" class="formulario">
-    <h3>Invertir en {{ accionSeleccionada.nombre }}</h3>
+    <h3>Invertir en {{ accionSeleccionada }}</h3>
 
     <label>Monto (MXN):</label>
     <input type="number" [(ngModel)]="monto" placeholder="Ej. 1000" min="100" />
 
     <label>Plazo:</label>
     <select [(ngModel)]="plazo">
-      <option [ngValue]="30">30 días</option>
-      <option [ngValue]="60">60 días</option>
-      <option [ngValue]="90">90 días</option>
+      <option value="30">30 días</option>
+      <option value="60">60 días</option>
+      <option value="90">90 días</option>
     </select>
 
     <div class="acciones">
@@ -53,7 +44,7 @@
     <h2>✅ Confirmación de compra</h2>
     <p>Tu inversión se registró exitosamente.</p>
     <ul>
-      <li><strong>Acción:</strong> {{ accionSeleccionada?.nombre }}</li>
+      <li><strong>Acción:</strong> {{ accionSeleccionada }}</li>
       <li><strong>Monto:</strong> ${{ monto }}</li>
       <li><strong>Plazo:</strong> {{ plazo }} días</li>
       <li><strong>Forma de pago:</strong> Fondos en cuenta</li>

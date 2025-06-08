@@ -66,56 +66,59 @@ export class CriptoCompraComponent {
       return;
     }
 
+    const ahora = new Date();
+    const hora = ahora.getHours();
+    const dia = ahora.getDay();
+    if (dia === 0 || dia === 6 || hora < 8 || hora >= 20) {
+      this.alertService.error('⏰ Solo puedes invertir en Criptomonedas de Lunes a Viernes entre 08:00 y 20:00.');
+      return;
+    }
+
     const req: RetirarSaldoRequest = { monto: this.monto };
     this.dashboardService.withdraw(req).subscribe({
-      next: () => {
-        this.procesarApuesta();
-      },
+      next: () => this.procesarApuesta(),
       error: (err) => {
         if (err?.status === 200 || err?.ok === false) {
-          console.warn('⚠️ Retiro respondió raro pero con 200 OK. Continuando...');
           this.procesarApuesta();
         } else {
-          console.error('❌ Error al retirar saldo:', err);
           this.alertService.error('No se pudo descontar el saldo.');
         }
       }
     });
   }
 
- private procesarApuesta(): void {
-  const apuesta: CrearApuestaRequest = {
-    simbolo: this.criptoSeleccionada,
-    tipo: 'cripto',
-    direccion: 'up',
-    monto: this.monto,
-    plazo: parseInt(this.duracion)
-  };
+  private procesarApuesta(): void {
+    const apuesta: CrearApuestaRequest = {
+      simbolo: this.criptoSeleccionada,
+      tipo: 'cripto',
+      direccion: 'up',
+      monto: this.monto,
+      plazo: parseInt(this.duracion)
+    };
 
-  this.apuestaService.crearApuesta(apuesta).subscribe({
-    next: () => {
-      this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
-      this.saldoService.cargarSaldo();
-      this.cargarMovimientos(); // <-- Agregado
-      this.confirmacion = true;
-      this.mostrarGrafica = false;
-    },
-    error: () => {
-      this.alertService.success(`✅ Inversión registrada con éxito.`);
-    }
-  });
+    this.apuestaService.crearApuesta(apuesta).subscribe({
+      next: () => {
+        this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
+        this.saldoService.cargarSaldo();
+        this.cargarMovimientos();
+        this.confirmacion = true;
+        this.mostrarGrafica = false;
+      },
+      error: () => {
+        this.alertService.success(`✅ Inversión registrada con éxito.`);
+      }
+    });
 
-  this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
-}
+    this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
+  }
 
-private cargarMovimientos(): void {
-  const userId = +(localStorage.getItem('id') || '0');
-  this.dashboardService.getTransactions(userId).subscribe({
-    next: (res) => console.log('Movimientos actualizados:', res),
-    error: (err) => console.error('Error al cargar movimientos:', err)
-  });
-}
-
+  private cargarMovimientos(): void {
+    const userId = +(localStorage.getItem('id') || '0');
+    this.dashboardService.getTransactions(userId).subscribe({
+      next: (res) => console.log('Movimientos actualizados:', res),
+      error: (err) => console.error('Error al cargar movimientos:', err)
+    });
+  }
 
   reiniciar() {
     this.criptoSeleccionada = '';
