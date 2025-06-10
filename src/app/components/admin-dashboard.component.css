@@ -1,67 +1,129 @@
+/* Fondo principal */
 .admin-wrapper {
-  padding: 30px;
-  background-color: #111;
-  color: white;
+  background: linear-gradient(145deg, #0e0e10, #1a1a1a);
+  color: #ffffff;
+  padding: 40px;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
 }
 
+/* Títulos generales */
 h2 {
+  font-size: 22px;
+  margin-top: 40px;
   margin-bottom: 20px;
   color: #00ffc8;
+  border-left: 5px solid #00ffc8;
+  padding-left: 10px;
 }
 
-.tabla-admin {
+/* Tablas con efecto glass */
+table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 30px;
   background: rgba(255, 255, 255, 0.03);
-  margin-top: 10px;
+  backdrop-filter: blur(14px);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 255, 200, 0.12);
 }
 
-.tabla-admin th, .tabla-admin td {
-  padding: 12px 15px;
+th, td {
+  padding: 16px;
   text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 14px;
 }
 
-.tabla-admin th {
-  background-color: rgba(0, 255, 200, 0.1);
+th {
+  background-color: rgba(0, 255, 200, 0.15);
+  color: #ffffff;
+  border-bottom: 1px solid rgba(0, 255, 200, 0.3);
 }
 
-a {
-  color: #00ffc8;
-  text-decoration: underline;
+td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  color: #e0e0e0;
 }
 
+/* Animaciones suaves */
+table tr:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+  transition: 0.3s;
+}
+
+/* Botones con glow */
 button {
-  padding: 6px 12px;
+  padding: 10px 16px;
   border: none;
   border-radius: 8px;
-  font-weight: bold;
-  margin-right: 6px;
+  font-weight: 600;
+  color: #ffffff;
   cursor: pointer;
+  margin-right: 8px;
+  transition: 0.3s;
+  background: linear-gradient(135deg, #00ffc8, #1de9b6);
+  box-shadow: 0 0 12px rgba(0, 255, 200, 0.4);
 }
 
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 16px rgba(0, 255, 200, 0.6);
+}
+
+/* Botones especiales */
 .btn-aprobar {
-  background-color: #00b894;
-  color: white;
+  background: linear-gradient(to right, #43e97b, #38f9d7);
 }
-
 .btn-rechazar {
-  background-color: #d63031;
-  color: white;
+  background: linear-gradient(to right, #ff6a6a, #ff3d67);
 }
-
 .btn-actualizar {
-  background-color: #0984e3;
-  color: white;
-  margin-top: 10px;
-  padding: 8px 16px;
-  border-radius: 6px;
+  background: linear-gradient(to right, #2196f3, #29b6f6);
 }
 
+/* Inputs glassy */
+input.form-control {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  width: 100%;
+  max-width: 300px;
+  backdrop-filter: blur(6px);
+}
+
+input::placeholder {
+  color: #cccccc;
+}
+
+input[type="date"] {
+  color-scheme: dark;
+}
+
+/* Contenedores flexibles */
 .tasa-cetes-config {
-  margin-top: 15px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
 }
 
+.tasa-cetes-config label {
+  width: 200px;
+  font-weight: 500;
+  color: #80cbc4;
+}
+
+/* Espaciados */
+.mb-2, .mb-3, .mb-4, .mb-5 {
+  margin-bottom: 16px;
+}
+.mt-2 {
+  margin-top: 20px;
+}
 .mt-4 {
-  margin-top: 40px;
+  margin-top: 36px;
 }
