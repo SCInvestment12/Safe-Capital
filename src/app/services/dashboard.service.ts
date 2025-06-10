@@ -13,7 +13,7 @@ export interface Transaction {
   id: number;
   amount: number;
   method: string;
-  type: 'DEPOSIT' | 'WITHDRAW';
+  type: 'DEPOSIT' | 'WITHDRAW' | 'Inversión';
   termDays: number;
   timestamp: string;
 }
@@ -25,7 +25,6 @@ export interface RetirarSaldoRequest {
 
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
-  // Ajusta esta URL si tu API corre en otro host/puerto
   private baseUrl = 'https://safe-capital-backend.onrender.com/api/usuarios';
 
   constructor(private http: HttpClient) {}
@@ -36,7 +35,7 @@ export class DashboardService {
     return { headers: new HttpHeaders().set('Authorization', `Bearer ${token}`) };
   }
 
-  //  Obtener saldo
+  // Obtener saldo actual
   getBalance(): Observable<number> {
     return this.http.get<number>(
       `${this.baseUrl}/saldo`,
@@ -44,7 +43,7 @@ export class DashboardService {
     );
   }
 
-  //  Hacer depósito (sin cambios)
+  // Hacer depósito (no cambia)
   deposit(userId: number, dto: AccountOperation): Observable<Transaction> {
     return this.http.post<Transaction>(
       `${this.baseUrl}/${userId}/deposit`,
@@ -53,7 +52,7 @@ export class DashboardService {
     );
   }
 
-  //  Hacer retiro de inversión
+  // Hacer retiro de inversión
   withdraw(dto: RetirarSaldoRequest): Observable<string> {
     return this.http.post<string>(
       `${this.baseUrl}/saldo/retirar`,
@@ -62,7 +61,7 @@ export class DashboardService {
     );
   }
 
-  //  Traer historial (sin cambios)
+  // Obtener historial de transacciones (depósitos, retiros, inversiones)
   getTransactions(userId: number): Observable<Transaction[]> {
     return this.http.get<Transaction[]>(
       `${this.baseUrl}/${userId}/transactions`,
