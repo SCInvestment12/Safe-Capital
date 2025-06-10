@@ -130,11 +130,17 @@ export class PerfilComponent implements OnInit {
   }
 
   cargarMovimientosYPortafolio() {
-    this.movimientos = [];
-    this.portafolio = [];
-    const depositos = this.movimientos.filter(m => m.tipo === 'Depósito');
-    this.ultimoDeposito = depositos.length ? depositos[depositos.length - 1] : null;
-  }
+  this.http.get<any[]>(`${this.base}/movimientos`, { headers: this.headers }).subscribe({
+    next: data => {
+      this.movimientos = data.filter(m => m.tipo !== 'Inversión');
+      this.portafolio = data.filter(m => m.tipo === 'Inversión');
+      const depositos = this.movimientos.filter(m => m.tipo === 'Depósito');
+      this.ultimoDeposito = depositos.length ? depositos[depositos.length - 1] : null;
+    },
+    error: () => this.alert.error('Error al cargar movimientos')
+  });
+}
+
 
   // Modal movimientos
   abrirModal() {
