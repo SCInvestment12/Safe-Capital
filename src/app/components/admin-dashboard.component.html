@@ -1,6 +1,6 @@
 <div class="admin-wrapper">
 
-  <!-- NUEVA TABLA: USUARIOS REGISTRADOS -->
+  <!-- USUARIOS REGISTRADOS -->
   <h2 class="mt-4">Usuarios Registrados</h2>
   <table class="tabla-admin" *ngIf="usuarios.length > 0">
     <thead>
@@ -29,7 +29,7 @@
     </tbody>
   </table>
 
-  <!-- COMPROBANTES -->
+  <!-- COMPROBANTES PENDIENTES -->
   <h2>Comprobantes Pendientes</h2>
   <p *ngIf="loading">Cargando comprobantes...</p>
   <p *ngIf="!loading && comprobantes.length === 0">No hay comprobantes pendientes.</p>
@@ -121,4 +121,17 @@
     <input type="number" [(ngModel)]="montoParaSaldo" class="form-control" min="1" placeholder="Ej. 1500" />
   </div>
   <button class="btn-actualizar mb-5" (click)="asignarSaldoManual()">Acreditar Saldo</button>
+
+  <!-- ACTUALIZAR PRECIO BASE DE FOREX -->
+  <h2 class="mt-4">Actualizar Precio Base (Forex)</h2>
+  <div class="tasa-cetes-config mb-3">
+    <label>Par de divisas (ej. EUR/USD):</label>
+    <input type="text" [(ngModel)]="parForex" placeholder="EUR/USD" class="form-control" />
+  </div>
+  <div class="tasa-cetes-config mb-3">
+    <label>Nuevo precio base:</label>
+    <input type="number" [(ngModel)]="precioForex" step="0.0001" placeholder="Ej. 1.0845" class="form-control" />
+  </div>
+  <button class="btn-actualizar" (click)="actualizarPrecioBaseForex()">Actualizar Precio</button>
+
 </div>

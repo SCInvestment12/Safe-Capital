@@ -32,6 +32,10 @@ export class AdminDashboardComponent implements OnInit {
   userEmailParaSaldo = '';
   montoParaSaldo: number | null = null;
 
+  // FOREX
+  parForex: string = '';
+  precioForex: number | null = null;
+
   private headers: HttpHeaders;
   private base = 'https://safe-capital-backend.onrender.com/api';
 
@@ -40,25 +44,21 @@ export class AdminDashboardComponent implements OnInit {
     this.headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
- ngOnInit(): void {
-  this.cargarComprobantes();
-  this.obtenerTasasCetes();
-  this.obtenerFechaSubasta();
-  this.obtenerConfiguracionBancaria();
-  this.cargarUsuarios(); // 👈 agregado
-}
+  ngOnInit(): void {
+    this.cargarComprobantes();
+    this.obtenerTasasCetes();
+    this.obtenerFechaSubasta();
+    this.obtenerConfiguracionBancaria();
+    this.cargarUsuarios();
+  }
 
-  // ✅ Cargar lista de usuarios
- 
-
-cargarUsuarios() {
-  this.http.get<any[]>(`${this.base}/usuarios`, { headers: this.headers })
-    .subscribe({
-      next: data => this.usuarios = data,
-      error: () => alert('Error al cargar usuarios')
-    });
-}
-
+  cargarUsuarios() {
+    this.http.get<any[]>(`${this.base}/usuarios`, { headers: this.headers })
+      .subscribe({
+        next: data => this.usuarios = data,
+        error: () => alert('Error al cargar usuarios')
+      });
+  }
 
   cargarComprobantes() {
     this.loading = true;
@@ -196,9 +196,32 @@ cargarUsuarios() {
         alert(`Se acreditó $${this.montoParaSaldo} a ${this.userEmailParaSaldo}`);
         this.userEmailParaSaldo = '';
         this.montoParaSaldo = null;
-        this.cargarUsuarios(); // actualizar tabla si aplica
+        this.cargarUsuarios();
       },
       error: () => alert('Error al acreditar saldo manualmente')
+    });
+  }
+
+  actualizarPrecioBaseForex(): void {
+    const par = this.parForex.replace('/', '').toUpperCase(); // EUR/USD → EURUSD
+    const precio = this.precioForex;
+
+    if (!par || !precio || precio <= 0) {
+      alert('Por favor ingresa un par válido y un precio mayor a cero.');
+      return;
+    }
+
+    this.http.put(
+      `${this.base}/admin/forex/precio?par=${par}&precio=${precio}`,
+      null,
+      { headers: this.headers, responseType: 'text' as 'json' }
+    ).subscribe({
+      next: () => {
+        alert(`✔ Precio base de ${par} actualizado a ${precio}`);
+        this.parForex = '';
+        this.precioForex = null;
+      },
+      error: () => alert('❌ Error al actualizar el precio base de Forex')
     });
   }
 }

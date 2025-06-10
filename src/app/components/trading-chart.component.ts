@@ -1,3 +1,4 @@
+// src/app/components/trading-chart.component.ts
 import {
   Component,
   Input,
@@ -138,7 +139,8 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   private startPolling(): void {
-    this.subscription = interval(5000).subscribe(() => this.fetchData());
+    const frecuencia = this.tipo === 'forex' ? 3000 : 5000;
+    this.subscription = interval(frecuencia).subscribe(() => this.fetchData());
     this.fetchData();
   }
 
@@ -148,10 +150,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
       .subscribe((barras: TradingBarDTO[]) => {
         if (!barras.length) return;
 
-        // Orden por fecha
         barras.sort((a, b) => Date.parse(a.timestamp) - Date.parse(b.timestamp));
-
-        // Mapeo a [ms, close]
         const puntos: [number, number][] = barras.map(bar => {
           const ms = new Date(bar.timestamp).getTime();
           return [ms, bar.close];
@@ -187,6 +186,6 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.subscription?.unsubscribe();
   }
 }
