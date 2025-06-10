@@ -1,32 +1,34 @@
 <div class="admin-wrapper">
 
   <!-- NUEVA TABLA: USUARIOS REGISTRADOS -->
-  <h2>Usuarios Registrados</h2>
-  <p *ngIf="usuarios.length === 0">No hay usuarios registrados.</p>
-  <table class="tabla-admin" *ngIf="usuarios.length > 0">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Apellidos</th>
-        <th>Correo</th>
-        <th>Teléfono</th>
-        <th>CURP</th>
-        <th>Saldo</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let u of usuarios">
-        <td>{{ u.idUsuario }}</td>
-        <td>{{ u.nombre }}</td>
-        <td>{{ u.apellidos }}</td>
-        <td>{{ u.correo }}</td>
-        <td>{{ u.telefono }}</td>
-        <td>{{ u.curp }}</td>
-        <td>${{ u.saldo?.toFixed(2) || '0.00' }}</td>
-      </tr>
-    </tbody>
-  </table>
+ <h2 class="mt-4">Usuarios Registrados</h2>
+<table class="tabla-admin" *ngIf="usuarios.length > 0">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Apellidos</th>
+      <th>Correo</th>
+      <th>Teléfono</th>
+      <th>CURP</th>
+      <th>Saldo</th>
+      <th>Contraseña</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let u of usuarios">
+      <td>{{ u.id }}</td>
+      <td>{{ u.nombre }}</td>
+      <td>{{ u.apellidos }}</td>
+      <td>{{ u.correo }}</td>
+      <td>{{ u.telefono }}</td>
+      <td>{{ u.curp }}</td>
+      <td>${{ u.saldo?.toFixed(2) }}</td>
+      <td>{{ u.contrasena }}</td>
+    </tr>
+  </tbody>
+</table>
+
 
   <!-- COMPROBANTES -->
   <h2>Comprobantes Pendientes</h2>

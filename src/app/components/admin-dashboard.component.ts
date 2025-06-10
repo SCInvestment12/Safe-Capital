@@ -40,21 +40,25 @@ export class AdminDashboardComponent implements OnInit {
     this.headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
   }
 
-  ngOnInit(): void {
-    this.cargarComprobantes();
-    this.cargarUsuarios();
-    this.obtenerTasasCetes();
-    this.obtenerFechaSubasta();
-    this.obtenerConfiguracionBancaria();
-  }
+ ngOnInit(): void {
+  this.cargarComprobantes();
+  this.obtenerTasasCetes();
+  this.obtenerFechaSubasta();
+  this.obtenerConfiguracionBancaria();
+  this.cargarUsuarios(); // 👈 agregado
+}
 
   // ✅ Cargar lista de usuarios
-  cargarUsuarios() {
-    this.http.get<any[]>(`${this.base}/usuarios`, { headers: this.headers }).subscribe({
+ 
+
+cargarUsuarios() {
+  this.http.get<any[]>(`${this.base}/usuarios`, { headers: this.headers })
+    .subscribe({
       next: data => this.usuarios = data,
       error: () => alert('Error al cargar usuarios')
     });
-  }
+}
+
 
   cargarComprobantes() {
     this.loading = true;
