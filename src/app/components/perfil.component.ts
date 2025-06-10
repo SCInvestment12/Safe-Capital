@@ -128,23 +128,24 @@ export class PerfilComponent implements OnInit {
   }
 
   cargarMovimientosYPortafolio() {
-    this.userService.obtenerMovimientos().subscribe({
-      next: data => {
-        this.movimientos = data.filter(m => m.tipo !== 'Inversión');
-        this.portafolio = data
-          .filter(m => m.tipo === 'Inversión')
-          .map(m => ({
-            instrumento: this.extraerInstrumento(m.descripcion),
-            monto: m.monto,
-            fecha: m.fecha,
-            tipo: m.tipo
-          }));
-        const depositos = this.movimientos.filter(m => m.tipo.toLowerCase() === 'depósito');
-        this.ultimoDeposito = depositos.length ? depositos[depositos.length - 1] : null;
-      },
-      error: () => this.alert.error('Error al cargar movimientos')
-    });
-  }
+  this.userService.obtenerMovimientos().subscribe({
+    next: data => {
+      this.movimientos = data.filter(m => m.tipo.toUpperCase() !== 'INVERSIÓN');
+      this.portafolio = data
+        .filter(m => m.tipo.toUpperCase() === 'INVERSIÓN')
+        .map(m => ({
+          instrumento: this.extraerInstrumento(m.descripcion),
+          monto: m.monto,
+          fecha: m.fecha,
+          tipo: m.tipo
+        }));
+      const depositos = this.movimientos.filter(m => m.tipo.toLowerCase() === 'depósito');
+      this.ultimoDeposito = depositos.length ? depositos[depositos.length - 1] : null;
+    },
+    error: () => this.alert.error('Error al cargar movimientos')
+  });
+}
+
 
   extraerInstrumento(descripcion: string): string {
     if (!descripcion) return '---';
