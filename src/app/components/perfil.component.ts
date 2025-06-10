@@ -134,7 +134,7 @@ export class PerfilComponent implements OnInit {
     next: data => {
       this.movimientos = data.filter(m => m.tipo !== 'Inversión');
       this.portafolio = data.filter(m => m.tipo === 'Inversión');
-      const depositos = this.movimientos.filter(m => m.tipo === 'Depósito');
+const depositos = this.movimientos.filter(m => m.tipo.toLowerCase() === 'depósito');
       this.ultimoDeposito = depositos.length ? depositos[depositos.length - 1] : null;
     },
     error: () => this.alert.error('Error al cargar movimientos')
