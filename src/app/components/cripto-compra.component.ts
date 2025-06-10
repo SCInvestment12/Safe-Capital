@@ -20,6 +20,7 @@ export class CriptoCompraComponent {
   duracion: string = '';
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
+  movimientos: any[] = [];
 
   criptos = [
     { nombre: 'Bitcoin', simbolo: 'BTC' },
@@ -115,7 +116,7 @@ export class CriptoCompraComponent {
   private cargarMovimientos(): void {
     const userId = +(localStorage.getItem('id') || '0');
     this.dashboardService.getTransactions(userId).subscribe({
-      next: (res) => console.log('Movimientos actualizados:', res),
+      next: (res) => this.movimientos = res,
       error: (err) => console.error('Error al cargar movimientos:', err)
     });
   }

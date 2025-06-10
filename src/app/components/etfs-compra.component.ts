@@ -20,6 +20,7 @@ export class EtfsCompraComponent {
   plazo: string = '';
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
+  movimientos: any[] = [];
 
   etfs = [
     'SPY', 'IVV', 'VOO', 'VTI', 'QQQ', 'VEA', 'AGG', 'VTV', 'BND', 'IEMG',
@@ -93,7 +94,10 @@ export class EtfsCompraComponent {
 
   private cargarMovimientos(): void {
     const userId = +(localStorage.getItem('id') || '0');
-    this.dashboardService.getTransactions(userId).subscribe();
+    this.dashboardService.getTransactions(userId).subscribe({
+      next: (res) => this.movimientos = res,
+      error: (err) => console.error('Error al cargar movimientos:', err)
+    });
   }
 
   cancelar() {

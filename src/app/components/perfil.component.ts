@@ -8,6 +8,7 @@ import { AlertService } from '../services/alert.service';
 import { UserService } from '../services/user.service';
 import { NavbarComponent } from './navbar.component';
 import { DepositoModalComponent } from '../components/deposito-modal/deposito-modal.component';
+import { InversionService } from '../services/inversion.service'; // ✅ Agregado para sincronizar movimientos
 
 @Component({
   selector: 'app-perfil',
@@ -25,7 +26,6 @@ import { DepositoModalComponent } from '../components/deposito-modal/deposito-mo
   styleUrls: ['./perfil.component.css']
 })
 export class PerfilComponent implements OnInit {
-  // Perfil
   nombre = '';
   apellidos = '';
   correo = '';
@@ -37,7 +37,6 @@ export class PerfilComponent implements OnInit {
   apellidosEditado = '';
   telefonoEditado = '';
 
-  // Finanzas
   saldo = 0;
   movimientos: Array<{ tipo: string; monto: number; fecha: string }> = [];
   portafolio: Array<{ instrumento: string; monto: number; fecha: string; tipo: string }> = [];
@@ -45,12 +44,10 @@ export class PerfilComponent implements OnInit {
   mostrarModalDeposito = false;
   ultimoDeposito: any;
 
-  // Configuración de depósito
   banco = 'Cargando...';
   cuenta = 'Cargando...';
   clabe = 'Cargando...';
 
-  // Comprobante
   archivoComprobante: File | null = null;
   nombreComprobante: string = '';
   montoComprobante: number = 0;
@@ -61,7 +58,8 @@ export class PerfilComponent implements OnInit {
   constructor(
     private userService: UserService,
     private alert: AlertService,
-    private http: HttpClient
+    private http: HttpClient,
+    private inversionService: InversionService // ✅ Inyección agregada
   ) {
     const token = localStorage.getItem('token') || '';
     this.headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
@@ -128,24 +126,23 @@ export class PerfilComponent implements OnInit {
   }
 
   cargarMovimientosYPortafolio() {
-  this.userService.obtenerMovimientos().subscribe({
-    next: data => {
-      this.movimientos = data.filter(m => m.tipo.toUpperCase() !== 'INVERSIÓN');
-      this.portafolio = data
-        .filter(m => m.tipo.toUpperCase() === 'INVERSIÓN')
-        .map(m => ({
-          instrumento: this.extraerInstrumento(m.descripcion),
-          monto: m.monto,
-          fecha: m.fecha,
-          tipo: m.tipo
-        }));
-      const depositos = this.movimientos.filter(m => m.tipo.toLowerCase() === 'depósito');
-      this.ultimoDeposito = depositos.length ? depositos[depositos.length - 1] : null;
-    },
-    error: () => this.alert.error('Error al cargar movimientos')
-  });
-}
-
+    this.inversionService.obtenerMovimientos().subscribe({ // ✅ Ahora desde inversión
+      next: data => {
+        this.movimientos = data.filter(m => m.tipo.toUpperCase() !== 'INVERSIÓN');
+        this.portafolio = data
+          .filter(m => m.tipo.toUpperCase() === 'INVERSIÓN')
+          .map(m => ({
+            instrumento: this.extraerInstrumento(m.descripcion),
+            monto: m.monto,
+            fecha: m.fecha,
+            tipo: m.tipo
+          }));
+        const depositos = this.movimientos.filter(m => m.tipo.toLowerCase() === 'depósito');
+        this.ultimoDeposito = depositos.length ? depositos[depositos.length - 1] : null;
+      },
+      error: () => this.alert.error('Error al cargar movimientos')
+    });
+  }
 
   extraerInstrumento(descripcion: string): string {
     if (!descripcion) return '---';

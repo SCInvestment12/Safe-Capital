@@ -126,7 +126,7 @@ export class CetesCompraComponent implements OnInit {
         this.confirmar = true;
       },
       error: () => {
-        this.alertService.success(`✅ Inversión en CETES registrada con éxito.`);
+        this.alertService.error(`❌ No se pudo registrar la inversión en CETES.`);
       }
     });
 
@@ -145,8 +145,7 @@ export class CetesCompraComponent implements OnInit {
   }
 
   private cargarMovimientos(): void {
-    const userId = +(localStorage.getItem('id') || '0');
-    this.dashboardService.getTransactions(userId).subscribe({
+    this.inversionService.obtenerMovimientos().subscribe({
       next: (res) => this.movimientos = res,
       error: () => console.error('Error al cargar movimientos')
     });

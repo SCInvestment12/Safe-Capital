@@ -6,6 +6,7 @@ import { DashboardService, RetirarSaldoRequest } from '../../services/dashboard.
 import { AlertService } from '../../services/alert.service';
 import { ApuestaService, CrearApuestaRequest } from '../../services/apuesta.service';
 import { SaldoService } from '../../services/saldo.service';
+import { InversionService, CrearInversionRequest } from '../../services/inversion.service';
 
 interface ParDivisa {
   nombre: string;
@@ -40,7 +41,8 @@ export class ForexCompraComponent {
     private dashboardService: DashboardService,
     private alertService: AlertService,
     private apuestaService: ApuestaService,
-    private saldoService: SaldoService
+    private saldoService: SaldoService,
+    private inversionService: InversionService
   ) {}
 
   seleccionarPar(par: ParDivisa): void {
@@ -81,26 +83,45 @@ export class ForexCompraComponent {
   }
 
   private procesarApuesta(): void {
-    if (!this.parSeleccionado) return;
+    if (!this.parSeleccionado || !this.monto || !this.duracion) return;
 
-    const apuesta: CrearApuestaRequest = {
-      simbolo: this.parSeleccionado.simbolo,
+    const idUsuario = +(localStorage.getItem('id') || '0');
+    const inversion: CrearInversionRequest = {
+      idUsuario,
       tipo: 'forex',
-      direccion: 'up',
-      monto: this.monto!,
-      plazo: parseInt(this.duracion)
+      simbolo: this.parSeleccionado.simbolo,
+      monto: this.monto,
+      plazoDias: parseInt(this.duracion)
     };
 
-    this.apuestaService.crearApuesta(apuesta).subscribe();
-    this.chartWrapper?.lanzarApuesta('up');
-    this.confirmacion = true;
-    this.saldoService.cargarSaldo();
-    this.cargarMovimientos();
+    this.inversionService.crearInversion(inversion).subscribe({
+      next: () => {
+        const apuesta: CrearApuestaRequest = {
+          simbolo: this.parSeleccionado!.simbolo,
+          tipo: 'forex',
+          direccion: 'up',
+          monto: this.monto!,
+          plazo: parseInt(this.duracion)
+        };
+
+        this.apuestaService.crearApuesta(apuesta).subscribe();
+        this.chartWrapper?.lanzarApuesta('up');
+        this.confirmacion = true;
+        this.saldoService.cargarSaldo();
+        this.cargarMovimientos();
+        this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
+      },
+      error: () => {
+        this.alertService.error('No se pudo registrar la inversión.');
+      }
+    });
   }
 
   private cargarMovimientos(): void {
-    const userId = +(localStorage.getItem('id') || '0');
-    this.dashboardService.getTransactions(userId).subscribe();
+    this.inversionService.obtenerMovimientos().subscribe({
+      next: (res) => console.log('Movimientos actualizados (Forex):', res),
+      error: (err) => console.error('Error al cargar movimientos (Forex):', err)
+    });
   }
 
   cancelar(): void {

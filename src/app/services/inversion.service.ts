@@ -1,3 +1,4 @@
+// ✅ inversion.service.ts - Corregido SOLO para resolver el punto 1 (sin borrar nada)
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -23,6 +24,15 @@ export class InversionService {
   }
 
   obtenerInversionesDeUsuario(id: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/usuario/${id}`);
+    const token = localStorage.getItem('token') || '';
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any[]>(`${this.baseUrl}/usuario/${id}`, { headers });
+  }
+
+  // ✅ Agregado solo para resolver el punto 1 (ver movimientos de inversión)
+  obtenerMovimientos(): Observable<any[]> {
+    const token = localStorage.getItem('token') || '';
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any[]>('https://safe-capital-backend.onrender.com/api/movimientos', { headers });
   }
 }

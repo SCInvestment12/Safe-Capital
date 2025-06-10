@@ -6,6 +6,7 @@ import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.ser
 import { AlertService } from '../services/alert.service';
 import { ApuestaService, CrearApuestaRequest } from '../services/apuesta.service';
 import { SaldoService } from '../services/saldo.service';
+import { InversionService, CrearInversionRequest } from '../services/inversion.service'; // ✅ agregado
 
 @Component({
   selector: 'app-acciones-compra',
@@ -30,7 +31,8 @@ export class AccionesCompraComponent {
     private dashboardService: DashboardService,
     private alertService: AlertService,
     private apuestaService: ApuestaService,
-    private saldoService: SaldoService
+    private saldoService: SaldoService,
+    private inversionService: InversionService // ✅ inyectado
   ) {}
 
   verGraficaDesdeLista(simbolo: string) {
@@ -67,16 +69,28 @@ export class AccionesCompraComponent {
   }
 
   private procesarApuesta(): void {
-    const apuesta: CrearApuestaRequest = {
-      simbolo: this.accionSeleccionada,
+    const idUsuario = +(localStorage.getItem('id') || '0');
+    const inversion: CrearInversionRequest = {
+      idUsuario,
       tipo: 'acciones',
-      direccion: 'up',
+      simbolo: this.accionSeleccionada,
       monto: this.monto,
-      plazo: parseInt(this.plazo)
+      plazoDias: parseInt(this.plazo)
     };
 
-    this.apuestaService.crearApuesta(apuesta).subscribe({
+    // ✅ Enviar inversión al backend
+    this.inversionService.crearInversion(inversion).subscribe({
       next: () => {
+        const apuesta: CrearApuestaRequest = {
+          simbolo: this.accionSeleccionada,
+          tipo: 'acciones',
+          direccion: 'up',
+          monto: this.monto,
+          plazo: parseInt(this.plazo)
+        };
+
+        this.apuestaService.crearApuesta(apuesta).subscribe();
+
         this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
         this.saldoService.cargarSaldo();
         this.cargarMovimientos();
@@ -84,7 +98,7 @@ export class AccionesCompraComponent {
         this.mostrarGrafica = false;
       },
       error: () => {
-        this.alertService.success(`✅ Inversión registrada con éxito.`);
+        this.alertService.error(`❌ No se pudo registrar la inversión en Acciones.`);
       }
     });
 
@@ -92,8 +106,7 @@ export class AccionesCompraComponent {
   }
 
   private cargarMovimientos(): void {
-    const userId = +(localStorage.getItem('id') || '0');
-    this.dashboardService.getTransactions(userId).subscribe();
+    this.inversionService.obtenerMovimientos().subscribe(); // ✅ se actualiza usando el servicio correcto
   }
 
   cancelar() {
