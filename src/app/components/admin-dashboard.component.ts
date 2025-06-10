@@ -12,6 +12,7 @@ import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http'
 })
 export class AdminDashboardComponent implements OnInit {
   comprobantes: any[] = [];
+  usuarios: any[] = [];
   loading = false;
 
   // CETES
@@ -41,9 +42,18 @@ export class AdminDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarComprobantes();
+    this.cargarUsuarios();
     this.obtenerTasasCetes();
     this.obtenerFechaSubasta();
     this.obtenerConfiguracionBancaria();
+  }
+
+  // ✅ Cargar lista de usuarios
+  cargarUsuarios() {
+    this.http.get<any[]>(`${this.base}/usuarios`, { headers: this.headers }).subscribe({
+      next: data => this.usuarios = data,
+      error: () => alert('Error al cargar usuarios')
+    });
   }
 
   cargarComprobantes() {
@@ -182,16 +192,9 @@ export class AdminDashboardComponent implements OnInit {
         alert(`Se acreditó $${this.montoParaSaldo} a ${this.userEmailParaSaldo}`);
         this.userEmailParaSaldo = '';
         this.montoParaSaldo = null;
+        this.cargarUsuarios(); // actualizar tabla si aplica
       },
-      error: (err) => {
-        if (err?.status === 200 || err?.ok === false) {
-          alert(`Saldo acreditado.`);
-          this.userEmailParaSaldo = '';
-          this.montoParaSaldo = null;
-        } else {
-          alert('Error al acreditar saldo manualmente');
-        }
-      }
+      error: () => alert('Error al acreditar saldo manualmente')
     });
   }
 }
