@@ -13,9 +13,9 @@ import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http'
 export class AdminDashboardComponent implements OnInit {
   comprobantes: any[] = [];
   usuarios: any[] = [];
+  paresForex: { parDivisas: string; precioBase: number; nuevoPrecio?: number }[] = [];
   loading = false;
 
-  // CETES
   tasasCetes: { [key: string]: number } = {
     '30': 0, '90': 0, '180': 0, '365': 0, '730': 0
   };
@@ -32,10 +32,6 @@ export class AdminDashboardComponent implements OnInit {
   userEmailParaSaldo = '';
   montoParaSaldo: number | null = null;
 
-  // FOREX
-  parForex: string = '';
-  precioForex: number | null = null;
-
   private headers: HttpHeaders;
   private base = 'https://safe-capital-backend.onrender.com/api';
 
@@ -50,6 +46,7 @@ export class AdminDashboardComponent implements OnInit {
     this.obtenerFechaSubasta();
     this.obtenerConfiguracionBancaria();
     this.cargarUsuarios();
+    this.cargarParesForex(); // 👈 Agregado
   }
 
   cargarUsuarios() {
@@ -202,26 +199,32 @@ export class AdminDashboardComponent implements OnInit {
     });
   }
 
-  actualizarPrecioBaseForex(): void {
-    const par = this.parForex.replace('/', '').toUpperCase(); // EUR/USD → EURUSD
-    const precio = this.precioForex;
+  cargarParesForex() {
+    this.http.get<{ parDivisas: string; precioBase: number }[]>(
+      `${this.base}/admin/forex/pares`,
+      { headers: this.headers }
+    ).subscribe({
+      next: data => this.paresForex = data,
+      error: () => alert('Error al cargar pares Forex')
+    });
+  }
 
-    if (!par || !precio || precio <= 0) {
-      alert('Por favor ingresa un par válido y un precio mayor a cero.');
+  actualizarPrecioPar(par: string, nuevoPrecio: number) {
+    if (!nuevoPrecio || nuevoPrecio <= 0) {
+      alert('Ingresa un precio válido');
       return;
     }
 
     this.http.put(
-      `${this.base}/admin/forex/precio?par=${par}&precio=${precio}`,
+      `${this.base}/admin/forex/precio?par=${par}&precio=${nuevoPrecio}`,
       null,
       { headers: this.headers, responseType: 'text' as 'json' }
     ).subscribe({
       next: () => {
-        alert(`✔ Precio base de ${par} actualizado a ${precio}`);
-        this.parForex = '';
-        this.precioForex = null;
+        alert(`✔ Precio base de ${par} actualizado`);
+        this.cargarParesForex(); // Refrescar
       },
-      error: () => alert('❌ Error al actualizar el precio base de Forex')
+      error: () => alert('Error al actualizar precio')
     });
   }
 }

@@ -68,4 +68,16 @@ export class DashboardService {
       this.authHeaders()
     );
   }
+  getParesForex(): Observable<{ parDivisas: string; precioBase: number }[]> {
+  return this.http.get<{ parDivisas: string; precioBase: number }[]>(
+    'https://safe-capital-backend.onrender.com/api/admin/forex/pares',
+    {
+      headers: new HttpHeaders().set(
+        'Authorization',
+        `Bearer ${localStorage.getItem('token') || ''}`
+      )
+    }
+  );
+}
+
 }

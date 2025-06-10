@@ -122,16 +122,40 @@
   </div>
   <button class="btn-actualizar mb-5" (click)="asignarSaldoManual()">Acreditar Saldo</button>
 
-  <!-- ACTUALIZAR PRECIO BASE DE FOREX -->
-  <h2 class="mt-4">Actualizar Precio Base (Forex)</h2>
-  <div class="tasa-cetes-config mb-3">
-    <label>Par de divisas (ej. EUR/USD):</label>
-    <input type="text" [(ngModel)]="parForex" placeholder="EUR/USD" class="form-control" />
-  </div>
-  <div class="tasa-cetes-config mb-3">
-    <label>Nuevo precio base:</label>
-    <input type="number" [(ngModel)]="precioForex" step="0.0001" placeholder="Ej. 1.0845" class="form-control" />
-  </div>
-  <button class="btn-actualizar" (click)="actualizarPrecioBaseForex()">Actualizar Precio</button>
+ <!-- ✅ GESTIÓN COMPLETA DE PARES FOREX -->
+<h2 class="mt-4">Editar Precios Base de Pares Forex</h2>
+<p *ngIf="paresForex.length === 0">No hay pares configurados.</p>
+<table class="tabla-admin" *ngIf="paresForex.length > 0">
+  <thead>
+    <tr>
+      <th>Par de Divisas</th>
+      <th>Precio Actual</th>
+      <th>Nuevo Precio</th>
+      <th>Actualizar</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let par of paresForex">
+      <td>{{ par.parDivisas }}</td>
+      <td>{{ par.precioBase.toFixed(4) }}</td>
+      <td>
+        <input
+          type="number"
+          [(ngModel)]="par.nuevoPrecio"
+          step="0.0001"
+          placeholder="Ej. 1.0850"
+          class="form-control"
+        />
+      </td>
+      <td>
+        <button
+          class="btn-actualizar"
+          (click)="actualizarPrecioPar(par.parDivisas, par.nuevoPrecio!)"
+        >
+          Guardar
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
-</div>
