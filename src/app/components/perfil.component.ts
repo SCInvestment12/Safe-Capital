@@ -53,7 +53,7 @@ export class PerfilComponent implements OnInit {
   // Comprobante
   archivoComprobante: File | null = null;
   nombreComprobante: string = '';
-  montoComprobante: number = 0; // ✅ Agregado
+  montoComprobante: number = 0;
 
   private headers: HttpHeaders;
   private base = 'https://safe-capital-backend.onrender.com/api';
@@ -74,7 +74,6 @@ export class PerfilComponent implements OnInit {
     this.cargarDatosBancarios();
   }
 
-  // Perfil
   cargarPerfil() {
     this.userService.obtenerPerfil().subscribe({
       next: data => {
@@ -121,7 +120,6 @@ export class PerfilComponent implements OnInit {
     this.modoEdicion = false;
   }
 
-  // Saldo y movimientos
   cargarSaldo() {
     this.userService.obtenerSaldo().subscribe({
       next: s => this.saldo = s,
@@ -130,23 +128,39 @@ export class PerfilComponent implements OnInit {
   }
 
   cargarMovimientosYPortafolio() {
-  this.userService.obtenerMovimientos().subscribe({
-    next: data => {
-      this.movimientos = data.filter(m => m.tipo !== 'Inversión');
-      this.portafolio = data.filter(m => m.tipo === 'Inversión');
-      const depositos = this.movimientos.filter(m => m.tipo.toLowerCase() === 'depósito');
-      this.ultimoDeposito = depositos.length ? depositos[depositos.length - 1] : null;
-    },
-    error: () => this.alert.error('Error al cargar movimientos')
-  });
-}
+    this.userService.obtenerMovimientos().subscribe({
+      next: data => {
+        this.movimientos = data.filter(m => m.tipo !== 'Inversión');
+        this.portafolio = data
+          .filter(m => m.tipo === 'Inversión')
+          .map(m => ({
+            instrumento: this.extraerInstrumento(m.descripcion),
+            monto: m.monto,
+            fecha: m.fecha,
+            tipo: m.tipo
+          }));
+        const depositos = this.movimientos.filter(m => m.tipo.toLowerCase() === 'depósito');
+        this.ultimoDeposito = depositos.length ? depositos[depositos.length - 1] : null;
+      },
+      error: () => this.alert.error('Error al cargar movimientos')
+    });
+  }
 
+  extraerInstrumento(descripcion: string): string {
+    if (!descripcion) return '---';
+    if (descripcion.includes(':')) {
+      return descripcion.split(':')[1].split(' a ')[0].trim();
+    }
+    if (descripcion.includes('en')) {
+      return descripcion.split('en')[1].trim();
+    }
+    return descripcion;
+  }
 
-
-  // Modal movimientos
   abrirModal() {
     this.mostrarModal = true;
   }
+
   cerrarModal() {
     this.mostrarModal = false;
   }
@@ -160,7 +174,6 @@ export class PerfilComponent implements OnInit {
     }
   }
 
-  // Datos bancarios
   cargarDatosBancarios() {
     this.http.get(`${this.base}/config/banco`, { headers: this.headers, responseType: 'text' })
       .subscribe(v => this.banco = v, () => this.banco = 'Error al cargar banco');
@@ -197,7 +210,7 @@ export class PerfilComponent implements OnInit {
     const form = new FormData();
     form.append('archivo', this.archivoComprobante);
     form.append('correoElectronico', this.correo);
-    form.append('monto', this.montoComprobante.toString()); // ✅ Nuevo campo
+    form.append('monto', this.montoComprobante.toString());
 
     const headers = new HttpHeaders().set('Authorization', `Bearer ${localStorage.getItem('token') || ''}`);
 
@@ -220,7 +233,6 @@ export class PerfilComponent implements OnInit {
     return `${this.base}/comprobantes/archivo/${localStorage.getItem('id')}/${this.nombreComprobante}`;
   }
 
-  // Navegación
   irAFondos() {
     this.mostrarModalDeposito = true;
   }
