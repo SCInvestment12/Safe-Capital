@@ -53,7 +53,7 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   cargarUsuarios() {
-    this.http.get<any[]>(`${this.base}/usuarios`, { headers: this.headers })
+this.http.get<any[]>(`${this.base}/usuarios/usuarios`, { headers: this.headers })
       .subscribe({
         next: data => this.usuarios = data,
         error: () => alert('Error al cargar usuarios')
