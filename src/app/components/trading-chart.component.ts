@@ -1,4 +1,3 @@
-// src/app/components/trading-chart.component.ts
 import {
   Component,
   Input,
@@ -47,6 +46,8 @@ export type ChartOptions = {
 export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
   @Input() tipo = 'acciones';
   @Input() simbolo = 'TSLA';
+  @Input() precioCompra: number | null = null;
+  @Input() precioVenta: number | null = null;
 
   public chartOptions!: ChartOptions;
   public precioActual: number | null = null;
@@ -64,6 +65,10 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
       this.subscription?.unsubscribe();
       this.initChart();
       this.startPolling();
+    }
+
+    if (changes['precioCompra'] || changes['precioVenta']) {
+      this.agregarLineasHorizontales(); // Actualiza si cambian los precios
     }
   }
 
@@ -135,6 +140,41 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
       annotations: {
         points: []
       }
+    };
+
+    this.agregarLineasHorizontales(); // ← Agrega líneas si ya están disponibles
+  }
+
+  private agregarLineasHorizontales(): void {
+    if (this.tipo !== 'forex') return;
+
+    const anotacionesY = [];
+
+    if (this.precioCompra != null) {
+      anotacionesY.push({
+        y: this.precioCompra,
+        borderColor: '#28a745',
+        label: {
+          text: `Compra $${this.precioCompra.toFixed(2)}`,
+          style: { color: '#fff', background: '#28a745' }
+        }
+      });
+    }
+
+    if (this.precioVenta != null) {
+      anotacionesY.push({
+        y: this.precioVenta,
+        borderColor: '#dc3545',
+        label: {
+          text: `Venta $${this.precioVenta.toFixed(2)}`,
+          style: { color: '#fff', background: '#dc3545' }
+        }
+      });
+    }
+
+    this.chartOptions.annotations = {
+      ...this.chartOptions.annotations,
+      yaxis: anotacionesY
     };
   }
 

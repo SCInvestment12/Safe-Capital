@@ -15,15 +15,14 @@
   <div *ngIf="parSeleccionado && !confirmacion" class="formulario">
     <h3>Invertir en {{ parSeleccionado.nombre }}</h3>
 
-    <!-- Mostrar precios actuales -->
-<div class="precios-forex">
-  <span>💱 Compra (Ask): <strong style="color:#00ffcc">${{ parSeleccionado.precioCompra?.toFixed(2) }}</strong></span> |
-  <span>💸 Venta (Bid): <strong style="color:#ffcc00">${{ parSeleccionado.precioVenta?.toFixed(2) }}</strong></span>
-</div>
-
     <!-- Gráfica -->
     <div class="grafica-par">
-      <app-chart-wrapper [tipo]="'forex'" [simbolo]="parSeleccionado.simbolo"></app-chart-wrapper>
+      <app-chart-wrapper
+        [tipo]="'forex'"
+        [simbolo]="parSeleccionado.simbolo"
+        [precioCompra]="parSeleccionado.precioCompra"
+        [precioVenta]="parSeleccionado.precioVenta">
+      </app-chart-wrapper>
     </div>
 
     <label>Monto (MXN):</label>

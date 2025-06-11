@@ -21,8 +21,10 @@ import { TradingChartComponent } from './trading-chart.component';
         <app-trading-chart
           #chart
           [tipo]="tipo"
-          [simbolo]="simboloFormateado">
-        </app-trading-chart>
+          [simbolo]="simboloFormateado"
+          [precioCompra]="precioCompra"
+          [precioVenta]="precioVenta"
+        ></app-trading-chart>
       </div>
     </ng-container>
   `,
@@ -31,6 +33,8 @@ import { TradingChartComponent } from './trading-chart.component';
 export class ChartWrapperComponent implements OnChanges {
   @Input() tipo = '';
   @Input() simbolo = '';
+  @Input() precioCompra: number | null = null;
+  @Input() precioVenta: number | null = null;
 
   simboloFormateado = '';
   isBrowser: boolean;

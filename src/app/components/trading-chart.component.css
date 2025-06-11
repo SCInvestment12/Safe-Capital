@@ -69,3 +69,18 @@ apx-chart {
     height: 300px !important;
   }
 }
+
+
+.precio-actual-container {
+  color: #ffffff;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.precios-forex {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 5px;
+  font-size: 14px;
+}

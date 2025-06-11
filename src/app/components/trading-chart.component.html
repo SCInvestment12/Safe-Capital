@@ -1,19 +1,23 @@
-<div id="chart" class="grafica-wrapper">
-  <apx-chart
-    [series]="chartOptions.series"
-    [chart]="chartOptions.chart"
-    [xaxis]="chartOptions.xaxis"
-    [yaxis]="chartOptions.yaxis"
-    [dataLabels]="chartOptions.dataLabels"
-    [stroke]="chartOptions.stroke"
-    [title]="chartOptions.title"
-    [tooltip]="chartOptions.tooltip"
-    [markers]="chartOptions.markers"
-    [annotations]="chartOptions.annotations"
-  ></apx-chart>
+<!-- trading-chart.component.html -->
+<div class="precio-actual-container" *ngIf="precioActual !== null">
+  <h4>💹 Precio actual: <strong>${{ precioActual | number:'1.2-2' }}</strong></h4>
 
-  <div class="precio-actual mt-2 text-light">
-    Precio actual:
-    <span class="valor">{{ precioActual | currency:'USD':'symbol' }}</span>
+  <div *ngIf="precioCompra !== null && precioVenta !== null" class="precios-forex">
+    <span>💱 Compra: <strong>${{ precioCompra | number:'1.2-2' }}</strong></span>
+    <span>💸 Venta: <strong>${{ precioVenta | number:'1.2-2' }}</strong></span>
   </div>
 </div>
+
+<apx-chart
+  [series]="chartOptions.series"
+  [chart]="chartOptions.chart"
+  [xaxis]="chartOptions.xaxis"
+  [yaxis]="chartOptions.yaxis"
+  [dataLabels]="chartOptions.dataLabels"
+  [stroke]="chartOptions.stroke"
+  [title]="chartOptions.title"
+  [tooltip]="chartOptions.tooltip"
+  [markers]="chartOptions.markers"
+  [annotations]="chartOptions.annotations"
+>
+</apx-chart>
