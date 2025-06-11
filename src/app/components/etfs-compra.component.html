@@ -28,9 +28,9 @@
 
     <label for="plazo">Plazo:</label>
     <select [(ngModel)]="plazo" id="plazo">
-      <option value="30">30 días</option>
-      <option value="60">60 días</option>
-      <option value="90">90 días</option>
+      <option [value]="30">30 días</option>
+      <option [value]="60">60 días</option>
+      <option [value]="90">90 días</option>
     </select>
 
     <button (click)="confirmarInversion()" [disabled]="!monto || !plazo">Continuar</button>
@@ -48,5 +48,25 @@
       <li><strong>Forma de pago:</strong> Fondos en cuenta</li>
     </ul>
     <button class="btn-cancelar" (click)="cancelar()">Inicio</button>
+
+    <div *ngIf="movimientos.length > 0" class="tabla-movimientos">
+      <h4>📋 Historial de movimientos</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Monto</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mov of movimientos">
+            <td>{{ mov.type }}</td>
+            <td>${{ mov.amount }}</td>
+            <td>{{ mov.timestamp | date:'dd/MM/yyyy HH:mm' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

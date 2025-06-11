@@ -1,20 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ChartWrapperComponent } from '../chart-wrapper.component';
 import { DashboardService, RetirarSaldoRequest } from '../../services/dashboard.service';
 import { AlertService } from '../../services/alert.service';
 import { ApuestaService, CrearApuestaRequest } from '../../services/apuesta.service';
 import { SaldoService } from '../../services/saldo.service';
 import { InversionService, CrearInversionRequest } from '../../services/inversion.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 interface ParDivisa {
   simbolo: string;
   nombre: string;
 }
-
-// ... importaciones igual que antes
 
 @Component({
   selector: 'app-forex-compra',
@@ -32,6 +30,7 @@ export class ForexCompraComponent implements OnInit {
   duracion: string = '';
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
+  movimientos: any[] = [];
 
   private base = 'https://safe-capital-backend.onrender.com/api';
 
@@ -147,18 +146,22 @@ export class ForexCompraComponent implements OnInit {
         };
 
         this.apuestaService.crearApuesta(apuesta).subscribe();
+
         this.chartWrapper?.lanzarApuesta('up');
         this.confirmacion = true;
         this.saldoService.cargarSaldo();
         this.cargarMovimientos();
         this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
       },
-      error: () => this.alertService.error('No se pudo registrar la inversión.')
+      error: () => this.alertService.error('❌ No se pudo registrar la inversión en Forex.')
     });
   }
 
   private cargarMovimientos(): void {
-    this.inversionService.obtenerMovimientos().subscribe();
+    this.inversionService.obtenerMovimientos().subscribe({
+      next: (res) => (this.movimientos = res),
+      error: (err) => console.error('Error al cargar movimientos:', err)
+    });
   }
 
   cancelar(): void {

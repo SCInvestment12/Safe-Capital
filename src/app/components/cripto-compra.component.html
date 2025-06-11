@@ -1,8 +1,9 @@
 <div class="cripto-container glass-card">
   <h3>Selecciona una Criptomoneda</h3>
+
   <label for="cripto">Criptomoneda:</label>
   <select id="cripto" [(ngModel)]="criptoSeleccionada">
-    <option value="" disabled selected>Selecciona una criptomoneda</option>
+    <option [ngValue]="null" disabled>Selecciona una criptomoneda</option>
     <option *ngFor="let cripto of criptos" [value]="cripto.simbolo">
       {{ cripto.nombre }} ({{ cripto.simbolo }})
     </option>
@@ -13,12 +14,11 @@
   </div>
 
   <!-- Mostrar la gráfica -->
-<div *ngIf="mostrarGrafica" class="grafica-cripto">
-  <div class="grafica-box">
-    <app-chart-wrapper [tipo]="'cripto'" [simbolo]="criptoSeleccionada"></app-chart-wrapper>
+  <div *ngIf="mostrarGrafica" class="grafica-cripto">
+    <div class="grafica-box">
+      <app-chart-wrapper [tipo]="'cripto'" [simbolo]="criptoSeleccionada"></app-chart-wrapper>
+    </div>
   </div>
-</div>
-
 
   <div class="inversion-form" *ngIf="criptoSeleccionada && !confirmacion">
     <p>Criptomoneda: <strong>{{ criptoSeleccionada }}</strong></p>
@@ -28,11 +28,11 @@
 
     <label>Duración (días):</label>
     <select [(ngModel)]="duracion">
-      <option value="7">7 días</option>
-      <option value="15">15 días</option>
-      <option value="30">30 días</option>
-      <option value="60">60 días</option>
-      <option value="90">90 días</option>
+      <option [value]="7">7 días</option>
+      <option [value]="15">15 días</option>
+      <option [value]="30">30 días</option>
+      <option [value]="60">60 días</option>
+      <option [value]="90">90 días</option>
     </select>
 
     <button (click)="confirmarInversion()">Confirmar Inversión</button>
@@ -48,5 +48,26 @@
       <li><strong>Forma de pago:</strong> Fondos en cuenta</li>
     </ul>
     <button class="btn-cancelar" (click)="reiniciar()">Inicio</button>
+
+    <!-- Historial de movimientos -->
+    <div *ngIf="movimientos.length > 0" class="tabla-movimientos">
+      <h4>📋 Historial de movimientos</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Monto</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let mov of movimientos">
+            <td>{{ mov.type }}</td>
+            <td>${{ mov.amount }}</td>
+            <td>{{ mov.timestamp | date:'dd/MM/yyyy HH:mm' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>

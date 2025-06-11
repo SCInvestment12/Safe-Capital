@@ -6,6 +6,7 @@ import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.ser
 import { AlertService } from '../services/alert.service';
 import { ApuestaService, CrearApuestaRequest } from '../services/apuesta.service';
 import { SaldoService } from '../services/saldo.service';
+import { InversionService, CrearInversionRequest } from '../services/inversion.service'; // ✅ Agregado
 
 @Component({
   selector: 'app-cripto-compra',
@@ -49,7 +50,8 @@ export class CriptoCompraComponent {
     private dashboardService: DashboardService,
     private alertService: AlertService,
     private apuestaService: ApuestaService,
-    private saldoService: SaldoService
+    private saldoService: SaldoService,
+    private inversionService: InversionService // ✅ Inyectado
   ) {}
 
   mostrarBotonGrafica(): boolean {
@@ -77,10 +79,10 @@ export class CriptoCompraComponent {
 
     const req: RetirarSaldoRequest = { monto: this.monto };
     this.dashboardService.withdraw(req).subscribe({
-      next: () => this.procesarApuesta(),
+      next: () => this.procesarInversion(),
       error: (err) => {
         if (err?.status === 200 || err?.ok === false) {
-          this.procesarApuesta();
+          this.procesarInversion();
         } else {
           this.alertService.error('No se pudo descontar el saldo.');
         }
@@ -88,7 +90,23 @@ export class CriptoCompraComponent {
     });
   }
 
-  private procesarApuesta(): void {
+  private procesarInversion(): void {
+    const idUsuario = +(localStorage.getItem('id') || '0');
+    const inversion: CrearInversionRequest = {
+      idUsuario,
+      tipo: 'cripto',
+      simbolo: this.criptoSeleccionada,
+      monto: this.monto,
+      plazoDias: parseInt(this.duracion)
+    };
+
+    // ✅ Guardar la inversión
+    this.inversionService.crearInversion(inversion).subscribe({
+      next: () => console.log('Inversión cripto registrada'),
+      error: () => console.error('❌ No se pudo guardar la inversión cripto')
+    });
+
+    // ✅ Registrar la apuesta
     const apuesta: CrearApuestaRequest = {
       simbolo: this.criptoSeleccionada,
       tipo: 'cripto',
@@ -114,8 +132,7 @@ export class CriptoCompraComponent {
   }
 
   private cargarMovimientos(): void {
-    const userId = +(localStorage.getItem('id') || '0');
-    this.dashboardService.getTransactions(userId).subscribe({
+    this.inversionService.obtenerMovimientos().subscribe({
       next: (res) => this.movimientos = res,
       error: (err) => console.error('Error al cargar movimientos:', err)
     });

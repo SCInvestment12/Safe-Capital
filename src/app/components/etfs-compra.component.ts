@@ -6,6 +6,7 @@ import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.ser
 import { AlertService } from '../services/alert.service';
 import { ApuestaService, CrearApuestaRequest } from '../services/apuesta.service';
 import { SaldoService } from '../services/saldo.service';
+import { InversionService, CrearInversionRequest } from '../services/inversion.service';
 
 @Component({
   selector: 'app-etfs-compra',
@@ -31,7 +32,8 @@ export class EtfsCompraComponent {
     private dashboardService: DashboardService,
     private alertService: AlertService,
     private apuestaService: ApuestaService,
-    private saldoService: SaldoService
+    private saldoService: SaldoService,
+    private inversionService: InversionService
   ) {}
 
   verGrafica(etf: string) {
@@ -56,10 +58,10 @@ export class EtfsCompraComponent {
 
     const req: RetirarSaldoRequest = { monto: this.monto };
     this.dashboardService.withdraw(req).subscribe({
-      next: () => this.procesarApuesta(),
+      next: () => this.procesarInversion(),
       error: (err) => {
         if (err?.status === 200 || err?.ok === false) {
-          this.procesarApuesta();
+          this.procesarInversion();
         } else {
           this.alertService.error('No se pudo descontar el saldo.');
         }
@@ -67,17 +69,28 @@ export class EtfsCompraComponent {
     });
   }
 
-  private procesarApuesta(): void {
-    const apuesta: CrearApuestaRequest = {
-      simbolo: this.etfSeleccionado,
+  private procesarInversion(): void {
+    const idUsuario = +(localStorage.getItem('id') || '0');
+    const inversion: CrearInversionRequest = {
+      idUsuario,
       tipo: 'etfs',
-      direccion: 'up',
+      simbolo: this.etfSeleccionado,
       monto: this.monto,
-      plazo: parseInt(this.plazo)
+      plazoDias: parseInt(this.plazo)
     };
 
-    this.apuestaService.crearApuesta(apuesta).subscribe({
+    this.inversionService.crearInversion(inversion).subscribe({
       next: () => {
+        const apuesta: CrearApuestaRequest = {
+          simbolo: this.etfSeleccionado,
+          tipo: 'etfs',
+          direccion: 'up',
+          monto: this.monto,
+          plazo: parseInt(this.plazo)
+        };
+
+        this.apuestaService.crearApuesta(apuesta).subscribe();
+
         this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
         this.saldoService.cargarSaldo();
         this.cargarMovimientos();
@@ -85,7 +98,7 @@ export class EtfsCompraComponent {
         this.mostrarGrafica = false;
       },
       error: () => {
-        this.alertService.success(`✅ Inversión registrada con éxito.`);
+        this.alertService.error(`❌ No se pudo registrar la inversión en ETFs.`);
       }
     });
 
@@ -93,9 +106,8 @@ export class EtfsCompraComponent {
   }
 
   private cargarMovimientos(): void {
-    const userId = +(localStorage.getItem('id') || '0');
-    this.dashboardService.getTransactions(userId).subscribe({
-      next: (res) => this.movimientos = res,
+    this.inversionService.obtenerMovimientos().subscribe({
+      next: (res) => (this.movimientos = res),
       error: (err) => console.error('Error al cargar movimientos:', err)
     });
   }

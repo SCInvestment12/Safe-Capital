@@ -61,9 +61,9 @@
         </thead>
         <tbody>
           <tr *ngFor="let mov of movimientos">
-            <td>{{ mov.type }}</td>
-            <td>${{ mov.amount }}</td>
-            <td>{{ mov.timestamp | date:'dd/MM/yyyy HH:mm' }}</td>
+            <td>{{ mov.tipo }}</td>
+            <td>${{ mov.monto }}</td>
+            <td>{{ mov.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
           </tr>
         </tbody>
       </table>

@@ -6,7 +6,7 @@ import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.ser
 import { AlertService } from '../services/alert.service';
 import { ApuestaService, CrearApuestaRequest } from '../services/apuesta.service';
 import { SaldoService } from '../services/saldo.service';
-import { InversionService, CrearInversionRequest } from '../services/inversion.service'; // ✅ agregado
+import { InversionService, CrearInversionRequest } from '../services/inversion.service';
 
 @Component({
   selector: 'app-acciones-compra',
@@ -21,6 +21,7 @@ export class AccionesCompraComponent {
   plazo: string = '';
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
+  movimientos: any[] = []; // ✅ NUEVO
 
   acciones = [
     'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'BRK.B', 'JNJ', 'V',
@@ -32,7 +33,7 @@ export class AccionesCompraComponent {
     private alertService: AlertService,
     private apuestaService: ApuestaService,
     private saldoService: SaldoService,
-    private inversionService: InversionService // ✅ inyectado
+    private inversionService: InversionService
   ) {}
 
   verGraficaDesdeLista(simbolo: string) {
@@ -78,7 +79,6 @@ export class AccionesCompraComponent {
       plazoDias: parseInt(this.plazo)
     };
 
-    // ✅ Enviar inversión al backend
     this.inversionService.crearInversion(inversion).subscribe({
       next: () => {
         const apuesta: CrearApuestaRequest = {
@@ -93,7 +93,7 @@ export class AccionesCompraComponent {
 
         this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
         this.saldoService.cargarSaldo();
-        this.cargarMovimientos();
+        this.cargarMovimientos(); // ✅ ACTUALIZA movimientos
         this.confirmacion = true;
         this.mostrarGrafica = false;
       },
@@ -106,7 +106,15 @@ export class AccionesCompraComponent {
   }
 
   private cargarMovimientos(): void {
-    this.inversionService.obtenerMovimientos().subscribe(); // ✅ se actualiza usando el servicio correcto
+    this.inversionService.obtenerMovimientos().subscribe({
+      next: (data) => {
+        this.movimientos = data;
+        console.log('Movimientos:', this.movimientos);
+      },
+      error: () => {
+        this.alertService.error('No se pudieron cargar los movimientos.');
+      }
+    });
   }
 
   cancelar() {

@@ -6,9 +6,7 @@
     <div *ngFor="let accion of acciones" class="card" (click)="verGraficaDesdeLista(accion)">
       <h3>{{ accion }}</h3>
       <p>Acción destacada</p>
-      <button (click)="verGraficaDesdeLista(accion); $event.stopPropagation()">
-        📈 Ver Gráfica
-      </button>
+      <button (click)="verGraficaDesdeLista(accion); $event.stopPropagation()">📈 Ver Gráfica</button>
     </div>
   </div>
 
@@ -50,5 +48,15 @@
       <li><strong>Forma de pago:</strong> Fondos en cuenta</li>
     </ul>
     <button class="btn-cancelar" (click)="cancelar()">Inicio</button>
+
+    <!-- NUEVO: Mostrar movimientos -->
+    <div *ngIf="movimientos.length > 0" class="movimientos">
+      <h3>📄 Movimientos recientes</h3>
+      <ul>
+        <li *ngFor="let mov of movimientos">
+          {{ mov.tipo }} | {{ mov.descripcion }} | {{ mov.moneda }} ${{ mov.monto }} | {{ mov.fecha | date:'short' }}
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
