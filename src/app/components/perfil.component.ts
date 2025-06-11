@@ -39,6 +39,9 @@ export class PerfilComponent implements OnInit {
 
   saldo = 0;
   movimientos: Array<{ tipo: string; monto: number; fecha: string }> = [];
+  depositos: Array<{ tipo: string; monto: number; fecha: string }> = [];
+inversiones: Array<{ tipo: string; monto: number; fecha: string; descripcion?: string }> = [];
+
   portafolio: Array<{ instrumento: string; monto: number; fecha: string; tipo: string }> = [];
   mostrarModal = false;
   mostrarModalDeposito = false;
@@ -128,7 +131,9 @@ export class PerfilComponent implements OnInit {
   cargarMovimientosYPortafolio() {
     this.inversionService.obtenerMovimientos().subscribe({ // ✅ Ahora desde inversión
       next: data => {
-        this.movimientos = data.filter(m => m.tipo.toUpperCase() !== 'INVERSIÓN');
+this.movimientos = data;
+this.depositos = data.filter(m => m.tipo.toLowerCase() === 'depósito');
+this.inversiones = data.filter(m => m.tipo.toLowerCase() === 'inversión');
         this.portafolio = data
           .filter(m => m.tipo.toUpperCase() === 'INVERSIÓN')
           .map(m => ({
