@@ -1,15 +1,25 @@
 <div class="forex-container glass-card">
   <h2 class="titulo">Pares de Divisas (Forex)</h2>
 
+  <!-- 🔍 Filtro -->
+  <div class="busqueda-container" *ngIf="!parSeleccionado">
+    <input
+      type="text"
+      [(ngModel)]="filtroTexto"
+      placeholder="Buscar par de divisas..."
+      class="form-control"
+    />
+  </div>
+
   <!-- Lista de pares -->
   <div class="lista-pares" *ngIf="!parSeleccionado">
-    <div *ngFor="let par of paresDivisas" class="card" (click)="seleccionarPar(par)">
+    <div *ngFor="let par of paresFiltrados" class="card" (click)="seleccionarPar(par)">
       <h3>{{ par.nombre }}</h3>
       <button (click)="verGraficaDesdeLista(par); $event.stopPropagation()">📈 Ver Gráfica</button>
     </div>
   </div>
 
-  <!-- Gráfica + Formulario (unificados como en Cripto) -->
+  <!-- Gráfica + Formulario -->
   <div *ngIf="parSeleccionado && !confirmacion" class="formulario">
     <h3>Invertir en {{ parSeleccionado.nombre }}</h3>
 

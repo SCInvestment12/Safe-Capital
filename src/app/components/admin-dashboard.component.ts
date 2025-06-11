@@ -46,7 +46,7 @@ export class AdminDashboardComponent implements OnInit {
     this.obtenerFechaSubasta();
     this.obtenerConfiguracionBancaria();
     this.cargarUsuarios();
-    this.cargarParesForex(); // 👈 Agregado
+    this.cargarParesForex();
   }
 
   cargarUsuarios() {
@@ -204,25 +204,32 @@ export class AdminDashboardComponent implements OnInit {
       `${this.base}/admin/forex/pares`,
       { headers: this.headers }
     ).subscribe({
-      next: data => this.paresForex = data,
+      next: data => {
+        this.paresForex = data.map(par => ({
+          ...par,
+          nuevoPrecio: par.precioBase
+        }));
+      },
       error: () => alert('Error al cargar pares Forex')
     });
   }
 
   actualizarPrecioPar(par: string, nuevoPrecio: number) {
-    if (!nuevoPrecio || nuevoPrecio <= 0) {
+    if (!nuevoPrecio || nuevoPrecio <= 0 || isNaN(nuevoPrecio)) {
       alert('Ingresa un precio válido');
       return;
     }
 
+    const precioRedondeado = Math.round(nuevoPrecio * 100000) / 100000;
+
     this.http.put(
-      `${this.base}/admin/forex/precio?par=${par}&precio=${nuevoPrecio}`,
+      `${this.base}/admin/forex/precio?par=${encodeURIComponent(par)}&precio=${precioRedondeado}`,
       null,
       { headers: this.headers, responseType: 'text' as 'json' }
     ).subscribe({
       next: () => {
         alert(`✔ Precio base de ${par} actualizado`);
-        this.cargarParesForex(); // Refrescar
+        this.cargarParesForex();
       },
       error: () => alert('Error al actualizar precio')
     });

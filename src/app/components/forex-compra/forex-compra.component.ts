@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from '../chart-wrapper.component';
@@ -7,43 +7,91 @@ import { AlertService } from '../../services/alert.service';
 import { ApuestaService, CrearApuestaRequest } from '../../services/apuesta.service';
 import { SaldoService } from '../../services/saldo.service';
 import { InversionService, CrearInversionRequest } from '../../services/inversion.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 interface ParDivisa {
-  nombre: string;
   simbolo: string;
+  nombre: string;
 }
 
 @Component({
   selector: 'app-forex-compra',
   standalone: true,
-  imports: [CommonModule, FormsModule, ChartWrapperComponent],
+  imports: [CommonModule, FormsModule, ChartWrapperComponent, HttpClientModule],
   templateUrl: './forex-compra.component.html',
   styleUrls: ['./forex-compra.component.css']
 })
-export class ForexCompraComponent {
+export class ForexCompraComponent implements OnInit {
   @ViewChild(ChartWrapperComponent) chartWrapper!: ChartWrapperComponent;
 
-  paresDivisas: ParDivisa[] = [
-    { nombre: 'Euro / Dólar Estadounidense', simbolo: 'EURUSD' },
-    { nombre: 'Libra Esterlina / Dólar Estadounidense', simbolo: 'GBPUSD' },
-    { nombre: 'Dólar Estadounidense / Yen Japonés', simbolo: 'USDJPY' },
-    { nombre: 'Dólar Canadiense / Franco Suizo', simbolo: 'CADCHF' },
-    { nombre: 'Dólar Australiano / Dólar Estadounidense', simbolo: 'AUDUSD' }
-  ];
-
+  paresDivisas: ParDivisa[] = [];
+  filtroTexto: string = '';
   parSeleccionado: ParDivisa | null = null;
   monto: number | null = null;
   duracion: string = '';
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
 
+  private base = 'https://safe-capital-backend.onrender.com/api';
+
+  private nombresLegibles: { [simbolo: string]: string } = {
+    EURUSD: 'Euro / Dólar Estadounidense',
+    GBPUSD: 'Libra Esterlina / Dólar Estadounidense',
+    USDJPY: 'Dólar Estadounidense / Yen Japonés',
+    USDCHF: 'Dólar Estadounidense / Franco Suizo',
+    AUDUSD: 'Dólar Australiano / Dólar Estadounidense',
+    USDCAD: 'Dólar Estadounidense / Dólar Canadiense',
+    NZDUSD: 'Dólar Neozelandés / Dólar Estadounidense',
+    EURJPY: 'Euro / Yen Japonés',
+    EURGBP: 'Euro / Libra Esterlina',
+    CHFJPY: 'Franco Suizo / Yen Japonés',
+    GBPJPY: 'Libra Esterlina / Yen Japonés',
+    AUDJPY: 'Dólar Australiano / Yen Japonés',
+    CADJPY: 'Dólar Canadiense / Yen Japonés',
+    NZDJPY: 'Dólar Neozelandés / Yen Japonés',
+    EURAUD: 'Euro / Dólar Australiano',
+    EURCAD: 'Euro / Dólar Canadiense',
+    AUDNZD: 'Dólar Australiano / Dólar Neozelandés',
+    GBPAUD: 'Libra Esterlina / Dólar Australiano',
+    GBPCHF: 'Libra Esterlina / Franco Suizo',
+    USDNOK: 'Dólar Estadounidense / Corona Noruega'
+  };
+
   constructor(
+    private http: HttpClient,
     private dashboardService: DashboardService,
     private alertService: AlertService,
     private apuestaService: ApuestaService,
     private saldoService: SaldoService,
     private inversionService: InversionService
   ) {}
+
+  ngOnInit(): void {
+    this.cargarPares();
+  }
+
+  get paresFiltrados(): ParDivisa[] {
+    const texto = this.filtroTexto.toLowerCase();
+    return this.paresDivisas.filter(par =>
+      par.nombre.toLowerCase().includes(texto) || par.simbolo.toLowerCase().includes(texto)
+    );
+  }
+
+  cargarPares(): void {
+    const token = localStorage.getItem('token') || '';
+    this.http.get<{ parDivisas: string; precioBase: number }[]>(
+      `${this.base}/admin/forex/pares`,
+      { headers: { Authorization: `Bearer ${token}` } }
+    ).subscribe({
+      next: data => {
+        this.paresDivisas = data.map(d => ({
+          simbolo: d.parDivisas,
+          nombre: this.nombresLegibles[d.parDivisas] || d.parDivisas
+        }));
+      },
+      error: () => this.alertService.error('Error al cargar pares de Forex')
+    });
+  }
 
   seleccionarPar(par: ParDivisa): void {
     this.resetear();
@@ -111,9 +159,7 @@ export class ForexCompraComponent {
         this.cargarMovimientos();
         this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
       },
-      error: () => {
-        this.alertService.error('No se pudo registrar la inversión.');
-      }
+      error: () => this.alertService.error('No se pudo registrar la inversión.')
     });
   }
 
@@ -134,5 +180,6 @@ export class ForexCompraComponent {
     this.duracion = '';
     this.confirmacion = false;
     this.mostrarGrafica = false;
+    this.filtroTexto = '';
   }
 }
