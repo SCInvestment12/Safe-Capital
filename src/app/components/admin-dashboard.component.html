@@ -118,44 +118,44 @@
     <input type="number" [(ngModel)]="montoParaSaldo" class="form-control" min="1" placeholder="Ej. 1500" />
   </div>
   <button class="btn-actualizar mb-5" (click)="asignarSaldoManual()">Acreditar Saldo</button>
-
-  <!-- AGREGAR NUEVO PAR -->
-  <h3 class="mt-4">Agregar Nuevo Par de Divisas</h3>
-  <div class="tasa-cetes-config" style="display: flex; gap: 12px; flex-wrap: wrap;">
-    <div>
-      <label>Par (ej. GBPUSD):</label>
-      <input type="text" [(ngModel)]="nuevoPar" class="form-control" placeholder="Símbolo de par" />
-    </div>
-    <div>
-      <label>Precio Base:</label>
-      <input type="number" [(ngModel)]="nuevoPrecio" class="form-control" step="0.0001" placeholder="Ej. 1.2650" />
-    </div>
-    <div style="align-self: end;">
-      <button class="btn-actualizar" (click)="crearNuevoPar()">Agregar Par</button>
-    </div>
+<!-- 🔒 Sección para agregar nuevo par Forex -->
+  <h2>Agregar nuevo par de divisas</h2>
+  <div class="grid grid-cols-4 gap-2 mb-4">
+    <input type="text" class="form-control" placeholder="Par (ej. EURUSD)" [(ngModel)]="nuevoPar" />
+    <input type="number" class="form-control" placeholder="Precio compra" [(ngModel)]="nuevoCompra" step="0.00001" />
+    <input type="number" class="form-control" placeholder="Precio venta" [(ngModel)]="nuevoVenta" step="0.00001" />
+    <button class="btn btn-success" (click)="crearNuevoPar()">Agregar Par</button>
   </div>
 
-  <!-- GESTIÓN DE PARES -->
-  <h2 class="mt-4">Editar Precios Base de Pares Forex</h2>
-  <p *ngIf="paresForex.length === 0">No hay pares configurados.</p>
-  <table class="tabla-admin" *ngIf="paresForex.length > 0">
+  <!-- 📈 Tabla de edición de pares Forex existentes -->
+  <h3 class="mt-4">Editar precios de pares Forex</h3>
+  <table class="table table-bordered table-striped">
     <thead>
       <tr>
-        <th>Par de Divisas</th>
-        <th>Precio Actual</th>
-        <th>Nuevo Precio</th>
+        <th>Par</th>
+        <th>Precio Compra</th>
+        <th>Nuevo Compra</th>
+        <th>Precio Venta</th>
+        <th>Nuevo Venta</th>
         <th>Actualizar</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let par of paresForex">
-        <td>{{ par.parDivisas }}</td>
-        <td>{{ par.precioBase.toFixed(4) }}</td>
+        <td><strong>{{ par.parDivisas }}</strong></td>
+        <td>{{ par.precioCompra }}</td>
         <td>
-          <input type="number" [(ngModel)]="par.nuevoPrecio" step="0.0001" placeholder="Ej. 1.0850" class="form-control" />
+          <input type="number" [(ngModel)]="par.nuevoCompra" class="form-control" step="0.00001" />
+        </td>
+        <td>{{ par.precioVenta }}</td>
+        <td>
+          <input type="number" [(ngModel)]="par.nuevoVenta" class="form-control" step="0.00001" />
         </td>
         <td>
-          <button class="btn-actualizar" (click)="actualizarPrecioPar(par.parDivisas, par.nuevoPrecio!)">Guardar</button>
+          <button class="btn btn-primary"
+                  (click)="actualizarPrecioPar(par.parDivisas, par.nuevoCompra!, par.nuevoVenta!)">
+            Guardar
+          </button>
         </td>
       </tr>
     </tbody>
@@ -163,27 +163,26 @@
 
   <!-- ✅ TABLA DE MOVIMIENTOS GLOBALES -->
   <h2 class="mt-4">Movimientos de Usuarios</h2>
-<table class="tabla-admin" *ngIf="movimientos.length > 0">
-  <thead>
-    <tr>
-      <th>Tipo</th>
-      <th>Monto</th>
-      <th>Moneda</th>
-      <th>Fecha</th>
-      <th>Descripción</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let m of movimientos">
-      <td>{{ m.tipo }}</td>
-      <td>${{ m.monto.toFixed(2) }}</td>
-      <td>{{ m.moneda }}</td>
-      <td>{{ m.fecha | date:'short' }}</td>
-      <td>{{ m.descripcion }}</td>
-    </tr>
-  </tbody>
-</table>
-<p *ngIf="movimientos.length === 0" style="color: #ccc;">No hay movimientos registrados.</p>
-
+  <table class="tabla-admin" *ngIf="movimientos.length > 0">
+    <thead>
+      <tr>
+        <th>Tipo</th>
+        <th>Monto</th>
+        <th>Moneda</th>
+        <th>Fecha</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let m of movimientos">
+        <td>{{ m.tipo }}</td>
+        <td>${{ m.monto.toFixed(2) }}</td>
+        <td>{{ m.moneda }}</td>
+        <td>{{ m.fecha | date:'short' }}</td>
+        <td>{{ m.descripcion }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <p *ngIf="movimientos.length === 0" style="color: #ccc;">No hay movimientos registrados.</p>
 
 </div>

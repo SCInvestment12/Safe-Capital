@@ -12,6 +12,8 @@ import { InversionService, CrearInversionRequest } from '../../services/inversio
 interface ParDivisa {
   simbolo: string;
   nombre: string;
+  precioCompra: number;
+  precioVenta: number;
 }
 
 @Component({
@@ -72,14 +74,16 @@ export class ForexCompraComponent implements OnInit {
 
   cargarPares(): void {
     const token = localStorage.getItem('token') || '';
-    this.http.get<{ parDivisas: string; precioBase: number }[]>(
+    this.http.get<{ parDivisas: string; precioCompra: number; precioVenta: number }[]>(
       `${this.base}/admin/forex/pares`,
       { headers: { Authorization: `Bearer ${token}` } }
     ).subscribe({
       next: data => {
         this.paresDivisas = data.map(d => ({
           simbolo: d.parDivisas,
-          nombre: this.nombresLegibles[d.parDivisas] || d.parDivisas
+          nombre: this.nombresLegibles[d.parDivisas] || d.parDivisas,
+          precioCompra: d.precioCompra,
+          precioVenta: d.precioVenta
         }));
       },
       error: () => this.alertService.error('Error al cargar pares de Forex')

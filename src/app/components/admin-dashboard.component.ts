@@ -14,12 +14,16 @@ export class AdminDashboardComponent implements OnInit {
   comprobantes: any[] = [];
   usuarios: any[] = [];
   movimientos: any[] = [];
-  paresForex: { parDivisas: string; precioBase: number; nuevoPrecio?: number }[] = [];
+  paresForex: {
+    parDivisas: string;
+    precioCompra: number;
+    precioVenta: number;
+    nuevoCompra?: number;
+    nuevoVenta?: number;
+  }[] = [];
   loading = false;
 
-  tasasCetes: { [key: string]: number } = {
-    '30': 0, '90': 0, '180': 0, '365': 0, '730': 0
-  };
+  tasasCetes: { [key: string]: number } = { '30': 0, '90': 0, '180': 0, '365': 0, '730': 0 };
   fechaSubasta = '';
   fechaSubastaNueva = '';
 
@@ -34,7 +38,8 @@ export class AdminDashboardComponent implements OnInit {
   montoParaSaldo: number | null = null;
 
   nuevoPar: string = '';
-  nuevoPrecio: number | null = null;
+  nuevoCompra: number | null = null;
+  nuevoVenta: number | null = null;
 
   private headers: HttpHeaders;
   private base = 'https://safe-capital-backend.onrender.com/api';
@@ -63,12 +68,12 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   cargarMovimientos() {
-  this.http.get<any[]>(`${this.base}/movimientos`, { headers: this.headers })
-    .subscribe({
-      next: data => this.movimientos = data,
-      error: () => alert('Error al cargar movimientos')
-    });
-}
+    this.http.get<any[]>(`${this.base}/movimientos`, { headers: this.headers })
+      .subscribe({
+        next: data => this.movimientos = data,
+        error: () => alert('Error al cargar movimientos')
+      });
+  }
 
   cargarComprobantes() {
     this.loading = true;
@@ -83,19 +88,16 @@ export class AdminDashboardComponent implements OnInit {
     const token = localStorage.getItem('token') || '';
     const nombreCodificado = encodeURIComponent(nombreArchivo);
     const url = `${this.base}/comprobantes/archivo/${idUsuario}/${nombreCodificado}`;
-
-    fetch(url, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    .then(res => {
-      if (!res.ok) throw new Error('No autorizado');
-      return res.blob();
-    })
-    .then(blob => {
-      const urlBlob = URL.createObjectURL(blob);
-      window.open(urlBlob, '_blank');
-    })
-    .catch(() => alert('No se pudo abrir el archivo. Verifica permisos o token.'));
+    fetch(url, { headers: { 'Authorization': `Bearer ${token}` } })
+      .then(res => {
+        if (!res.ok) throw new Error('No autorizado');
+        return res.blob();
+      })
+      .then(blob => {
+        const urlBlob = URL.createObjectURL(blob);
+        window.open(urlBlob, '_blank');
+      })
+      .catch(() => alert('No se pudo abrir el archivo. Verifica permisos o token.'));
   }
 
   acreditarSaldo(id: number, correo: string) {
@@ -213,65 +215,68 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   cargarParesForex() {
-    this.http.get<{ parDivisas: string; precioBase: number }[]>(
-      `${this.base}/admin/forex/pares`,
-      { headers: this.headers }
-    ).subscribe({
-      next: data => {
-        this.paresForex = data.map(par => ({
-          ...par,
-          nuevoPrecio: par.precioBase
-        }));
-      },
-      error: () => alert('Error al cargar pares Forex')
-    });
+    this.http.get<any[]>(`${this.base}/admin/forex/pares`, { headers: this.headers })
+      .subscribe({
+        next: data => {
+          this.paresForex = data.map(par => ({
+            ...par,
+            nuevoCompra: par.precioCompra,
+            nuevoVenta: par.precioVenta
+          }));
+        },
+        error: () => alert('Error al cargar pares Forex')
+      });
   }
 
-  actualizarPrecioPar(par: string, nuevoPrecio: number) {
-    if (!nuevoPrecio || nuevoPrecio <= 0 || isNaN(nuevoPrecio)) {
-      alert('Ingresa un precio válido');
+  actualizarPrecioPar(par: string, compra: number, venta: number) {
+    if (!compra || !venta || compra <= 0 || venta <= 0) {
+      alert('Ambos precios deben ser mayores a cero');
       return;
     }
 
-    const precioRedondeado = Math.round(nuevoPrecio * 100000) / 100000;
+    const c = Math.round(compra * 100000) / 100000;
+    const v = Math.round(venta * 100000) / 100000;
 
     this.http.put(
-      `${this.base}/admin/forex/precio?par=${encodeURIComponent(par)}&precio=${precioRedondeado}`,
+      `${this.base}/admin/forex/precio?par=${encodeURIComponent(par)}&compra=${c}&venta=${v}`,
       null,
       { headers: this.headers, responseType: 'text' as 'json' }
     ).subscribe({
       next: () => {
-        alert(`✔ Precio base de ${par} actualizado`);
+        alert(`✔ ${par}: compra ${c}, venta ${v}`);
         this.cargarParesForex();
       },
-      error: () => alert('Error al actualizar precio')
+      error: () => alert('Error al actualizar precios del par')
     });
   }
 
   crearNuevoPar() {
     const par = this.nuevoPar?.trim().toUpperCase();
-    const precio = this.nuevoPrecio;
+    const compra = this.nuevoCompra;
+    const venta = this.nuevoVenta;
 
     if (!par || !/^[A-Z]{6,7}$/.test(par)) {
       alert('Par inválido. Usa formato como EURUSD, GBPJPY, etc.');
       return;
     }
-    if (!precio || precio <= 0) {
-      alert('Precio base inválido');
+    if (!compra || compra <= 0 || !venta || venta <= 0) {
+      alert('Ambos precios son obligatorios y deben ser mayores a cero');
       return;
     }
 
-    const precioRedondeado = Math.round(precio * 100000) / 100000;
+    const c = Math.round(compra * 100000) / 100000;
+    const v = Math.round(venta * 100000) / 100000;
 
     this.http.put(
-      `${this.base}/admin/forex/precio?par=${encodeURIComponent(par)}&precio=${precioRedondeado}`,
+      `${this.base}/admin/forex/precio?par=${encodeURIComponent(par)}&compra=${c}&venta=${v}`,
       null,
       { headers: this.headers, responseType: 'text' as 'json' }
     ).subscribe({
       next: () => {
-        alert(`✅ Par ${par} agregado con precio ${precioRedondeado}`);
+        alert(`✅ ${par} agregado (compra ${c} / venta ${v})`);
         this.nuevoPar = '';
-        this.nuevoPrecio = null;
+        this.nuevoCompra = null;
+        this.nuevoVenta = null;
         this.cargarParesForex();
       },
       error: () => alert('Error al agregar el par')

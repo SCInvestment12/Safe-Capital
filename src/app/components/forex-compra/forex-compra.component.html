@@ -5,6 +5,8 @@
   <div class="lista-pares" *ngIf="!parSeleccionado">
     <div *ngFor="let par of paresDivisas" class="card" (click)="seleccionarPar(par)">
       <h3>{{ par.nombre }}</h3>
+      <p>💱 Compra: {{ par.precioCompra }}</p>
+      <p>💸 Venta: {{ par.precioVenta }}</p>
       <button (click)="verGraficaDesdeLista(par); $event.stopPropagation()">📈 Ver Gráfica</button>
     </div>
   </div>
@@ -44,6 +46,8 @@
       <li><strong>Par de Divisas:</strong> {{ parSeleccionado?.nombre }}</li>
       <li><strong>Monto:</strong> ${{ monto }}</li>
       <li><strong>Duración:</strong> {{ duracion }} días</li>
+      <li><strong>Precio de compra:</strong> {{ parSeleccionado?.precioCompra }}</li>
+      <li><strong>Precio de venta:</strong> {{ parSeleccionado?.precioVenta }}</li>
       <li><strong>Forma de pago:</strong> Fondos en cuenta</li>
     </ul>
     <button class="btn-cancelar" (click)="cancelar()">Inicio</button>
