@@ -14,6 +14,8 @@ interface ParDivisa {
   nombre: string;
 }
 
+// ... importaciones igual que antes
+
 @Component({
   selector: 'app-forex-compra',
   standalone: true,
@@ -25,7 +27,6 @@ export class ForexCompraComponent implements OnInit {
   @ViewChild(ChartWrapperComponent) chartWrapper!: ChartWrapperComponent;
 
   paresDivisas: ParDivisa[] = [];
-  filtroTexto: string = '';
   parSeleccionado: ParDivisa | null = null;
   monto: number | null = null;
   duracion: string = '';
@@ -68,13 +69,6 @@ export class ForexCompraComponent implements OnInit {
 
   ngOnInit(): void {
     this.cargarPares();
-  }
-
-  get paresFiltrados(): ParDivisa[] {
-    const texto = this.filtroTexto.toLowerCase();
-    return this.paresDivisas.filter(par =>
-      par.nombre.toLowerCase().includes(texto) || par.simbolo.toLowerCase().includes(texto)
-    );
   }
 
   cargarPares(): void {
@@ -164,10 +158,7 @@ export class ForexCompraComponent implements OnInit {
   }
 
   private cargarMovimientos(): void {
-    this.inversionService.obtenerMovimientos().subscribe({
-      next: (res) => console.log('Movimientos actualizados (Forex):', res),
-      error: (err) => console.error('Error al cargar movimientos (Forex):', err)
-    });
+    this.inversionService.obtenerMovimientos().subscribe();
   }
 
   cancelar(): void {
@@ -180,6 +171,5 @@ export class ForexCompraComponent implements OnInit {
     this.duracion = '';
     this.confirmacion = false;
     this.mostrarGrafica = false;
-    this.filtroTexto = '';
   }
 }
