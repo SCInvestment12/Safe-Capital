@@ -1,4 +1,3 @@
-// ✅ inversion.service.ts - Corregido SOLO para resolver el punto 1 (sin borrar nada)
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -11,28 +10,43 @@ export interface CrearInversionRequest {
   plazoDias: number;
 }
 
+export interface CrearApuestaRequest {
+  simbolo: string;
+  tipo: string;
+  direccion: string;
+  monto: number;
+  plazo: number;
+}
+
 @Injectable({ providedIn: 'root' })
 export class InversionService {
-  private baseUrl = 'https://safe-capital-backend.onrender.com/api/inversiones';
+  private inversionUrl = 'https://safe-capital-backend.onrender.com/api/inversiones';
+  private apuestasUrl = 'https://safe-capital-backend.onrender.com/api/apuestas';
+  private movimientosUrl = 'https://safe-capital-backend.onrender.com/api/movimientos';
 
   constructor(private http: HttpClient) {}
 
   crearInversion(req: CrearInversionRequest): Observable<any> {
     const token = localStorage.getItem('token') || '';
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(this.baseUrl, req, { headers });
+    return this.http.post(this.inversionUrl, req, { headers });
+  }
+
+  crearApuesta(req: CrearApuestaRequest): Observable<any> {
+    const token = localStorage.getItem('token') || '';
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.post(this.apuestasUrl, req, { headers });
   }
 
   obtenerInversionesDeUsuario(id: number): Observable<any[]> {
     const token = localStorage.getItem('token') || '';
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any[]>(`${this.baseUrl}/usuario/${id}`, { headers });
+    return this.http.get<any[]>(`${this.inversionUrl}/usuario/${id}`, { headers });
   }
 
-  // ✅ Agregado solo para resolver el punto 1 (ver movimientos de inversión)
   obtenerMovimientos(): Observable<any[]> {
     const token = localStorage.getItem('token') || '';
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any[]>('https://safe-capital-backend.onrender.com/api/movimientos', { headers });
+    return this.http.get<any[]>(this.movimientosUrl, { headers });
   }
 }

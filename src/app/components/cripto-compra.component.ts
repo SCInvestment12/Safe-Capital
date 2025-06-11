@@ -90,46 +90,48 @@ export class CriptoCompraComponent {
     });
   }
 
-  private procesarInversion(): void {
-    const idUsuario = +(localStorage.getItem('id') || '0');
-    const inversion: CrearInversionRequest = {
-      idUsuario,
-      tipo: 'cripto',
-      simbolo: this.criptoSeleccionada,
-      monto: this.monto,
-      plazoDias: parseInt(this.duracion)
-    };
+  // Solo parte corregida: procesarInversion()
+private procesarInversion(): void {
+  const idUsuario = +(localStorage.getItem('id') || '0');
+  const inversion: CrearInversionRequest = {
+    idUsuario,
+    tipo: 'cripto',
+    simbolo: this.criptoSeleccionada,
+    monto: this.monto,
+    plazoDias: parseInt(this.duracion)
+  };
 
-    // ✅ Guardar la inversión
-    this.inversionService.crearInversion(inversion).subscribe({
-      next: () => console.log('Inversión cripto registrada'),
-      error: () => console.error('❌ No se pudo guardar la inversión cripto')
-    });
+  const apuesta: CrearApuestaRequest = {
+    simbolo: this.criptoSeleccionada,
+    tipo: 'cripto',
+    direccion: 'up',
+    monto: this.monto,
+    plazo: parseInt(this.duracion)
+  };
 
-    // ✅ Registrar la apuesta
-    const apuesta: CrearApuestaRequest = {
-      simbolo: this.criptoSeleccionada,
-      tipo: 'cripto',
-      direccion: 'up',
-      monto: this.monto,
-      plazo: parseInt(this.duracion)
-    };
+  // ✅ Guardar inversión
+  this.inversionService.crearInversion(inversion).subscribe({
+    next: () => console.log('Inversión cripto registrada'),
+    error: () => console.error('❌ No se pudo guardar la inversión cripto')
+  });
 
-    this.apuestaService.crearApuesta(apuesta).subscribe({
-      next: () => {
-        this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
-        this.saldoService.cargarSaldo();
-        this.cargarMovimientos();
-        this.confirmacion = true;
-        this.mostrarGrafica = false;
-      },
-      error: () => {
-        this.alertService.success(`✅ Inversión registrada con éxito.`);
-      }
-    });
+  // ✅ Guardar apuesta
+  this.inversionService.crearApuesta(apuesta).subscribe({
+    next: () => {
+      this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
+      this.saldoService.cargarSaldo();
+      this.cargarMovimientos();
+      this.confirmacion = true;
+      this.mostrarGrafica = false;
+    },
+    error: () => {
+      this.alertService.error(`❌ No se pudo registrar la apuesta.`);
+    }
+  });
 
-    this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
-  }
+  this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
+}
+
 
   private cargarMovimientos(): void {
     this.inversionService.obtenerMovimientos().subscribe({
