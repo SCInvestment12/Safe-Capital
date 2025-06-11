@@ -63,12 +63,12 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   cargarMovimientos() {
-    this.http.get<any[]>(`${this.base}/movimientos/todos`, { headers: this.headers })
-      .subscribe({
-        next: data => this.movimientos = data,
-        error: () => alert('Error al cargar movimientos')
-      });
-  }
+  this.http.get<any[]>(`${this.base}/movimientos`, { headers: this.headers })
+    .subscribe({
+      next: data => this.movimientos = data,
+      error: () => alert('Error al cargar movimientos')
+    });
+}
 
   cargarComprobantes() {
     this.loading = true;
