@@ -1,37 +1,35 @@
 <div class="admin-wrapper">
 
   <!-- USUARIOS REGISTRADOS -->
- <!-- USUARIOS REGISTRADOS -->
-<h2 class="mt-4">Usuarios Registrados</h2>
-<table class="tabla-admin" *ngIf="usuarios.length > 0">
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Nombre</th>
-      <th>Apellidos</th>
-      <th>Correo</th>
-      <th>Teléfono</th>
-      <th>CURP</th>
-      <th>Saldo</th>
-      <th>Contraseña</th>
-      <th>Rol</th> <!-- ✅ NUEVA COLUMNA -->
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let u of usuarios">
-      <td>{{ u.idUsuario }}</td>
-      <td>{{ u.nombre }}</td>
-      <td>{{ u.apellidos }}</td>
-      <td>{{ u.correo }}</td> <!-- ⚠️ antes decía "u.correoElectronico", debe ser "u.correo" -->
-      <td>{{ u.telefono }}</td>
-      <td>{{ u.curp }}</td>
-      <td>${{ u.saldo?.toFixed(2) }}</td>
-      <td>{{ u.contrasena }}</td>
-      <td>{{ u.rol }}</td> <!-- ✅ NUEVO DATO -->
-    </tr>
-  </tbody>
-</table>
-
+  <h2 class="mt-4">Usuarios Registrados</h2>
+  <table class="tabla-admin" *ngIf="usuarios.length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Apellidos</th>
+        <th>Correo</th>
+        <th>Teléfono</th>
+        <th>CURP</th>
+        <th>Saldo</th>
+        <th>Contraseña</th>
+        <th>Rol</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let u of usuarios">
+        <td>{{ u.idUsuario }}</td>
+        <td>{{ u.nombre }}</td>
+        <td>{{ u.apellidos }}</td>
+        <td>{{ u.correo }}</td>
+        <td>{{ u.telefono }}</td>
+        <td>{{ u.curp }}</td>
+        <td>${{ u.saldo?.toFixed(2) }}</td>
+        <td>{{ u.contrasena }}</td>
+        <td>{{ u.rol }}</td>
+      </tr>
+    </tbody>
+  </table>
 
   <!-- COMPROBANTES PENDIENTES -->
   <h2>Comprobantes Pendientes</h2>
@@ -72,19 +70,14 @@
   <div class="tasa-cetes-config">
     <label>1 mes (30 días):</label>
     <input type="number" [(ngModel)]="tasasCetes['30']" class="form-control" />
-
     <label>3 meses (90 días):</label>
     <input type="number" [(ngModel)]="tasasCetes['90']" class="form-control" />
-
     <label>6 meses (180 días):</label>
     <input type="number" [(ngModel)]="tasasCetes['180']" class="form-control" />
-
     <label>12 meses (365 días):</label>
     <input type="number" [(ngModel)]="tasasCetes['365']" class="form-control" />
-
     <label>2 años (730 días):</label>
     <input type="number" [(ngModel)]="tasasCetes['730']" class="form-control" />
-
     <button class="btn-actualizar mt-2" (click)="actualizarTasasCetes()">Actualizar Tasas</button>
   </div>
 
@@ -126,58 +119,74 @@
   </div>
   <button class="btn-actualizar mb-5" (click)="asignarSaldoManual()">Acreditar Saldo</button>
 
+  <!-- AGREGAR NUEVO PAR -->
+  <h3 class="mt-4">Agregar Nuevo Par de Divisas</h3>
+  <div class="tasa-cetes-config" style="display: flex; gap: 12px; flex-wrap: wrap;">
+    <div>
+      <label>Par (ej. GBPUSD):</label>
+      <input type="text" [(ngModel)]="nuevoPar" class="form-control" placeholder="Símbolo de par" />
+    </div>
+    <div>
+      <label>Precio Base:</label>
+      <input type="number" [(ngModel)]="nuevoPrecio" class="form-control" step="0.0001" placeholder="Ej. 1.2650" />
+    </div>
+    <div style="align-self: end;">
+      <button class="btn-actualizar" (click)="crearNuevoPar()">Agregar Par</button>
+    </div>
+  </div>
 
-  <!-- ✅ Agregar nuevo par de divisas -->
-<h3 class="mt-4">Agregar Nuevo Par de Divisas</h3>
-<div class="tasa-cetes-config" style="display: flex; gap: 12px; flex-wrap: wrap;">
-  <div>
-    <label>Par (ej. GBPUSD):</label>
-    <input type="text" [(ngModel)]="nuevoPar" class="form-control" placeholder="Símbolo de par" />
-  </div>
-  <div>
-    <label>Precio Base:</label>
-    <input type="number" [(ngModel)]="nuevoPrecio" class="form-control" step="0.0001" placeholder="Ej. 1.2650" />
-  </div>
-  <div style="align-self: end;">
-    <button class="btn-actualizar" (click)="crearNuevoPar()">Agregar Par</button>
-  </div>
+  <!-- GESTIÓN DE PARES -->
+  <h2 class="mt-4">Editar Precios Base de Pares Forex</h2>
+  <p *ngIf="paresForex.length === 0">No hay pares configurados.</p>
+  <table class="tabla-admin" *ngIf="paresForex.length > 0">
+    <thead>
+      <tr>
+        <th>Par de Divisas</th>
+        <th>Precio Actual</th>
+        <th>Nuevo Precio</th>
+        <th>Actualizar</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let par of paresForex">
+        <td>{{ par.parDivisas }}</td>
+        <td>{{ par.precioBase.toFixed(4) }}</td>
+        <td>
+          <input type="number" [(ngModel)]="par.nuevoPrecio" step="0.0001" placeholder="Ej. 1.0850" class="form-control" />
+        </td>
+        <td>
+          <button class="btn-actualizar" (click)="actualizarPrecioPar(par.parDivisas, par.nuevoPrecio!)">Guardar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ✅ TABLA DE MOVIMIENTOS GLOBALES -->
+  <h2 class="mt-5">Movimientos de Usuarios</h2>
+  <p *ngIf="movimientos.length === 0">No hay movimientos registrados.</p>
+  <table class="tabla-admin" *ngIf="movimientos.length > 0">
+    <thead>
+      <tr>
+        <th>Usuario</th>
+        <th>Correo</th>
+        <th>Tipo</th>
+        <th>Monto</th>
+        <th>Moneda</th>
+        <th>Fecha</th>
+        <th>Descripción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let m of movimientos">
+        <td>{{ m.usuario.nombre }} {{ m.usuario.apellidos }}</td>
+        <td>{{ m.usuario.correoElectronico }}</td>
+        <td>{{ m.tipo }}</td>
+        <td>${{ m.monto.toFixed(2) }}</td>
+        <td>{{ m.moneda }}</td>
+        <td>{{ m.fecha | date:'short' }}</td>
+        <td>{{ m.descripcion }}</td>
+      </tr>
+    </tbody>
+  </table>
+
 </div>
-
- <!-- ✅ GESTIÓN COMPLETA DE PARES FOREX -->
-<h2 class="mt-4">Editar Precios Base de Pares Forex</h2>
-<p *ngIf="paresForex.length === 0">No hay pares configurados.</p>
-<table class="tabla-admin" *ngIf="paresForex.length > 0">
-  <thead>
-    <tr>
-      <th>Par de Divisas</th>
-      <th>Precio Actual</th>
-      <th>Nuevo Precio</th>
-      <th>Actualizar</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let par of paresForex">
-      <td>{{ par.parDivisas }}</td>
-      <td>{{ par.precioBase.toFixed(4) }}</td>
-      <td>
-        <input
-          type="number"
-          [(ngModel)]="par.nuevoPrecio"
-          step="0.0001"
-          placeholder="Ej. 1.0850"
-          class="form-control"
-        />
-      </td>
-      <td>
-        <button
-          class="btn-actualizar"
-          (click)="actualizarPrecioPar(par.parDivisas, par.nuevoPrecio!)"
-        >
-          Guardar
-        </button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-

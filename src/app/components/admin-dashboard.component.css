@@ -127,3 +127,23 @@ input[type="date"] {
 .mt-4 {
   margin-top: 36px;
 }
+.tabla-admin {
+  overflow-x: auto;
+  display: block;
+}
+/* Colores por tipo de movimiento */
+td[data-tipo="DEPÓSITO"] {
+  color: #00e676;
+  font-weight: bold;
+}
+td[data-tipo="RETIRO"] {
+  color: #ff5252;
+  font-weight: bold;
+}
+td[data-tipo="CETES"],
+td[data-tipo="ETF"],
+td[data-tipo="ACCIÓN"],
+td[data-tipo="FOREX"],
+td[data-tipo="CRIPTO"] {
+  color: #40c4ff;
+}

@@ -13,6 +13,7 @@ import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http'
 export class AdminDashboardComponent implements OnInit {
   comprobantes: any[] = [];
   usuarios: any[] = [];
+  movimientos: any[] = [];
   paresForex: { parDivisas: string; precioBase: number; nuevoPrecio?: number }[] = [];
   loading = false;
 
@@ -50,13 +51,22 @@ export class AdminDashboardComponent implements OnInit {
     this.obtenerConfiguracionBancaria();
     this.cargarUsuarios();
     this.cargarParesForex();
+    this.cargarMovimientos();
   }
 
   cargarUsuarios() {
-this.http.get<any[]>(`${this.base}/usuarios/usuarios`, { headers: this.headers })
+    this.http.get<any[]>(`${this.base}/usuarios/usuarios`, { headers: this.headers })
       .subscribe({
         next: data => this.usuarios = data,
         error: () => alert('Error al cargar usuarios')
+      });
+  }
+
+  cargarMovimientos() {
+    this.http.get<any[]>(`${this.base}/movimientos/todos`, { headers: this.headers })
+      .subscribe({
+        next: data => this.movimientos = data,
+        error: () => alert('Error al cargar movimientos')
       });
   }
 
