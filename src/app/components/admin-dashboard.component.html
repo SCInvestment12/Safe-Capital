@@ -122,6 +122,23 @@
   </div>
   <button class="btn-actualizar mb-5" (click)="asignarSaldoManual()">Acreditar Saldo</button>
 
+
+  <!-- ✅ Agregar nuevo par de divisas -->
+<h3 class="mt-4">Agregar Nuevo Par de Divisas</h3>
+<div class="tasa-cetes-config" style="display: flex; gap: 12px; flex-wrap: wrap;">
+  <div>
+    <label>Par (ej. GBPUSD):</label>
+    <input type="text" [(ngModel)]="nuevoPar" class="form-control" placeholder="Símbolo de par" />
+  </div>
+  <div>
+    <label>Precio Base:</label>
+    <input type="number" [(ngModel)]="nuevoPrecio" class="form-control" step="0.0001" placeholder="Ej. 1.2650" />
+  </div>
+  <div style="align-self: end;">
+    <button class="btn-actualizar" (click)="crearNuevoPar()">Agregar Par</button>
+  </div>
+</div>
+
  <!-- ✅ GESTIÓN COMPLETA DE PARES FOREX -->
 <h2 class="mt-4">Editar Precios Base de Pares Forex</h2>
 <p *ngIf="paresForex.length === 0">No hay pares configurados.</p>

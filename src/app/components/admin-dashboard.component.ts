@@ -32,6 +32,9 @@ export class AdminDashboardComponent implements OnInit {
   userEmailParaSaldo = '';
   montoParaSaldo: number | null = null;
 
+  nuevoPar: string = '';
+  nuevoPrecio: number | null = null;
+
   private headers: HttpHeaders;
   private base = 'https://safe-capital-backend.onrender.com/api';
 
@@ -232,6 +235,36 @@ export class AdminDashboardComponent implements OnInit {
         this.cargarParesForex();
       },
       error: () => alert('Error al actualizar precio')
+    });
+  }
+
+  crearNuevoPar() {
+    const par = this.nuevoPar?.trim().toUpperCase();
+    const precio = this.nuevoPrecio;
+
+    if (!par || !/^[A-Z]{6,7}$/.test(par)) {
+      alert('Par inválido. Usa formato como EURUSD, GBPJPY, etc.');
+      return;
+    }
+    if (!precio || precio <= 0) {
+      alert('Precio base inválido');
+      return;
+    }
+
+    const precioRedondeado = Math.round(precio * 100000) / 100000;
+
+    this.http.put(
+      `${this.base}/admin/forex/precio?par=${encodeURIComponent(par)}&precio=${precioRedondeado}`,
+      null,
+      { headers: this.headers, responseType: 'text' as 'json' }
+    ).subscribe({
+      next: () => {
+        alert(`✅ Par ${par} agregado con precio ${precioRedondeado}`);
+        this.nuevoPar = '';
+        this.nuevoPrecio = null;
+        this.cargarParesForex();
+      },
+      error: () => alert('Error al agregar el par')
     });
   }
 }
