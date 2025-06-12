@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
-import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
 import { AlertService } from '../services/alert.service';
 import { SaldoService } from '../services/saldo.service';
 import { InversionService, CrearInversionRequest, CrearApuestaRequest } from '../services/inversion.service';
@@ -47,7 +46,6 @@ export class CriptoCompraComponent {
   ];
 
   constructor(
-    private dashboardService: DashboardService,
     private alertService: AlertService,
     private saldoService: SaldoService,
     private inversionService: InversionService
@@ -76,17 +74,7 @@ export class CriptoCompraComponent {
       return;
     }
 
-    const req: RetirarSaldoRequest = { monto: this.monto };
-    this.dashboardService.withdraw(req).subscribe({
-      next: () => this.procesarInversion(),
-      error: (err) => {
-        if (err?.status === 200 || err?.ok === false) {
-          this.procesarInversion();
-        } else {
-          this.alertService.error('No se pudo descontar el saldo.');
-        }
-      }
-    });
+    this.procesarInversion(); // ✅ No se descuenta el saldo aquí directamente
   }
 
   private procesarInversion(): void {
@@ -115,7 +103,6 @@ export class CriptoCompraComponent {
         this.inversionService.crearApuesta(apuesta).subscribe({
           next: () => {
             this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
-            this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
             this.saldoService.cargarSaldo();
             this.cargarMovimientos();
             this.confirmacion = true;
