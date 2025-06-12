@@ -86,8 +86,8 @@ export class CetesCompraComponent implements OnInit {
     const ahora = new Date();
     const hora = ahora.getHours();
     const dia = ahora.getDay();
-    if (dia === 0 || dia === 6 || hora < 8 || hora >= 16) {
-      this.alertService.error('⏰ Solo puedes invertir en CETES de Lunes a Viernes entre 08:00 y 16:00.');
+    if (dia === 0 || dia === 6 || hora < 8 || hora >= 20) {
+      this.alertService.error('⏰ Solo puedes invertir en CETES de Lunes a Viernes entre 08:00 y 20:00.');
       return;
     }
 
