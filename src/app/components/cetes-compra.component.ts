@@ -91,7 +91,21 @@ export class CetesCompraComponent implements OnInit {
       return;
     }
 
-    this.procesarInversion();
+    const req: RetirarSaldoRequest = { monto: this.monto };
+    this.dashboardService.withdraw(req).subscribe({
+      next: () => {
+        this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
+        this.procesarInversion();
+      },
+      error: (err) => {
+        if (err?.status === 200 || err?.ok === false) {
+          this.alertService.success(`⚠️ Saldo descontado parcialmente.`);
+          this.procesarInversion();
+        } else {
+          this.alertService.error('❌ No se pudo descontar el saldo.');
+        }
+      }
+    });
   }
 
   private procesarInversion() {
