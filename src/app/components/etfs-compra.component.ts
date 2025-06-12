@@ -43,31 +43,33 @@ export class EtfsCompraComponent {
   }
 
   confirmarInversion() {
-  if (!this.etfSeleccionado || !this.monto || !this.plazo) {
-    this.alertService.error('Completa todos los campos.');
-    return;
-  }
-
-  const ahora = new Date();
-  const hora = ahora.getHours();
-  const dia = ahora.getDay();
-  if (dia === 0 || dia === 6 || hora < 8 || hora >= 16) {
-    this.alertService.error('⏰ Solo puedes invertir en ETFs de Lunes a Viernes entre 08:00 y 16:00.');
-    return;
-  }
-
-  const req: RetirarSaldoRequest = { monto: this.monto };
-  this.dashboardService.withdraw(req).subscribe({
-    next: () => {
-      this.procesarInversion();
-    },
-    error: (err) => {
-      // ❌ Esta validación es incorrecta y duplicaba la lógica
-      this.alertService.error('No se pudo descontar el saldo.');
+    if (!this.etfSeleccionado || !this.monto || !this.plazo) {
+      this.alertService.error('Completa todos los campos.');
+      return;
     }
-  });
-}
 
+    const ahora = new Date();
+    const hora = ahora.getHours();
+    const dia = ahora.getDay();
+    if (dia === 0 || dia === 6 || hora < 8 || hora >= 16) {
+      this.alertService.error('⏰ Solo puedes invertir en ETFs de Lunes a Viernes entre 08:00 y 16:00.');
+      return;
+    }
+
+    const req: RetirarSaldoRequest = { monto: this.monto };
+    console.log('➡ Enviando solicitud de retiro:', req);
+
+    this.dashboardService.withdraw(req).subscribe({
+      next: () => {
+        console.log('✅ Saldo descontado, ahora se procesará la inversión');
+        this.procesarInversion();
+      },
+      error: (err) => {
+        console.error('❌ Error al retirar saldo:', err);
+        this.alertService.error('No se pudo descontar el saldo.');
+      }
+    });
+  }
 
   private procesarInversion(): void {
     const idUsuario = +(localStorage.getItem('id') || '0');
@@ -86,34 +88,46 @@ export class EtfsCompraComponent {
       direccion: 'up',
       monto: this.monto,
       plazo: parseInt(this.plazo),
-      precioActual: 0 // puedes reemplazar con el precio real si lo tienes
+      precioActual: 0
     };
+
+    console.log('📩 Enviando inversión:', inversion);
 
     this.inversionService.crearInversion(inversion).subscribe({
       next: () => {
+        console.log('✅ Inversión guardada correctamente');
         this.apuestaService.crearApuesta(apuesta).subscribe({
           next: () => {
+            console.log('✅ Apuesta registrada');
             this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
             this.saldoService.cargarSaldo();
             this.cargarMovimientos();
             this.confirmacion = true;
             this.mostrarGrafica = false;
           },
-          error: () => {
+          error: (err) => {
+            console.error('❌ Error al crear apuesta:', err);
             this.alertService.error('❌ No se pudo registrar la apuesta.');
           }
         });
       },
-      error: () => {
+      error: (err) => {
+        console.error('❌ Error al crear inversión:', err);
         this.alertService.error('❌ No se pudo registrar la inversión en ETFs.');
       }
     });
   }
 
   private cargarMovimientos(): void {
+    console.log('🔁 Solicitando movimientos...');
     this.inversionService.obtenerMovimientos().subscribe({
-      next: (res) => (this.movimientos = res),
-      error: (err) => console.error('Error al cargar movimientos:', err)
+      next: (res) => {
+        console.log('📦 Movimientos recibidos:', res);
+        this.movimientos = res;
+      },
+      error: (err) => {
+        console.error('❌ Error al cargar movimientos:', err);
+      }
     });
   }
 
