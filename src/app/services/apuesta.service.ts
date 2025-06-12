@@ -4,11 +4,13 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface CrearApuestaRequest {
+  idUsuario: number;                // ✅ Agregado para enviar al backend
   simbolo: string;
   tipo: string;
   direccion: 'up' | 'down';
   monto: number;
   plazo: number;
+  precioActual: number;            // ✅ Asegúrate de enviarlo también si el backend lo usa
 }
 
 @Injectable({ providedIn: 'root' })

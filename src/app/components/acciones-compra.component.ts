@@ -21,7 +21,8 @@ export class AccionesCompraComponent {
   plazo: string = '';
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
-  movimientos: any[] = []; // ✅ NUEVO
+  movimientos: any[] = [];
+  precioActual: number = 0; // ✅ NECESARIO
 
   acciones = [
     'AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'BRK.B', 'JNJ', 'V',
@@ -82,20 +83,27 @@ export class AccionesCompraComponent {
     this.inversionService.crearInversion(inversion).subscribe({
       next: () => {
         const apuesta: CrearApuestaRequest = {
+          idUsuario,
           simbolo: this.accionSeleccionada,
           tipo: 'acciones',
           direccion: 'up',
           monto: this.monto,
-          plazo: parseInt(this.plazo)
+          plazo: parseInt(this.plazo),
+          precioActual: this.precioActual // ✅ necesario para el backend
         };
 
-        this.apuestaService.crearApuesta(apuesta).subscribe();
-
-        this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
-        this.saldoService.cargarSaldo();
-        this.cargarMovimientos(); // ✅ ACTUALIZA movimientos
-        this.confirmacion = true;
-        this.mostrarGrafica = false;
+        this.apuestaService.crearApuesta(apuesta).subscribe({
+          next: () => {
+            this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
+            this.saldoService.cargarSaldo();
+            this.cargarMovimientos();
+            this.confirmacion = true;
+            this.mostrarGrafica = false;
+          },
+          error: () => {
+            this.alertService.error('❌ No se pudo registrar la apuesta.');
+          }
+        });
       },
       error: () => {
         this.alertService.error(`❌ No se pudo registrar la inversión en Acciones.`);

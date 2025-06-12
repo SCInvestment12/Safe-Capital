@@ -3,6 +3,8 @@ import {
   Component,
   Inject,
   Input,
+  Output,
+  EventEmitter,
   PLATFORM_ID,
   ViewChild,
   OnChanges,
@@ -24,6 +26,7 @@ import { TradingChartComponent } from './trading-chart.component';
           [simbolo]="simboloFormateado"
           [precioCompra]="precioCompra"
           [precioVenta]="precioVenta"
+          (precioActualCambiado)="emitirPrecioActual($event)"
         ></app-trading-chart>
       </div>
     </ng-container>
@@ -36,6 +39,8 @@ export class ChartWrapperComponent implements OnChanges {
   @Input() precioCompra: number | null = null;
   @Input() precioVenta: number | null = null;
 
+  @Output() precioActualCambiado = new EventEmitter<number>();
+
   simboloFormateado = '';
   isBrowser: boolean;
 
@@ -47,16 +52,17 @@ export class ChartWrapperComponent implements OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const cs = changes as any;
-    const cambioSimbolo = cs.simbolo as SimpleChanges[string];
-    const cambioTipo    = cs.tipo    as SimpleChanges[string];
+    const cambioSimbolo = changes['simbolo'];
+    const cambioTipo = changes['tipo'];
 
     if (cambioSimbolo || cambioTipo) {
       this.simboloFormateado =
-        this.tipo === 'forex'
-          ? this.simbolo.replace('/', '')
-          : this.simbolo;
+        this.tipo === 'forex' ? this.simbolo.replace('/', '') : this.simbolo;
     }
+  }
+
+  emitirPrecioActual(precio: number) {
+    this.precioActualCambiado.emit(precio);
   }
 
   lanzarApuesta(direccion: 'up' | 'down') {

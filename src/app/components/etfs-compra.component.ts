@@ -82,11 +82,13 @@ export class EtfsCompraComponent {
     this.inversionService.crearInversion(inversion).subscribe({
       next: () => {
         const apuesta: CrearApuestaRequest = {
+          idUsuario,
           simbolo: this.etfSeleccionado,
           tipo: 'etfs',
           direccion: 'up',
           monto: this.monto,
-          plazo: parseInt(this.plazo)
+          plazo: parseInt(this.plazo),
+          precioActual: 0 // ✅ Aquí puedes reemplazar con el precio real si lo tienes en otro componente
         };
 
         this.apuestaService.crearApuesta(apuesta).subscribe();

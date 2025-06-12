@@ -4,9 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
 import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
 import { AlertService } from '../services/alert.service';
-import { ApuestaService, CrearApuestaRequest } from '../services/apuesta.service';
 import { SaldoService } from '../services/saldo.service';
-import { InversionService, CrearInversionRequest } from '../services/inversion.service'; // ✅ Agregado
+import { InversionService, CrearInversionRequest, CrearApuestaRequest } from '../services/inversion.service'; // ✅ Incluye CrearApuestaRequest aquí
 
 @Component({
   selector: 'app-cripto-compra',
@@ -22,6 +21,7 @@ export class CriptoCompraComponent {
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
   movimientos: any[] = [];
+precioActual: number = 0;
 
   criptos = [
     { nombre: 'Bitcoin', simbolo: 'BTC' },
@@ -49,9 +49,8 @@ export class CriptoCompraComponent {
   constructor(
     private dashboardService: DashboardService,
     private alertService: AlertService,
-    private apuestaService: ApuestaService,
     private saldoService: SaldoService,
-    private inversionService: InversionService // ✅ Inyectado
+    private inversionService: InversionService
   ) {}
 
   mostrarBotonGrafica(): boolean {
@@ -90,48 +89,48 @@ export class CriptoCompraComponent {
     });
   }
 
-  // Solo parte corregida: procesarInversion()
-private procesarInversion(): void {
-  const idUsuario = +(localStorage.getItem('id') || '0');
-  const inversion: CrearInversionRequest = {
-    idUsuario,
-    tipo: 'cripto',
-    simbolo: this.criptoSeleccionada,
-    monto: this.monto,
-    plazoDias: parseInt(this.duracion)
-  };
+  private procesarInversion(): void {
+    const idUsuario = +(localStorage.getItem('id') || '0');
 
-  const apuesta: CrearApuestaRequest = {
-    simbolo: this.criptoSeleccionada,
-    tipo: 'cripto',
-    direccion: 'up',
-    monto: this.monto,
-    plazo: parseInt(this.duracion)
-  };
+    const inversion: CrearInversionRequest = {
+      idUsuario,
+      tipo: 'cripto',
+      simbolo: this.criptoSeleccionada,
+      monto: this.monto,
+      plazoDias: parseInt(this.duracion)
+    };
 
-  // ✅ Guardar inversión
-  this.inversionService.crearInversion(inversion).subscribe({
-    next: () => console.log('Inversión cripto registrada'),
-    error: () => console.error('❌ No se pudo guardar la inversión cripto')
-  });
+    const apuesta: CrearApuestaRequest = {
+  idUsuario,
+  simbolo: this.criptoSeleccionada,
+  tipo: 'cripto',
+  direccion: 'up',
+  monto: this.monto,
+  plazo: parseInt(this.duracion),
+  precioActual: this.precioActual // ✅ Este campo es requerido por el backend
+};
 
-  // ✅ Guardar apuesta
-  this.inversionService.crearApuesta(apuesta).subscribe({
-    next: () => {
-      this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
-      this.saldoService.cargarSaldo();
-      this.cargarMovimientos();
-      this.confirmacion = true;
-      this.mostrarGrafica = false;
-    },
-    error: () => {
-      this.alertService.error(`❌ No se pudo registrar la apuesta.`);
-    }
-  });
 
-  this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
-}
+    this.inversionService.crearInversion(inversion).subscribe({
+      next: () => console.log('Inversión cripto registrada'),
+      error: () => console.error('❌ No se pudo guardar la inversión cripto')
+    });
 
+    this.inversionService.crearApuesta(apuesta).subscribe({
+      next: () => {
+        this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
+        this.saldoService.cargarSaldo();
+        this.cargarMovimientos();
+        this.confirmacion = true;
+        this.mostrarGrafica = false;
+      },
+      error: () => {
+        this.alertService.error(`❌ No se pudo registrar la apuesta.`);
+      }
+    });
+
+    this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
+  }
 
   private cargarMovimientos(): void {
     this.inversionService.obtenerMovimientos().subscribe({

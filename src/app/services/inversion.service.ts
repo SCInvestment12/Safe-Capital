@@ -10,13 +10,18 @@ export interface CrearInversionRequest {
   plazoDias: number;
 }
 
+// src/app/services/inversion.service.ts
 export interface CrearApuestaRequest {
+  idUsuario: number;
   simbolo: string;
   tipo: string;
-  direccion: string;
+  direccion: 'up' | 'down';
   monto: number;
   plazo: number;
+  precioActual: number;
 }
+
+
 
 @Injectable({ providedIn: 'root' })
 export class InversionService {
@@ -33,10 +38,11 @@ export class InversionService {
   }
 
   crearApuesta(req: CrearApuestaRequest): Observable<any> {
-    const token = localStorage.getItem('token') || '';
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.post(this.apuestasUrl, req, { headers });
-  }
+  const token = localStorage.getItem('token') || '';
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.post('https://safe-capital-backend.onrender.com/api/apuestas', req, { headers });
+}
+
 
   obtenerInversionesDeUsuario(id: number): Observable<any[]> {
     const token = localStorage.getItem('token') || '';

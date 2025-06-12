@@ -142,11 +142,13 @@ export class ForexCompraComponent implements OnInit {
     this.inversionService.crearInversion(inversion).subscribe({
       next: () => {
         const apuesta: CrearApuestaRequest = {
+          idUsuario,
           simbolo: this.parSeleccionado!.simbolo,
           tipo: 'forex',
           direccion: 'up',
           monto: this.monto!,
-          plazo: parseInt(this.duracion)
+          plazo: parseInt(this.duracion),
+          precioActual: this.parSeleccionado!.precioCompra // ✅ Corregido
         };
 
         this.apuestaService.crearApuesta(apuesta).subscribe();

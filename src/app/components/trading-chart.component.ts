@@ -1,6 +1,8 @@
 import {
   Component,
   Input,
+  Output,
+  EventEmitter,
   OnInit,
   OnDestroy,
   OnChanges,
@@ -48,6 +50,8 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
   @Input() simbolo = 'TSLA';
   @Input() precioCompra: number | null = null;
   @Input() precioVenta: number | null = null;
+
+  @Output() precioActualCambiado = new EventEmitter<number>(); // ✅ NUEVO
 
   public chartOptions!: ChartOptions;
   public precioActual: number | null = null;
@@ -197,6 +201,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this.precioActual = puntos[puntos.length - 1][1];
+        this.precioActualCambiado.emit(this.precioActual); // ✅ EMITIR PRECIO
 
         this.chartOptions = {
           ...this.chartOptions,
