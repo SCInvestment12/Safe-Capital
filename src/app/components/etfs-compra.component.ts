@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
-import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
 import { AlertService } from '../services/alert.service';
 import { ApuestaService, CrearApuestaRequest } from '../services/apuesta.service';
 import { SaldoService } from '../services/saldo.service';
@@ -22,6 +21,7 @@ export class EtfsCompraComponent {
   confirmacion: boolean = false;
   mostrarGrafica: boolean = false;
   movimientos: any[] = [];
+  precioActual: number = 0;
 
   etfs = [
     'SPY', 'IVV', 'VOO', 'VTI', 'QQQ', 'VEA', 'AGG', 'VTV', 'BND', 'IEMG',
@@ -29,7 +29,6 @@ export class EtfsCompraComponent {
   ];
 
   constructor(
-    private dashboardService: DashboardService,
     private alertService: AlertService,
     private apuestaService: ApuestaService,
     private saldoService: SaldoService,
@@ -56,19 +55,7 @@ export class EtfsCompraComponent {
       return;
     }
 
-    const req: RetirarSaldoRequest = { monto: this.monto };
-    console.log('➡ Enviando solicitud de retiro:', req);
-
-    this.dashboardService.withdraw(req).subscribe({
-      next: () => {
-        console.log('✅ Saldo descontado, ahora se procesará la inversión');
-        this.procesarInversion();
-      },
-      error: (err) => {
-        console.error('❌ Error al retirar saldo:', err);
-        this.alertService.error('No se pudo descontar el saldo.');
-      }
-    });
+    this.procesarInversion();
   }
 
   private procesarInversion(): void {
@@ -88,45 +75,35 @@ export class EtfsCompraComponent {
       direccion: 'up',
       monto: this.monto,
       plazo: parseInt(this.plazo),
-      precioActual: 0
+      precioActual: this.precioActual
     };
-
-    console.log('📩 Enviando inversión:', inversion);
 
     this.inversionService.crearInversion(inversion).subscribe({
       next: () => {
-        console.log('✅ Inversión guardada correctamente');
         this.apuestaService.crearApuesta(apuesta).subscribe({
           next: () => {
-            console.log('✅ Apuesta registrada');
             this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
             this.saldoService.cargarSaldo();
             this.cargarMovimientos();
             this.confirmacion = true;
             this.mostrarGrafica = false;
           },
-          error: (err) => {
-            console.error('❌ Error al crear apuesta:', err);
+          error: () => {
             this.alertService.error('❌ No se pudo registrar la apuesta.');
           }
         });
       },
-      error: (err) => {
-        console.error('❌ Error al crear inversión:', err);
+      error: () => {
         this.alertService.error('❌ No se pudo registrar la inversión en ETFs.');
       }
     });
   }
 
   private cargarMovimientos(): void {
-    console.log('🔁 Solicitando movimientos...');
     this.inversionService.obtenerMovimientos().subscribe({
-      next: (res) => {
-        console.log('📦 Movimientos recibidos:', res);
-        this.movimientos = res;
-      },
-      error: (err) => {
-        console.error('❌ Error al cargar movimientos:', err);
+      next: (res) => (this.movimientos = res),
+      error: () => {
+        this.alertService.error('No se pudieron cargar los movimientos.');
       }
     });
   }
