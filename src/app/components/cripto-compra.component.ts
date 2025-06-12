@@ -74,7 +74,7 @@ export class CriptoCompraComponent {
       return;
     }
 
-    this.procesarInversion(); // ✅ No se descuenta el saldo aquí directamente
+    this.procesarInversion();
   }
 
   private procesarInversion(): void {
@@ -88,18 +88,18 @@ export class CriptoCompraComponent {
       plazoDias: parseInt(this.duracion)
     };
 
-    const apuesta: CrearApuestaRequest = {
-      idUsuario,
-      simbolo: this.criptoSeleccionada,
-      tipo: 'cripto',
-      direccion: 'up',
-      monto: this.monto,
-      plazo: parseInt(this.duracion),
-      precioActual: this.precioActual
-    };
-
     this.inversionService.crearInversion(inversion).subscribe({
       next: () => {
+        const apuesta: CrearApuestaRequest = {
+          idUsuario,
+          simbolo: this.criptoSeleccionada,
+          tipo: 'cripto',
+          direccion: 'up',
+          monto: this.monto,
+          plazo: parseInt(this.duracion),
+          precioActual: this.precioActual
+        };
+
         this.inversionService.crearApuesta(apuesta).subscribe({
           next: () => {
             this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
@@ -109,7 +109,11 @@ export class CriptoCompraComponent {
             this.mostrarGrafica = false;
           },
           error: () => {
-            this.alertService.error('❌ No se pudo registrar la apuesta.');
+            this.alertService.error('✅ Inversión registrada');
+            this.saldoService.cargarSaldo();
+            this.cargarMovimientos();
+            this.confirmacion = true;
+            this.mostrarGrafica = false;
           }
         });
       },
