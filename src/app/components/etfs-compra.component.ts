@@ -43,31 +43,31 @@ export class EtfsCompraComponent {
   }
 
   confirmarInversion() {
-    if (!this.etfSeleccionado || !this.monto || !this.plazo) {
-      this.alertService.error('Completa todos los campos.');
-      return;
-    }
-
-    const ahora = new Date();
-    const hora = ahora.getHours();
-    const dia = ahora.getDay();
-    if (dia === 0 || dia === 6 || hora < 8 || hora >= 16) {
-      this.alertService.error('⏰ Solo puedes invertir en ETFs de Lunes a Viernes entre 08:00 y 16:00.');
-      return;
-    }
-
-    const req: RetirarSaldoRequest = { monto: this.monto };
-    this.dashboardService.withdraw(req).subscribe({
-      next: () => this.procesarInversion(),
-      error: (err) => {
-        if (err?.status === 200 || err?.ok === false) {
-          this.procesarInversion();
-        } else {
-          this.alertService.error('No se pudo descontar el saldo.');
-        }
-      }
-    });
+  if (!this.etfSeleccionado || !this.monto || !this.plazo) {
+    this.alertService.error('Completa todos los campos.');
+    return;
   }
+
+  const ahora = new Date();
+  const hora = ahora.getHours();
+  const dia = ahora.getDay();
+  if (dia === 0 || dia === 6 || hora < 8 || hora >= 16) {
+    this.alertService.error('⏰ Solo puedes invertir en ETFs de Lunes a Viernes entre 08:00 y 16:00.');
+    return;
+  }
+
+  const req: RetirarSaldoRequest = { monto: this.monto };
+  this.dashboardService.withdraw(req).subscribe({
+    next: () => {
+      this.procesarInversion();
+    },
+    error: (err) => {
+      // ❌ Esta validación es incorrecta y duplicaba la lógica
+      this.alertService.error('No se pudo descontar el saldo.');
+    }
+  });
+}
+
 
   private procesarInversion(): void {
     const idUsuario = +(localStorage.getItem('id') || '0');
