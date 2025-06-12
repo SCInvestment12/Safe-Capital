@@ -70,46 +70,47 @@ export class EtfsCompraComponent {
   }
 
   private procesarInversion(): void {
-    const idUsuario = +(localStorage.getItem('id') || '0');
-    const inversion: CrearInversionRequest = {
-      idUsuario,
-      tipo: 'etfs',
-      simbolo: this.etfSeleccionado,
-      monto: this.monto,
-      plazoDias: parseInt(this.plazo)
-    };
+  const idUsuario = +(localStorage.getItem('id') || '0');
+  const inversion: CrearInversionRequest = {
+    idUsuario,
+    tipo: 'etfs',
+    simbolo: this.etfSeleccionado,
+    monto: this.monto,
+    plazoDias: parseInt(this.plazo)
+  };
 
-    this.inversionService.crearInversion(inversion).subscribe({
-      next: () => {
-        const apuesta: CrearApuestaRequest = {
-          idUsuario,
-          simbolo: this.etfSeleccionado,
-          tipo: 'etfs',
-          direccion: 'up',
-          monto: this.monto,
-          plazo: parseInt(this.plazo),
-          precioActual: 0 // Puedes reemplazar con el precio real si lo tienes
-        };
+  const apuesta: CrearApuestaRequest = {
+    idUsuario,
+    simbolo: this.etfSeleccionado,
+    tipo: 'etfs',
+    direccion: 'up',
+    monto: this.monto,
+    plazo: parseInt(this.plazo),
+    precioActual: 0 // Puedes reemplazar con el precio real si lo tienes
+  };
 
-        this.apuestaService.crearApuesta(apuesta).subscribe({
-          next: () => {
-            this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
-            this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
-            this.saldoService.cargarSaldo();
-            this.cargarMovimientos();
-            this.confirmacion = true;
-            this.mostrarGrafica = false;
-          },
-          error: () => {
-            this.alertService.error('❌ No se pudo registrar la apuesta.');
-          }
-        });
-      },
-      error: () => {
-        this.alertService.error(`❌ No se pudo registrar la inversión en ETFs.`);
-      }
-    });
-  }
+  this.inversionService.crearInversion(inversion).subscribe({
+    next: () => {
+      this.apuestaService.crearApuesta(apuesta).subscribe({
+        next: () => {
+          this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
+          this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
+          this.saldoService.cargarSaldo();
+          this.cargarMovimientos();
+          this.confirmacion = true;
+          this.mostrarGrafica = false;
+        },
+        error: () => {
+          this.alertService.error('❌ No se pudo registrar la apuesta.');
+        }
+      });
+    },
+    error: () => {
+      this.alertService.error(`❌ No se pudo registrar la inversión en ETFs.`);
+    }
+  });
+}
+
 
   private cargarMovimientos(): void {
     this.inversionService.obtenerMovimientos().subscribe({
