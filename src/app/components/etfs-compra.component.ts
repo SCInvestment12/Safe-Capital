@@ -102,9 +102,7 @@ export class EtfsCompraComponent {
   private cargarMovimientos(): void {
     this.inversionService.obtenerMovimientos().subscribe({
       next: (res) => (this.movimientos = res),
-      error: () => {
-        this.alertService.error('No se pudieron cargar los movimientos.');
-      }
+      error: (err) => console.error('Error al cargar movimientos:', err)
     });
   }
 
