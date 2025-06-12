@@ -86,7 +86,7 @@ export class EtfsCompraComponent {
       direccion: 'up',
       monto: this.monto,
       plazo: parseInt(this.plazo),
-      precioActual: 0
+      precioActual: 0 // puedes reemplazar con el precio real si lo tienes
     };
 
     this.inversionService.crearInversion(inversion).subscribe({
