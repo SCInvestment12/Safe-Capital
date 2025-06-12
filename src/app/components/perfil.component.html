@@ -60,7 +60,10 @@
       <div class="tarjeta-saldo animate__animated animate__fadeInUp animate__delay-1s">
         <h5>Saldo disponible</h5>
         <p class="saldo-cantidad">{{ saldo | currency:'MXN':'symbol' }}</p>
-        <small class="text-light">Actualizado: {{ ultimoDeposito?.fecha || '-' }}</small>
+<small class="text-light">
+  Actualizado: {{ ultimoDeposito?.fecha ? (ultimoDeposito.fecha | date:'d \'de\' MMMM \'de\' yyyy') : '-' }}
+</small>
+
         <button class="btn-verde" (click)="abrirModal()">Ver movimientos</button>
 
         <!-- PORTAFOLIO -->
@@ -79,7 +82,7 @@
                 <tr *ngFor="let item of portafolio">
                   <td>{{ item.instrumento }}</td>
                   <td>{{ item.monto | currency:'MXN' }}</td>
-                  <td>{{ item.fecha }}</td>
+<td>{{ item.fecha | date:'d \'de\' MMMM \'de\' yyyy' }}</td>
                 </tr>
               </tbody>
             </table>
@@ -146,7 +149,7 @@
           <div class="detalle-mov">
             <p class="tipo">{{ movimiento.tipo }}</p>
             <p class="monto">{{ movimiento.monto | currency:'MXN' }}</p>
-            <p class="fecha">{{ movimiento.fecha }}</p>
+<p class="fecha">{{ movimiento.fecha | date:'d \'de\' MMMM \'de\' yyyy' }}</p>
           </div>
         </div>
       </div>
@@ -190,7 +193,7 @@
             <td [ngClass]="{'positivo': movimiento.tipo === 'Depósito','negativo': movimiento.tipo === 'Retiro'}">
               {{ movimiento.monto | currency:'MXN' }}
             </td>
-            <td>{{ movimiento.fecha }}</td>
+<td>{{ movimiento.fecha | date:'d \'de\' MMMM \'de\' yyyy' }}</td>
           </tr>
         </tbody>
       </table>
