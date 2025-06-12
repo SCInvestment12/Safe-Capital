@@ -124,9 +124,7 @@ precioActual: number = 0;
         this.confirmacion = true;
         this.mostrarGrafica = false;
       },
-      error: () => {
-        this.alertService.error(`❌ No se pudo registrar la apuesta.`);
-      }
+      
     });
 
     this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
