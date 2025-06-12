@@ -101,18 +101,25 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   acreditarSaldo(id: number, correo: string) {
-    const montoStr = prompt('Ingresa el monto a acreditar:');
-    const monto = montoStr ? parseFloat(montoStr) : NaN;
-    if (isNaN(monto)) { alert('Monto inválido.'); return; }
-
-    this.http.post(`${this.base}/usuarios/saldo/acreditar`,
-      { correoElectronico: correo, monto },
-      { headers: this.headers }
-    ).subscribe({
-      next: () => this.cargarComprobantes(),
-      error: () => alert('Error al acreditar saldo')
-    });
+  const montoStr = prompt('Ingresa el monto a acreditar:');
+  const monto = montoStr ? parseFloat(montoStr) : NaN;
+  if (isNaN(monto)) {
+    alert('Monto inválido.');
+    return;
   }
+
+  this.http.post(`${this.base}/usuarios/saldo/acreditar`,
+    { correoElectronico: correo, monto },
+    { headers: this.headers }
+  ).subscribe({
+    next: () => {
+      this.cargarComprobantes();
+      this.cargarMovimientos(); // ✅ Se actualiza automáticamente
+      alert(`✔ Se acreditó $${monto} a ${correo}`);
+    },
+    error: () => alert('Error al acreditar saldo')
+  });
+}
 
   rechazar(id: number) {
     this.http.put(`${this.base}/comprobantes/${id}/estado?estado=RECHAZADO`,
@@ -196,23 +203,25 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   asignarSaldoManual() {
-    if (!this.userEmailParaSaldo || !this.montoParaSaldo || this.montoParaSaldo <= 0) {
-      alert('Por favor ingresa un correo válido y un monto mayor a cero.');
-      return;
-    }
-    this.http.post(`${this.base}/usuarios/saldo/acreditar`,
-      { correoElectronico: this.userEmailParaSaldo, monto: this.montoParaSaldo },
-      { headers: this.headers }
-    ).subscribe({
-      next: () => {
-        alert(`Se acreditó $${this.montoParaSaldo} a ${this.userEmailParaSaldo}`);
-        this.userEmailParaSaldo = '';
-        this.montoParaSaldo = null;
-        this.cargarUsuarios();
-      },
-      error: () => alert('Error al acreditar saldo manualmente')
-    });
+  if (!this.userEmailParaSaldo || !this.montoParaSaldo || this.montoParaSaldo <= 0) {
+    alert('Por favor ingresa un correo válido y un monto mayor a cero.');
+    return;
   }
+
+  this.http.post(`${this.base}/usuarios/saldo/acreditar`,
+    { correoElectronico: this.userEmailParaSaldo, monto: this.montoParaSaldo },
+    { headers: this.headers }
+  ).subscribe({
+    next: () => {
+      alert(`Se acreditó $${this.montoParaSaldo} a ${this.userEmailParaSaldo}`);
+      this.userEmailParaSaldo = '';
+      this.montoParaSaldo = null;
+      this.cargarUsuarios();
+      this.cargarMovimientos(); // ✅ Se actualiza automáticamente
+    },
+    error: () => alert('Error al acreditar saldo manualmente')
+  });
+}
 
   cargarParesForex() {
     this.http.get<any[]>(`${this.base}/admin/forex/pares`, { headers: this.headers })
