@@ -49,14 +49,5 @@
     </ul>
     <button class="btn-cancelar" (click)="cancelar()">Inicio</button>
 
-    <!-- NUEVO: Mostrar movimientos -->
-    <div *ngIf="movimientos.length > 0" class="movimientos">
-      <h3>📄 Movimientos recientes</h3>
-      <ul>
-        <li *ngFor="let mov of movimientos">
-          {{ mov.tipo }} | {{ mov.descripcion }} | {{ mov.moneda }} ${{ mov.monto }} | {{ mov.fecha | date:'short' }}
-        </li>
-      </ul>
-    </div>
-  </div>
+   
 </div>

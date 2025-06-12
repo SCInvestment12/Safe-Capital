@@ -48,25 +48,4 @@
     </ul>
     <button class="btn-cancelar" (click)="reiniciar()">Inicio</button>
 
-    <!-- Tabla de movimientos -->
-    <div *ngIf="movimientos.length > 0" class="tabla-movimientos">
-      <h4>📋 Historial de movimientos</h4>
-      <table>
-        <thead>
-          <tr>
-            <th>Tipo</th>
-            <th>Monto</th>
-            <th>Fecha</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let mov of movimientos">
-            <td>{{ mov.tipo }}</td>
-            <td>${{ mov.monto }}</td>
-            <td>{{ mov.fecha | date:'dd/MM/yyyy HH:mm' }}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+    
