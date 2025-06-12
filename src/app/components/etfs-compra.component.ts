@@ -88,23 +88,27 @@ export class EtfsCompraComponent {
           direccion: 'up',
           monto: this.monto,
           plazo: parseInt(this.plazo),
-          precioActual: 0 // ✅ Aquí puedes reemplazar con el precio real si lo tienes en otro componente
+          precioActual: 0 // Puedes reemplazar con el precio real si lo tienes
         };
 
-        this.apuestaService.crearApuesta(apuesta).subscribe();
-
-        this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
-        this.saldoService.cargarSaldo();
-        this.cargarMovimientos();
-        this.confirmacion = true;
-        this.mostrarGrafica = false;
+        this.apuestaService.crearApuesta(apuesta).subscribe({
+          next: () => {
+            this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
+            this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
+            this.saldoService.cargarSaldo();
+            this.cargarMovimientos();
+            this.confirmacion = true;
+            this.mostrarGrafica = false;
+          },
+          error: () => {
+            this.alertService.error('❌ No se pudo registrar la apuesta.');
+          }
+        });
       },
       error: () => {
         this.alertService.error(`❌ No se pudo registrar la inversión en ETFs.`);
       }
     });
-
-    this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
   }
 
   private cargarMovimientos(): void {
