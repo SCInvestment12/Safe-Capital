@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChartWrapperComponent } from './chart-wrapper.component';
-import { DashboardService, RetirarSaldoRequest } from '../services/dashboard.service';
 import { AlertService } from '../services/alert.service';
 import { ApuestaService, CrearApuestaRequest } from '../services/apuesta.service';
 import { SaldoService } from '../services/saldo.service';
@@ -30,7 +29,6 @@ export class AccionesCompraComponent {
   ];
 
   constructor(
-    private dashboardService: DashboardService,
     private alertService: AlertService,
     private apuestaService: ApuestaService,
     private saldoService: SaldoService,
@@ -57,17 +55,7 @@ export class AccionesCompraComponent {
       return;
     }
 
-    const req: RetirarSaldoRequest = { monto: this.monto };
-    this.dashboardService.withdraw(req).subscribe({
-      next: () => this.procesarApuesta(),
-      error: (err) => {
-        if (err?.status === 200 || err?.ok === false) {
-          this.procesarApuesta();
-        } else {
-          this.alertService.error('No se pudo descontar el saldo.');
-        }
-      }
-    });
+    this.procesarApuesta(); // ✅ Ya no se llama a withdraw aquí
   }
 
   private procesarApuesta(): void {
@@ -109,8 +97,6 @@ export class AccionesCompraComponent {
         this.alertService.error(`❌ No se pudo registrar la inversión en Acciones.`);
       }
     });
-
-    this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
   }
 
   private cargarMovimientos(): void {
