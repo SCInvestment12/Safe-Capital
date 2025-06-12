@@ -91,17 +91,7 @@ export class CetesCompraComponent implements OnInit {
       return;
     }
 
-    const req: RetirarSaldoRequest = { monto: this.monto };
-    this.dashboardService.withdraw(req).subscribe({
-      next: () => this.procesarInversion(),
-      error: (err) => {
-        if (err?.status === 200 || err?.ok === false) {
-          this.procesarInversion();
-        } else {
-          this.alertService.error('No se pudo descontar el saldo.');
-        }
-      }
-    });
+    this.procesarInversion();
   }
 
   private procesarInversion() {
@@ -129,8 +119,6 @@ export class CetesCompraComponent implements OnInit {
         this.alertService.error(`❌ No se pudo registrar la inversión en CETES.`);
       }
     });
-
-    this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
   }
 
   private obtenerDiasDesdePlazo(plazo: string): number {
