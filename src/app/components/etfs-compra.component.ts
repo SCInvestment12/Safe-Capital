@@ -86,14 +86,13 @@ export class EtfsCompraComponent {
       direccion: 'up',
       monto: this.monto,
       plazo: parseInt(this.plazo),
-      precioActual: 0 // puedes reemplazar con el precio real
+      precioActual: 0
     };
 
     this.inversionService.crearInversion(inversion).subscribe({
       next: () => {
         this.apuestaService.crearApuesta(apuesta).subscribe({
           next: () => {
-            this.alertService.success(`✅ Se descontaron $${this.monto} de tu saldo.`);
             this.alertService.success(`✅ Inversión registrada por $${this.monto}.`);
             this.saldoService.cargarSaldo();
             this.cargarMovimientos();
