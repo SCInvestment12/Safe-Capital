@@ -85,6 +85,47 @@ export class AdminDashboardComponent implements OnInit {
 
     FileSaver.saveAs(blob, 'movimientos.xlsx');
   }
+descargarUsuariosExcel() {
+  if (!this.usuarios || this.usuarios.length === 0) {
+    alert('No hay usuarios para exportar.');
+    return;
+  }
+  const data = this.usuarios.map(u => ({
+    ID: u.idUsuario,
+    Nombre: u.nombre,
+    Apellidos: u.apellidos,
+    Correo: u.correoElectronico,
+    Teléfono: u.telefono,
+    Rol: u.rol,
+    Estado: u.estado,
+    Saldo: `$${u.saldo ?? 0}`
+  }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = { Sheets: { 'Usuarios': ws }, SheetNames: ['Usuarios'] };
+  const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  FileSaver.saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'usuarios.xlsx');
+}
+
+descargarComprobantesExcel() {
+  if (!this.comprobantes || this.comprobantes.length === 0) {
+    alert('No hay comprobantes para exportar.');
+    return;
+  }
+  const data = this.comprobantes.map(c => ({
+    ID: c.id,
+    Monto: `$${c.monto}`,
+    Usuario: c.usuario?.correo || 'N/A',
+    NombreArchivo: c.nombreArchivo,
+    Estado: c.estado,
+    Fecha: c.fecha
+  }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = { Sheets: { 'Comprobantes': ws }, SheetNames: ['Comprobantes'] };
+  const buffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
+  FileSaver.saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'comprobantes.xlsx');
+}
+
+
 
   cargarUsuarios() {
     this.http.get<any[]>(`${this.base}/usuarios/usuarios`, { headers: this.headers })
