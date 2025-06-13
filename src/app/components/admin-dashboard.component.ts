@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HttpClient, HttpHeaders } from '@angular/common/http';
+import * as XLSX from 'xlsx';
+import * as FileSaver from 'file-saver';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -59,6 +61,31 @@ export class AdminDashboardComponent implements OnInit {
     this.cargarMovimientos();
   }
 
+  // ✅ NUEVO MÉTODO PARA EXPORTAR MOVIMIENTOS A EXCEL
+  descargarMovimientosExcel() {
+    if (!this.movimientos || this.movimientos.length === 0) {
+      alert('No hay movimientos para exportar.');
+      return;
+    }
+
+    const data = this.movimientos.map(m => ({
+      ID: m.id,
+      Tipo: m.tipo,
+      Monto: `$${m.monto}`,
+      Fecha: m.fecha,
+      Descripción: m.descripcion,
+      Usuario: m.correoUsuario || m.usuario?.correo || 'N/A'
+    }));
+
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
+    const workbook: XLSX.WorkBook = { Sheets: { 'Movimientos': worksheet }, SheetNames: ['Movimientos'] };
+
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+    const blob: Blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+
+    FileSaver.saveAs(blob, 'movimientos.xlsx');
+  }
+
   cargarUsuarios() {
     this.http.get<any[]>(`${this.base}/usuarios/usuarios`, { headers: this.headers })
       .subscribe({
@@ -101,25 +128,25 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   acreditarSaldo(id: number, correo: string) {
-  const montoStr = prompt('Ingresa el monto a acreditar:');
-  const monto = montoStr ? parseFloat(montoStr) : NaN;
-  if (isNaN(monto)) {
-    alert('Monto inválido.');
-    return;
-  }
+    const montoStr = prompt('Ingresa el monto a acreditar:');
+    const monto = montoStr ? parseFloat(montoStr) : NaN;
+    if (isNaN(monto)) {
+      alert('Monto inválido.');
+      return;
+    }
 
-  this.http.post(`${this.base}/usuarios/saldo/acreditar`,
-    { correoElectronico: correo, monto },
-    { headers: this.headers }
-  ).subscribe({
-    next: () => {
-      this.cargarComprobantes();
-      this.cargarMovimientos(); // ✅ Se actualiza automáticamente
-      alert(`✔ Se acreditó $${monto} a ${correo}`);
-    },
-    error: () => alert('Error al acreditar saldo')
-  });
-}
+    this.http.post(`${this.base}/usuarios/saldo/acreditar`,
+      { correoElectronico: correo, monto },
+      { headers: this.headers }
+    ).subscribe({
+      next: () => {
+        this.cargarComprobantes();
+        this.cargarMovimientos();
+        alert(`✔ Se acreditó $${monto} a ${correo}`);
+      },
+      error: () => alert('Error al acreditar saldo')
+    });
+  }
 
   rechazar(id: number) {
     this.http.put(`${this.base}/comprobantes/${id}/estado?estado=RECHAZADO`,
@@ -203,25 +230,25 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   asignarSaldoManual() {
-  if (!this.userEmailParaSaldo || !this.montoParaSaldo || this.montoParaSaldo <= 0) {
-    alert('Por favor ingresa un correo válido y un monto mayor a cero.');
-    return;
-  }
+    if (!this.userEmailParaSaldo || !this.montoParaSaldo || this.montoParaSaldo <= 0) {
+      alert('Por favor ingresa un correo válido y un monto mayor a cero.');
+      return;
+    }
 
-  this.http.post(`${this.base}/usuarios/saldo/acreditar`,
-    { correoElectronico: this.userEmailParaSaldo, monto: this.montoParaSaldo },
-    { headers: this.headers }
-  ).subscribe({
-    next: () => {
-      alert(`Se acreditó $${this.montoParaSaldo} a ${this.userEmailParaSaldo}`);
-      this.userEmailParaSaldo = '';
-      this.montoParaSaldo = null;
-      this.cargarUsuarios();
-      this.cargarMovimientos(); // ✅ Se actualiza automáticamente
-    },
-    error: () => alert('Error al acreditar saldo manualmente')
-  });
-}
+    this.http.post(`${this.base}/usuarios/saldo/acreditar`,
+      { correoElectronico: this.userEmailParaSaldo, monto: this.montoParaSaldo },
+      { headers: this.headers }
+    ).subscribe({
+      next: () => {
+        alert(`Se acreditó $${this.montoParaSaldo} a ${this.userEmailParaSaldo}`);
+        this.userEmailParaSaldo = '';
+        this.montoParaSaldo = null;
+        this.cargarUsuarios();
+        this.cargarMovimientos();
+      },
+      error: () => alert('Error al acreditar saldo manualmente')
+    });
+  }
 
   cargarParesForex() {
     this.http.get<any[]>(`${this.base}/admin/forex/pares`, { headers: this.headers })
