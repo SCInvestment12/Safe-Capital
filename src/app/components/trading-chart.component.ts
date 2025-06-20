@@ -38,6 +38,8 @@ export type ChartOptions = {
   annotations: ApexAnnotations;
 };
 
+// ... imports se mantienen igual
+
 @Component({
   selector: 'app-trading-chart',
   standalone: true,
@@ -51,29 +53,32 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
   @Input() precioCompra: number | null = null;
   @Input() precioVenta: number | null = null;
 
-  @Output() precioActualCambiado = new EventEmitter<number>(); // ✅ NUEVO
+  @Output() precioActualCambiado = new EventEmitter<number>();
 
   public chartOptions!: ChartOptions;
   public precioActual: number | null = null;
-  private subscription!: Subscription;
+  private subscription: Subscription | null = null;
 
   constructor(private tradingService: TradingService) {}
 
   ngOnInit(): void {
-    this.initChart();
-    this.startPolling();
+    this.cargarGrafica();
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['simbolo'] || changes['tipo']) {
-      this.subscription?.unsubscribe();
-      this.initChart();
-      this.startPolling();
+      this.cargarGrafica();
     }
 
     if (changes['precioCompra'] || changes['precioVenta']) {
-      this.agregarLineasHorizontales(); // Actualiza si cambian los precios
+      this.agregarLineasHorizontales();
     }
+  }
+
+  private cargarGrafica(): void {
+    this.subscription?.unsubscribe(); // Detener anterior si existe
+    this.initChart();
+    this.startPolling();
   }
 
   private initChart(): void {
@@ -142,16 +147,15 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         strokeWidth: 2
       },
       annotations: {
-        points: []
+        points: [],
+        yaxis: [] // Asegura que esté definido para todas
       }
     };
 
-    this.agregarLineasHorizontales(); // ← Agrega líneas si ya están disponibles
+    this.agregarLineasHorizontales();
   }
 
   private agregarLineasHorizontales(): void {
-    if (this.tipo !== 'forex') return;
-
     const anotacionesY = [];
 
     if (this.precioCompra != null) {
@@ -184,8 +188,9 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
 
   private startPolling(): void {
     const frecuencia = this.tipo === 'forex' ? 3000 : 5000;
+
     this.subscription = interval(frecuencia).subscribe(() => this.fetchData());
-    this.fetchData();
+    this.fetchData(); // Primera carga inmediata
   }
 
   private fetchData(): void {
@@ -201,7 +206,7 @@ export class TradingChartComponent implements OnInit, OnDestroy, OnChanges {
         });
 
         this.precioActual = puntos[puntos.length - 1][1];
-        this.precioActualCambiado.emit(this.precioActual); // ✅ EMITIR PRECIO
+        this.precioActualCambiado.emit(this.precioActual);
 
         this.chartOptions = {
           ...this.chartOptions,
